@@ -59,6 +59,8 @@
     <Compile Include="EventToAgent.fs" />
     <Compile Include="EventToCommand.fs" />
     <Compile Include="EventToFSEvent.fs" />
+    <Compile Include="Notifiers.fs" />
+    <Compile Include="ViewModelFactory.fs" />
     <Compile Include="ViewModelBase.fs" />
     <Compile Include="ViewController.fs" />
     <Compile Include="XamlTypeProviderSupport.fs" />
