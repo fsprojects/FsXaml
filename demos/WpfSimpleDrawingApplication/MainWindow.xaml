@@ -7,13 +7,13 @@
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         Title="Drawing using EventToFSharpEvent"
         >
+    <Window.DataContext>
+        <local:MainViewModel />
+    </Window.DataContext>
     <Window.Resources>
         <local:MoveConverter x:Key="moveConverter" />
         <local:ButtonCaptureConverter x:Key="buttonCaptureConverter" />
     </Window.Resources>
-    <Window.DataContext>
-        <local:MainViewModel />
-    </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
