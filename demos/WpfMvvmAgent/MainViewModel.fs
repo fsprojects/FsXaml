@@ -20,7 +20,7 @@ type MainViewModel() as me =
 
     let ui = SynchronizationContext.Current
 
-    let executing = me.Factory.Backing(<@ me.Executing @>, false)
+    let trackPositions = me.Factory.Backing(<@ me.TrackPositions @>, false)
     let positions = ObservableCollection<Point>()
     let maxPositions = 20
  
@@ -29,29 +29,27 @@ type MainViewModel() as me =
                     while true do
                         let! pt = inbox.Receive()
                         
-                        match me.Executing with
-                        | false ->
+                        if not(me.TrackPositions) then
                             // Update our UI
                             do! Async.SwitchToContext ui
                             if positions.Count > maxPositions then positions.RemoveAt 0
                             positions.Add(pt)
                             do! Async.SwitchToThreadPool()
-                        | true -> ()
                })
 
     let clear ui = async { 
-            me.Executing <- true            
+            me.TrackPositions <- true            
             while positions.Count > 0 do
                 do! Async.Sleep 100
                 do! Async.SwitchToContext ui
                 positions.RemoveAt(positions.Count - 1)
             
-            me.Executing <- false
+            me.TrackPositions <- false
         }
 
     let clearCommand = me.Factory.CommandAsync(clear)
     
     member this.MoveAgent = agent
     member this.Positions = positions
-    member this.Executing with get() = executing.Value and set(v) = executing.Value <- v
+    member this.TrackPositions with get() = trackPositions.Value and set(v) = trackPositions.Value <- v
     member this.Clear = clearCommand
