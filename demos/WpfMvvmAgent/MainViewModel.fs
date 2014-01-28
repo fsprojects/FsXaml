@@ -29,13 +29,29 @@ type MainViewModel() as me =
                     while true do
                         let! pt = inbox.Receive()
                         
-                        // Update our UI
-                        do! Async.SwitchToContext ui                        
-                        if positions.Count > maxPositions then positions.RemoveAt 0
-                        positions.Add(pt)
-                        do! Async.SwitchToThreadPool()
+                        match me.Executing with
+                        | false ->
+                            // Update our UI
+                            do! Async.SwitchToContext ui
+                            if positions.Count > maxPositions then positions.RemoveAt 0
+                            positions.Add(pt)
+                            do! Async.SwitchToThreadPool()
+                        | true -> ()
                })
+
+    let clear ui = async { 
+            me.Executing <- true            
+            while positions.Count > 0 do
+                do! Async.Sleep 100
+                do! Async.SwitchToContext ui
+                positions.RemoveAt(positions.Count - 1)
+            
+            me.Executing <- false
+        }
+
+    let clearCommand = me.Factory.CommandAsync(clear)
     
     member this.MoveAgent = agent
     member this.Positions = positions
     member this.Executing with get() = executing.Value and set(v) = executing.Value <- v
+    member this.Clear = clearCommand

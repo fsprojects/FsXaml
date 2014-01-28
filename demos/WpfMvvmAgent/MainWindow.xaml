@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -35,7 +36,8 @@
         </Canvas>
         
         <ListView Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ItemsSource="{Binding Positions}" />
-        
-        <Button x:Name="ExitButton" Margin="5" Grid.Row="2" Grid.ColumnSpan="2">Exit</Button>
+
+        <Button Margin="5" Grid.Row="2" Grid.ColumnSpan="2" Command="{Binding Clear}">Clear</Button>
+        <Button x:Name="ExitButton" Margin="5" Grid.Row="3" Grid.ColumnSpan="2">Exit</Button>
     </Grid>
 </Window>
