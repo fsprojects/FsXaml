@@ -34,7 +34,6 @@ type MainViewModel() as me =
                             do! Async.SwitchToContext ui
                             if positions.Count > maxPositions then positions.RemoveAt 0
                             positions.Add(pt)
-                            do! Async.SwitchToThreadPool()
                })
 
     let clear ui = async { 
