@@ -135,10 +135,9 @@ module internal Commands =
         // Note that we need to handle the fact that the arg is passed as null the first time, due to stupid data binding issues.  Let's fix that here.
         // This will cause the command to requery the CanExecute method after everything's loaded, which will then pass onto the user's canExecute function.
         // The first time things are loaded, since null will be passed, None will go through, and the method won't execute
-        let rec callback = fun e -> 
-            result.RaiseCanExecuteChanged()
-            subscription.Dispose()
-        and subscription : IDisposable = CommandManager.RequerySuggested.Subscribe(callback)
+        // Note that we only do this if loaded in a sync context that's current, so we can post back safely
+        if SynchronizationContext.Current <> null then
+            SynchronizationContext.Current.Post((fun _ -> result.RaiseCanExecuteChanged()), null)
 
         result
 
@@ -164,9 +163,8 @@ module internal Commands =
         // Note that we need to handle the fact that the arg is passed as null the first time, due to stupid data binding issues.  Let's fix that here.
         // This will cause the command to requery the CanExecute method after everything's loaded, which will then pass onto the user's canExecute function.
         // The first time things are loaded, since null will be passed, None will go through, and the method won't execute
-        let subscription : IDisposable ref = ref null
-        subscription := CommandManager.RequerySuggested.Subscribe(fun e -> 
-            result.RaiseCanExecuteChanged()
-            subscription.Value.Dispose())
+        // Note that we only do this if loaded in a sync context that's current, so we can post back safely
+        if SynchronizationContext.Current <> null then
+            SynchronizationContext.Current.Post((fun _ -> result.RaiseCanExecuteChanged()), null)
 
         result

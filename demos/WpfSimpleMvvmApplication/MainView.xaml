@@ -27,6 +27,6 @@
         <TextBlock Margin="3" Grid.Row="3" Grid.Column="0" Text="Full Name:" />
         <TextBox IsEnabled="false" Margin="3" Grid.Column="1" Grid.Row="3" FontSize="16" Text="{Binding FullName, Mode=OneWay}"/>
 
-        <Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" FontSize="16" Command="{Binding OkCommand}">Ok</Button>
+        <Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" FontSize="16" Command="{Binding OkCommand}" CommandParameter="{Binding FullName}">Ok</Button>
     </Grid>
 </UserControl>

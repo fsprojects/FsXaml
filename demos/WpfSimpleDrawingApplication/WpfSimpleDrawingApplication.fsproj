@@ -39,10 +39,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FsXaml.Wpf">
-      <HintPath>..\..\src\FsXaml.Wpf.TypeProvider\bin\Debug\FsXaml.Wpf.dll</HintPath>
+      <HintPath>..\..\bin\FsXaml.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="FsXaml.Wpf.TypeProvider">
-      <HintPath>..\..\src\FsXaml.Wpf.TypeProvider\bin\Debug\FsXaml.Wpf.TypeProvider.dll</HintPath>
+      <HintPath>..\..\bin\FsXaml.Wpf.TypeProvider.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -66,7 +66,7 @@
     <Compile Include="MainViewModel.fs" />
     <Resource Include="App.xaml" />
     <Resource Include="MainWindow.xaml" />
-    <Compile Include="MainWindow.xaml.fs"/>      
+    <Compile Include="MainWindow.xaml.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />
     <None Include="packages.config" />
