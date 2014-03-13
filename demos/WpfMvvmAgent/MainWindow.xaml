@@ -30,7 +30,7 @@
         <Canvas Grid.Row="1"  Background="#eeeeee" Margin="3">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseMove">
-                    <fsx:EventToAgent Agent="{Binding MoveAgent}" EventArgsConverter="{StaticResource moveConverter}" />
+                    <fsx:EventToMailbox Mailbox="{Binding MoveAgent}" EventArgsConverter="{StaticResource moveConverter}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Canvas>

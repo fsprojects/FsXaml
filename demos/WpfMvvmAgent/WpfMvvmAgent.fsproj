@@ -44,10 +44,10 @@
       <HintPath>..\..\lib\FSharp.ViewModule.Core.dll</HintPath>
     </Reference>
     <Reference Include="FsXaml.Wpf">
-      <HintPath>..\bin\FsXaml.Wpf.dll</HintPath>
+      <HintPath>..\..\bin\FsXaml.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="FsXaml.Wpf.TypeProvider">
-      <HintPath>..\bin\FsXaml.Wpf.TypeProvider.dll</HintPath>
+      <HintPath>..\..\bin\FsXaml.Wpf.TypeProvider.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

@@ -6,32 +6,32 @@ using Windows.UI.Xaml.Controls;
 
 namespace FsXaml
 {
-    public class EventToAgent : TriggerAction<FrameworkElement>
+    public class EventToMailbox : TriggerAction<FrameworkElement>
     {
         internal static IEventArgsConverter DefaultConverter = new DefaultEventConverter();
 
-        public static DependencyProperty AgentParameterProperty = DependencyProperty.Register("AgentParameter", typeof(object), typeof(EventToAgent), new PropertyMetadata(null));
-        public static DependencyProperty AgentProperty = DependencyProperty.Register("Agent", typeof(object), typeof(EventToAgent), new PropertyMetadata(null));
-        public static DependencyProperty EventArgsConverterParameterProperty = DependencyProperty.Register("EventArgsConverterParameter", typeof(object), typeof(EventToAgent), new PropertyMetadata(null));
-        public static DependencyProperty EventArgsConverterProperty = DependencyProperty.Register("EventArgsConverter", typeof(object), typeof(EventToAgent), new PropertyMetadata(DefaultConverter));
+        public static DependencyProperty MailboxParameterProperty = DependencyProperty.Register("MailboxParameter", typeof(object), typeof(EventToMailbox), new PropertyMetadata(null));
+        public static DependencyProperty MailboxProperty = DependencyProperty.Register("Mailbox", typeof(object), typeof(EventToMailbox), new PropertyMetadata(null));
+        public static DependencyProperty EventArgsConverterParameterProperty = DependencyProperty.Register("EventArgsConverterParameter", typeof(object), typeof(EventToMailbox), new PropertyMetadata(null));
+        public static DependencyProperty EventArgsConverterProperty = DependencyProperty.Register("EventArgsConverter", typeof(object), typeof(EventToMailbox), new PropertyMetadata(DefaultConverter));
 
         protected override void Invoke(object param)
         {
-            object agent = this.Agent;
+            object mailbox = this.Mailbox;
             Control associatedControl = this.AssociatedObject as Control;
 
             bool enable = (associatedControl == null && this.AssociatedObject != null) || associatedControl.IsEnabled;
-            if (enable && agent != null)
+            if (enable && mailbox != null)
             {
                 var parameter = this.EventArgsConverter.Convert(param as RoutedEventArgs, this.EventArgsConverterParameter);
 
-                var agentType = agent.GetType();
-                var parameterType = agentType.GenericTypeArguments[0];
-                MethodInfo method = agent.GetType().GetRuntimeMethod("Post", new[] {parameterType});
+                var mailboxType = mailbox.GetType();
+                var parameterType = mailboxType.GenericTypeArguments[0];
+                MethodInfo method = mailbox.GetType().GetRuntimeMethod("Post", new[] {parameterType});
                 try
                 {
                     object[] parameters = { parameter };
-                    method.Invoke(agent, parameters);
+                    method.Invoke(mailbox, parameters);
                 }
                 catch
                 {
@@ -39,27 +39,27 @@ namespace FsXaml
             }
         }
 
-        public object Agent
+        public object Mailbox
         {
             get
             {
-                return this.GetValue(AgentProperty);
+                return this.GetValue(MailboxProperty);
             }
             set
             {
-                this.SetValue(AgentProperty, value);
+                this.SetValue(MailboxProperty, value);
             }
         }
 
-        public object AgentParameter
+        public object MailboxParameter
         {
             get
             {
-                return this.GetValue(AgentParameterProperty);
+                return this.GetValue(MailboxParameterProperty);
             }
             set
             {
-                this.SetValue(AgentParameterProperty, value);
+                this.SetValue(MailboxParameterProperty, value);
             }
         }
 
@@ -87,7 +87,7 @@ namespace FsXaml
             }
         }
 
-        public bool PassEventArgsToAgent { get; set; }
+        public bool PassEventArgsToMailbox { get; set; }
 
         private class DefaultEventConverter : IEventArgsConverter
         {

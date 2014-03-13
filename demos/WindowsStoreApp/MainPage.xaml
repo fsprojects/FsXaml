@@ -31,7 +31,7 @@
         <Canvas Grid.Row="1" Grid.Column="0" Background="#eeeeee" Margin="3">
             <interactivity1:Interaction.Triggers>
                 <interactivity1:EventTrigger EventName="PointerMoved">
-                    <fsXaml1:EventToAgent Agent="{Binding MoveAgent}" EventArgsConverter="{StaticResource MoveConverter}" />
+                    <fsXaml1:EventToMailbox Mailbox="{Binding MoveAgent}" EventArgsConverter="{StaticResource MoveConverter}" />
                 </interactivity1:EventTrigger>
             </interactivity1:Interaction.Triggers>
         </Canvas>
