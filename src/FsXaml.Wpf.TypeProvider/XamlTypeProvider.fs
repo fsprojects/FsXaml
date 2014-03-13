@@ -19,6 +19,13 @@ open Microsoft.FSharp.Quotations.ExprShape
 open Samples.FSharp.ProvidedTypes
 open FsXaml.TypeProviders.Helper
 
+open System.Reflection
+
+[<assembly:AssemblyVersion("0.9.0.0")>]
+[<assembly:AssemblyFileVersion("0.9.0.0")>]
+do()
+
+
 module XamlTypeUtils =
     let internal wpfAssembly = typeof<System.Windows.Controls.Button>.Assembly
     let internal rootNamespace = typeof<XamlFileAccessor>.Namespace

@@ -103,7 +103,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="EventToAgent.cs" />
+    <Compile Include="EventToMailbox.cs" />
     <Compile Include="IEventArgsConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
