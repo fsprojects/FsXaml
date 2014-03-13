@@ -5,6 +5,7 @@ open System.Windows
 open System.Windows.Input
 
 open FsXaml
+open FSharp.ViewModule.Core.ViewModel
 
 type MainViewModel() as self = 
     inherit ViewModelBase()
@@ -20,7 +21,7 @@ type MainViewModel() as self =
 
     do
         // Add in property dependencies
-        self.Factory.SetPropertyDependencies(<@ self.FullName @>, [ <@ self.FirstName @> ; <@ self.LastName @> ])
+        self.DependencyTracker.AddPropertyDependencies(<@@ self.FullName @@>, [ <@@ self.FirstName @@> ; <@@ self.LastName @@> ])
     
     member x.FirstName with get() = firstName.Value and set value = firstName.Value <- value
     member x.LastName with get() = lastName.Value and set value = lastName.Value <- value

@@ -54,14 +54,10 @@
     <Compile Include="Wpf-Contracts.fs" />
     <Compile Include="Utilities.fs" />
     <Compile Include="Wpf-XamlUtilities.fs" />
-    <Compile Include="Wpf-FunCommand.fs" />
     <Compile Include="ValueConverters.fs" />
     <Compile Include="EventToAgent.fs" />
     <Compile Include="EventToCommand.fs" />
     <Compile Include="EventToFSEvent.fs" />
-    <Compile Include="Notifiers.fs" />
-    <Compile Include="ViewModelFactory.fs" />
-    <Compile Include="ViewModelBase.fs" />
     <Compile Include="ViewController.fs" />
     <Compile Include="XamlTypeProviderSupport.fs" />
     <None Include="packages.config" />
