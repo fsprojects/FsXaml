@@ -21,8 +21,8 @@ open FsXaml.TypeProviders.Helper
 
 open System.Reflection
 
-[<assembly:AssemblyVersion("0.9.1.0")>]
-[<assembly:AssemblyFileVersion("0.9.1.0")>]
+[<assembly:AssemblyVersion("0.9.2.0")>]
+[<assembly:AssemblyFileVersion("0.9.2.0")>]
 do()
 
 
