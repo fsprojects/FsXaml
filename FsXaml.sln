@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.Wpf", "src\FsXaml.Wpf\FsXaml.Wpf.fsproj", "{573FB772-0DBC-4E53-87EA-C61BE246FFC3}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.Wpf.TypeProvider", "src\FsXaml.Wpf.TypeProvider\FsXaml.Wpf.TypeProvider.fsproj", "{407071EF-1FC4-4185-96CA-47F02465F52C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsXaml.Store", "FsXaml.Store\FsXaml.Store.csproj", "{9FEEC3F9-815B-4225-A470-4B3F2E79BF24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FsXaml.Store", "src\FsXaml.Store\FsXaml.Store.csproj", "{9FEEC3F9-815B-4225-A470-4B3F2E79BF24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
