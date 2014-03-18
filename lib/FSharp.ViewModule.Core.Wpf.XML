@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>FSharp.ViewModule.Core.Wpf</name></assembly>
+<members>
+<member name="T:Commands">
+
+</member>
+<member name="">
+
+</member>
+<member name="F:FSharp.ViewModule.Core.FSharp.ViewModule.Core.DependencyTracker.SynchronizationContext@">
+<summary>
+ Optional context used to raise all property changed notifications.  If null, they&apos;ll get raised directly.
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="P:FSharp.ViewModule.Core.DependencyTracker.SynchronizationContext(System.Threading.SynchronizationContext)">
+<summary>
+ Optional context used to raise all property changed notifications.  If null, they&apos;ll get raised directly.
+</summary>
+</member>
+<member name="P:FSharp.ViewModule.Core.DependencyTracker.SynchronizationContext">
+<summary>
+ Optional context used to raise all property changed notifications.  If null, they&apos;ll get raised directly.
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:FSharp.ViewModule.Core.DependencyTracker">
+<summary>
+ Default implementation of IDependencyTracker which can be used for any relevent ViewModel
+ if an implementation does not already exist for the given framework
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:FSharp.ViewModule.Core.INotifyCommand.RaiseCanExecuteChanged">
+<summary>
+ Trigger the CanExecuteChanged event for this specific ICommand
+</summary>
+</member>
+<member name="T:FSharp.ViewModule.Core.INotifyCommand">
+ <summary>Extension of ICommand with a public method to fire the CanExecuteChanged event</summary>
+ <remarks>This type should provide a constructor which accepts an Execute (obj -> unit) and CanExecute (obj -> bool) function</remarks>
+</member>
+<member name="">
+
+</member>
+<member name="T:FSharp.ViewModule.Core.IRaisePropertyChanged">
+<summary>
+ Interface used to explicitly raise PropertyChanged
+</summary>
+</member>
+<member name="P:FSharp.ViewModule.Core.IViewModel.OperationExecuting(System.Boolean)">
+<summary>
+ Value used to notify view that an asynchronous operation is executing
+</summary>
+</member>
+<member name="P:FSharp.ViewModule.Core.IViewModel.OperationExecuting">
+<summary>
+ Value used to notify view that an asynchronous operation is executing
+</summary>
+</member>
+<member name="P:FSharp.ViewModule.Core.IViewModel.DependencyTracker">
+<summary>
+ Handles management of dependencies for all computed properties 
+ as well as ICommand dependencies
+</summary>
+</member>
+<member name="M:FSharp.ViewModule.Core.IViewModel.SetErrors(System.Collections.Generic.IEnumerable{FSharp.ViewModule.Core.ValidationResult})">
+<summary>
+ Setup all errors for validation
+</summary>
+</member>
+<member name="T:FSharp.ViewModule.Core.IViewModel">
+ <summary>Extension of INotifyPropertyChanged with a public method to fire the PropertyChanged event</summary>
+ <remarks>This type should provide a constructor which accepts no arguments, and one which accepts a Model</remarks>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:FSharp.ViewModule.Core.ValidationResult">
+<summary>
+ Results of a validation for the member of a type
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="T:FSharp.ViewModule.Core.ChangeNotifierUtils">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:FSharp.ViewModule.Core.Utilities">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="P:FSharp.ViewModule.Core.ViewModel.NotifyingValue`1.Value(`0)">
+<summary>
+ Extracts the current value from the backing storage
+</summary>
+</member>
+<member name="P:FSharp.ViewModule.Core.ViewModel.NotifyingValue`1.Value">
+<summary>
+ Extracts the current value from the backing storage
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="T:FSharp.ViewModule.Core.ViewModel.NotifyingValue`1">
+<summary>
+ Encapsulation of a value which handles raising property changed automatically in a clean manner
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="P:FSharp.ViewModule.Core.ViewModel.ViewModelBase.OperationExecuting(System.Boolean)">
+<summary>
+ Value used to notify view that an asynchronous operation is executing
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="P:FSharp.ViewModule.Core.ViewModel.ViewModelBase.OperationExecuting">
+<summary>
+ Value used to notify view that an asynchronous operation is executing
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="P:FSharp.ViewModule.Core.ViewModel.ViewModelBase.DependencyTracker">
+<summary>
+ Handles management of dependencies for all computed properties 
+ as well as ICommand dependencies
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:FSharp.ViewModule.Core.ViewModel.ViewModelBase.SetErrors(System.Collections.Generic.IEnumerable{FSharp.ViewModule.Core.ValidationResult})">
+<summary>
+ Setup all errors for validation
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:FSharp.ViewModule.Core.ViewModel.ChangeNotifierUtils">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:FSharp.ViewModule.Core.ViewModel.Commands">
+<summary>
+ Module containing Command factory methods to create ICommand implementations
+</summary>
+</member>
+</members>
+</doc>

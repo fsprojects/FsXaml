@@ -39,8 +39,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.ViewModule.Core">
-      <HintPath>..\..\lib\FSharp.ViewModule.Core.dll</HintPath>
+    <Reference Include="FSharp.ViewModule.Core.Wpf">
+      <HintPath>..\..\lib\FSharp.ViewModule.Core.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="FsXaml.Wpf">
       <HintPath>..\..\bin\FsXaml.Wpf.dll</HintPath>
