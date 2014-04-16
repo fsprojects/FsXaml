@@ -278,10 +278,10 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                         outertype.AddMember ctor
                         outertype
                     match root.NodeType with
-                    | win when win = typeof<System.Windows.Window> ->
-                        createFactoryType typeof<XamlTypeFactory<System.Windows.Window>>
-                    | app when app = typeof<System.Windows.Application> ->
-                        createFactoryType(typeof<XamlTypeFactory<System.Windows.Application>>)
+                    | win when typeof<System.Windows.Window>.IsAssignableFrom win ->
+                        createFactoryType (typedefof<XamlTypeFactory<_>>.MakeGenericType(win))
+                    | app when typeof<System.Windows.Application>.IsAssignableFrom app ->
+                        createFactoryType (typedefof<XamlTypeFactory<_>>.MakeGenericType(app))
                     | rd when rd = typeof<System.Windows.ResourceDictionary> ->
                         createFactoryType(typeof<XamlTypeFactory<System.Windows.ResourceDictionary>>)
                     | _ ->
