@@ -15,12 +15,26 @@ module LoadXaml =
         let s = System.IO.Packaging.PackUriHelper.UriSchemePack
         let resName = t.Assembly.GetName().Name + ".g.resources"
         use stream = t.Assembly.GetManifestResourceStream(resName)
-        use reader = new System.Resources.ResourceReader(stream)
-        let dataType, data = file.ToLowerInvariant() |> reader.GetResourceData
-        let ms = new MemoryStream(data)
-        let pos = match dataType with
-                    | "ResourceTypeCode.Stream" -> 4L
-                    | "ResourceTypeCode.Byte" -> 4L
-                    | _ -> 0L
-        ms.Position <- pos
-        System.Windows.Markup.XamlReader.Load(ms) |> unbox        
+        match stream with
+        | null -> failwith "Unable to load XAML data. Verify that all .xaml files are compiled as \"Resource\""
+        | _ ->
+            use reader = new System.Resources.ResourceReader(stream)
+            let dataType, data = file.ToLowerInvariant() |> reader.GetResourceData
+            let ms = new MemoryStream(data)
+            let pos = match dataType with
+                        | "ResourceTypeCode.Stream" -> 4L
+                        | "ResourceTypeCode.Byte" -> 4L
+                        | _ -> 0L
+            ms.Position <- pos
+            try
+                System.Windows.Markup.XamlReader.Load(ms) |> unbox
+            with
+                | :? System.Windows.Markup.XamlParseException as ioe -> 
+                    match ioe.Message.Contains("The invocation of the constructor on type") with
+                        | true -> failwith "Unable to load XAML data. Verify that all .xaml files are compiled as \"Resources\""
+//                            ms.Position <- 0L
+//                            let results a b c = Utilities.getXMLObjectAt a b c
+//                            let msg = results (new MemoryStream(data)) 4 5
+//                            failwith "Unable to load XAML data.  In " file + ", Property:" + fst(msg) + ". Make sure" + snd(msg) + "is compiled as \"Resource\""
+                        | false -> reraise()    
+                        
