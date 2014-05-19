@@ -30,11 +30,10 @@ module LoadXaml =
                 System.Windows.Markup.XamlReader.Load(ms) |> unbox
             with
                 | :? System.Windows.Markup.XamlParseException as ioe -> 
+                    // TODO: Replace Contains with line number & position function to display
+                    //       XAML property and property value causing the issue.
                     match ioe.Message.Contains("The invocation of the constructor on type") with
                         | true -> failwith "Unable to load XAML data. Verify that all .xaml files are compiled as \"Resources\""
-//                            ms.Position <- 0L
-//                            let results a b c = Utilities.getXMLObjectAt a b c
-//                            let msg = results (new MemoryStream(data)) 4 5
-//                            failwith "Unable to load XAML data.  In " file + ", Property:" + fst(msg) + ". Make sure" + snd(msg) + "is compiled as \"Resource\""
                         | false -> reraise()    
+                | _ -> reraise()
                         
