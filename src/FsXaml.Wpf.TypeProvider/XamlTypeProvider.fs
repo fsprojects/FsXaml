@@ -8,6 +8,7 @@ open System.ComponentModel
 open System.Xml
 open System.Windows
 open System.Windows.Data
+open System.Diagnostics
 
 open Microsoft.FSharp.Core.CompilerServices
 open Microsoft.FSharp.Reflection
@@ -227,14 +228,8 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
     let assembly = Assembly.GetExecutingAssembly()
     let nameSpace = this.GetType().Namespace
     let providerType = ProvidedTypeDefinition(assembly, nameSpace, "XAML", Some typeof<obj>, IsErased = false)
-    let fileSystemWatcher: IDisposable option ref = ref None
-
-    let disposeFileSystemWatcher() = 
-        !fileSystemWatcher |> Option.iter (fun x -> 
-            Diagnostics.Debug.WriteLine ("[FsXaml] Disposing FileSystemWatcher.")
-            x.Dispose()) 
-        fileSystemWatcher := None
-    
+    let fileSystemWatchers = ResizeArray<IDisposable>()
+     
     let assemblies = 
         config.ReferencedAssemblies 
         |> Seq.map (fun r -> Assembly.Load(IO.File.ReadAllBytes r))
@@ -266,9 +261,8 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
             instantiationFunction = (fun typeName parameterValues ->   
                 let resourcePath = string parameterValues.[0]
                 let resolvedFileName = findConfigFile config.ResolutionFolder resourcePath
-                disposeFileSystemWatcher()
-                Diagnostics.Debug.WriteLine ("[FsXaml] Creating FileSystemWatcher.")
-                fileSystemWatcher := watchForChanges this resolvedFileName
+                Debug.WriteLine ("[FsXaml] Creating FileSystemWatcher.")
+                watchForChanges this resolvedFileName |> Option.iter fileSystemWatchers.Add
 
                 use reader = new StreamReader(resolvedFileName)                            
                 let elements = XamlTypeUtils.readElements schemaContext reader resolvedFileName
@@ -304,7 +298,12 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
         this.AddNamespace(nameSpace, [ providerType ])
 
     interface IDisposable with
-        member __.Dispose() = disposeFileSystemWatcher()
+        member __.Dispose() = 
+            for watcher in fileSystemWatchers do
+                watcher.Dispose() 
+
+            Diagnostics.Debug.WriteLine ("[FsXaml] {0} instances of FileSystemWatcher have been disposed.", fileSystemWatchers.Count)
+            fileSystemWatchers.Clear()
 
 [<assembly:TypeProviderAssembly>] 
 do()
