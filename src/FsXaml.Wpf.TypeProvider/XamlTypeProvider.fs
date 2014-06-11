@@ -8,6 +8,7 @@ open System.ComponentModel
 open System.Xml
 open System.Windows
 open System.Windows.Data
+open System.Diagnostics
 
 open Microsoft.FSharp.Core.CompilerServices
 open Microsoft.FSharp.Reflection
@@ -227,8 +228,8 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
     let assembly = Assembly.GetExecutingAssembly()
     let nameSpace = this.GetType().Namespace
     let providerType = ProvidedTypeDefinition(assembly, nameSpace, "XAML", Some typeof<obj>, IsErased = false)
-    let missingValue = "@@@missingValue###"
-    
+    let fileSystemWatchers = ResizeArray<IDisposable>()
+     
     let assemblies = 
         config.ReferencedAssemblies 
         |> Seq.map (fun r -> Assembly.Load(IO.File.ReadAllBytes r))
@@ -260,21 +261,19 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
             instantiationFunction = (fun typeName parameterValues ->   
                 let resourcePath = string parameterValues.[0]
                 let resolvedFileName = findConfigFile config.ResolutionFolder resourcePath
-                watchForChanges this resolvedFileName
+                Debug.WriteLine ("[FsXaml] Creating FileSystemWatcher.")
+                watchForChanges this resolvedFileName |> Option.iter fileSystemWatchers.Add
 
                 use reader = new StreamReader(resolvedFileName)                            
                 let elements = XamlTypeUtils.readElements schemaContext reader resolvedFileName
-            
                 let root = List.head elements
                 
-                let ucType = typeof<System.Windows.Controls.UserControl>
-
                 let outerType =
                     let createFactoryType factoryType =
                         let outertype = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(factoryType), IsErased = false)
                         let ctor = ProvidedConstructor([])
-                        ctor.BaseConstructorCall <- fun args -> factoryType.GetConstructors().[0], [Expr.Value(resourcePath)]
-                        ctor.InvokeCode <- fun args -> <@@ 0 @@>
+                        ctor.BaseConstructorCall <- fun _ -> factoryType.GetConstructors().[0], [Expr.Value(resourcePath)]
+                        ctor.InvokeCode <- fun _ -> <@@ 0 @@>
                         outertype.AddMember ctor
                         outertype
                     match root.NodeType with
@@ -297,6 +296,14 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                 outerType))
 
         this.AddNamespace(nameSpace, [ providerType ])
+
+    interface IDisposable with
+        member __.Dispose() = 
+            for watcher in fileSystemWatchers do
+                watcher.Dispose() 
+
+            Diagnostics.Debug.WriteLine ("[FsXaml] {0} instances of FileSystemWatcher have been disposed.", fileSystemWatchers.Count)
+            fileSystemWatchers.Clear()
 
 [<assembly:TypeProviderAssembly>] 
 do()
