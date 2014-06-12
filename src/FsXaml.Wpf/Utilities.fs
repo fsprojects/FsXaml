@@ -19,6 +19,3 @@ module internal Utilities =
         {new IEventArgsConverter with
             member this.Convert (args : EventArgs) param =
                 args :> obj }
-
-
-        
