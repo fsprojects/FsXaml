@@ -3,6 +3,21 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="{x:Type TextBox}" x:Key="customTextBoxStyle">
         <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Validation.ErrorTemplate">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Border Background="Red" HorizontalAlignment="Right"  Margin="5,0" Width="14" Height="14" CornerRadius="7"
+                            ToolTip="{Binding ElementName=customAdorner, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">
+                            <TextBlock Text="!" VerticalAlignment="center" HorizontalAlignment="Center" FontWeight="Bold" Foreground="white"/>
+                        </Border>
+                        <AdornedElementPlaceholder Name="customAdorner" VerticalAlignment="Center" >
+                            <Border BorderBrush="red" BorderThickness="1" />
+                        </AdornedElementPlaceholder>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource customTextBoxStyle}" />
 </ResourceDictionary>
