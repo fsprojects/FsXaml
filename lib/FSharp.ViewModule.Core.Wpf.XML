@@ -100,6 +100,15 @@
  Interface used to explicitly raise PropertyChanged
 </summary>
 </member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
 <member name="P:FSharp.ViewModule.Core.IViewModel.OperationExecuting(System.Boolean)">
 <summary>
  Value used to notify view that an asynchronous operation is executing
@@ -116,11 +125,6 @@
  as well as ICommand dependencies
 </summary>
 </member>
-<member name="M:FSharp.ViewModule.Core.IViewModel.SetErrors(System.Collections.Generic.IEnumerable{FSharp.ViewModule.Core.ValidationResult})">
-<summary>
- Setup all errors for validation
-</summary>
-</member>
 <member name="T:FSharp.ViewModule.Core.IViewModel">
  <summary>Extension of INotifyPropertyChanged with a public method to fire the PropertyChanged event</summary>
  <remarks>This type should provide a constructor which accepts no arguments, and one which accepts a Model</remarks>
@@ -131,10 +135,46 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
 <member name="T:FSharp.ViewModule.Core.ValidationResult">
 <summary>
- Results of a validation for the member of a type
+ Results of a validation for the member of a type or an entity.  errorKey is a string identifier unique per &quot;error case&quot;
 </summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
 </member>
 <member name="">
 
@@ -149,6 +189,12 @@
 
 </member>
 <member name="T:FSharp.ViewModule.Core.Utilities">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
 
 </member>
 <member name="">
@@ -277,6 +323,12 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
 <member name="P:FSharp.ViewModule.Core.ViewModel.ViewModelBase.OperationExecuting(System.Boolean)">
 <summary>
  Value used to notify view that an asynchronous operation is executing
@@ -305,6 +357,9 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
 <member name="P:FSharp.ViewModule.Core.ViewModel.ViewModelBase.DependencyTracker">
 <summary>
  Handles management of dependencies for all computed properties 
@@ -317,10 +372,22 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
 <member name="M:FSharp.ViewModule.Core.ViewModel.ViewModelBase.SetErrors(System.Collections.Generic.IEnumerable{FSharp.ViewModule.Core.ValidationResult})">
 <summary>
  Setup all errors for validation
 </summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
 </member>
 <member name="">
 

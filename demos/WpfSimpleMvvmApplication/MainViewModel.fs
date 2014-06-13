@@ -5,18 +5,26 @@ open System.Windows
 open System.Windows.Input
 
 open FsXaml
+
+open FSharp.ViewModule.Core
 open FSharp.ViewModule.Core.ViewModel
 
 type MainViewModel() as self = 
     inherit ViewModelBase()
 
-    let firstName = self.Factory.Backing(<@ self.FirstName @>, "")
-    let lastName = self.Factory.Backing(<@ self.LastName @>, "")
+    let validateName name = 
+        match name with
+        | _ when String.IsNullOrWhiteSpace(name) -> Some "Name must be filled in"
+        | _ when name.Contains(" ") -> Some "Names may not contain spaces"
+        | _ -> None
+
+    let firstName = self.Factory.Backing(<@ self.FirstName @>, "", validateName)
+    let lastName = self.Factory.Backing(<@ self.LastName @>, "", validateName)
     let hasValue str = not(System.String.IsNullOrWhiteSpace(str))
     let okCommand = 
         self.Factory.CommandSyncCheckedParam(
             (fun param -> MessageBox.Show(sprintf "Hello, %s" param) |> ignore), 
-            (fun param -> hasValue self.FirstName && hasValue self.LastName), 
+            (fun param -> not(self.HasErrors) && hasValue self.FirstName && hasValue self.LastName), 
             [ <@ self.FirstName @> ; <@ self.LastName @> ])   // Or could be: [ <@ self.FullName @> ])
 
     do
@@ -28,3 +36,15 @@ type MainViewModel() as self =
     member x.FullName with get() = x.FirstName + " " + x.LastName 
 
     member x.OkCommand = okCommand
+
+    override x.Validate propertyName =
+        match propertyName with
+        | "FullName" ->
+            seq {
+                let err = 
+                    match x.FullName with
+                    | "Reed Copsey" -> Some "That is a poor choice of names"
+                    | _ -> None
+                yield PropertyValidation(propertyName, "EntityError", err)
+            }
+        | _ -> Seq.empty
