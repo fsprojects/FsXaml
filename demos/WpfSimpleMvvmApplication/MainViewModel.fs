@@ -8,18 +8,16 @@ open FsXaml
 
 open FSharp.ViewModule.Core
 open FSharp.ViewModule.Core.ViewModel
+open FSharp.ViewModule.Core.Validation
+
 
 type MainViewModel() as self = 
     inherit ViewModelBase()
 
-    let validateName name = 
-        match name with
-        | _ when String.IsNullOrWhiteSpace(name) -> Some "Name must be filled in"
-        | _ when name.Contains(" ") -> Some "Names may not contain spaces"
-        | _ -> None
+    let validateName descriptiveName = validate descriptiveName >> notNullOrWhitespace >> noSpaces  >> notEqual "Reed" >> result
 
-    let firstName = self.Factory.Backing(<@ self.FirstName @>, "", validateName)
-    let lastName = self.Factory.Backing(<@ self.LastName @>, "", validateName)
+    let firstName = self.Factory.Backing(<@ self.FirstName @>, "", validateName "First Name")
+    let lastName = self.Factory.Backing(<@ self.LastName @>, "", validateName "Last Name")
     let hasValue str = not(System.String.IsNullOrWhiteSpace(str))
     let okCommand = 
         self.Factory.CommandSyncCheckedParam(
