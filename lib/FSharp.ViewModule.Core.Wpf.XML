@@ -227,6 +227,15 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
 <member name="T:FSharp.ViewModule.Core.Validation.Validators">
 
 </member>
@@ -421,6 +430,9 @@
 <summary>
  Setup all errors for validation
 </summary>
+</member>
+<member name="">
+
 </member>
 <member name="">
 
