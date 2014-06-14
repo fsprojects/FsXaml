@@ -7,8 +7,12 @@
             <Setter.Value>
                 <ControlTemplate>
                     <Grid>
-                        <Border Background="Red" HorizontalAlignment="Right"  Margin="5,0" Width="14" Height="14" CornerRadius="7"
-                            ToolTip="{Binding ElementName=customAdorner, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">
+                        <Border Background="Red" HorizontalAlignment="Right"  Margin="5,0" Width="14" Height="14" CornerRadius="7">
+                            <Border.ToolTip>
+                                <ListView ItemsSource="{Binding ElementName=customAdorner, Path=AdornedElement.(Validation.Errors)}">
+                                    <TextBlock Text="{Binding ErrorContent}" />
+                                </ListView>
+                            </Border.ToolTip>
                             <TextBlock Text="!" VerticalAlignment="center" HorizontalAlignment="Center" FontWeight="Bold" Foreground="white"/>
                         </Border>
                         <AdornedElementPlaceholder Name="customAdorner" VerticalAlignment="Center" >
