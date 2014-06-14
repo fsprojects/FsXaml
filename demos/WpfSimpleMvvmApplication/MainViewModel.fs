@@ -14,10 +14,13 @@ open FSharp.ViewModule.Core.Validation
 type MainViewModel() as self = 
     inherit ViewModelBase()
 
-    let validateName descriptiveName = validate descriptiveName >> notNullOrWhitespace >> noSpaces  >> notEqual "Reed" >> result
+    // Using validation with default naming
+    let firstName = self.Factory.Backing(<@ self.FirstName @>, "", notNullOrWhitespace >> noSpaces >> notEqual "Reed")
 
-    let firstName = self.Factory.Backing(<@ self.FirstName @>, "", validateName "First Name")
-    let lastName = self.Factory.Backing(<@ self.LastName @>, "", validateName "Last Name")
+    // Using validation with custom name
+    let validateName = validate "Last Name" >> notNullOrWhitespace >> hasLengthAtLeast 3 >> noSpaces >> result
+    let lastName = self.Factory.Backing(<@ self.LastName @>, "", validateName)
+
     let hasValue str = not(System.String.IsNullOrWhiteSpace(str))
     let okCommand = 
         self.Factory.CommandSyncCheckedParam(
