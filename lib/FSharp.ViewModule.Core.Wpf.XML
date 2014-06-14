@@ -200,6 +200,11 @@
 <member name="">
 
 </member>
+<member name="M:FSharp.ViewModule.Core.Validation.Validators.resultWithError``1(System.String,FSharp.ViewModule.Core.Validation.ValidationStep{``0})">
+<summary>
+ Produces a result of the validation, using a custom error message if an error occurred
+</summary>
+</member>
 <member name="">
 
 </member>

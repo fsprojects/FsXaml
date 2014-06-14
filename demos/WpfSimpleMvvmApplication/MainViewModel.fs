@@ -18,7 +18,12 @@ type MainViewModel() as self =
     let firstName = self.Factory.Backing(<@ self.FirstName @>, "", notNullOrWhitespace >> noSpaces >> notEqual "Reed")
 
     // Using validation with custom name
-    let validateName = validate "Last Name" >> notNullOrWhitespace >> hasLengthAtLeast 3 >> noSpaces >> result
+    let validateName = 
+        validate "Last Name" 
+        >> notNullOrWhitespace 
+        >> hasLengthAtLeast 3 
+        >> noSpaces 
+        >> result
     let lastName = self.Factory.Backing(<@ self.LastName @>, "", validateName)
 
     let hasValue str = not(System.String.IsNullOrWhiteSpace(str))
