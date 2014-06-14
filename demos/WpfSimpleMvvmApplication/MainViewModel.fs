@@ -49,7 +49,7 @@ type MainViewModel() as self =
             seq {
                 let err = 
                     match x.FullName with
-                    | "Reed Copsey" -> Some "That is a poor choice of names"
+                    | "Reed Copsey" -> Some ["That is a poor choice of names"]
                     | _ -> None
                 yield PropertyValidation(propertyName, "EntityError", err)
             }
