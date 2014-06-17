@@ -179,6 +179,9 @@
 <member name="">
 
 </member>
+<member name="">
+
+</member>
 <member name="T:FSharp.ViewModule.Core.ChangeNotifierUtils">
 
 </member>
@@ -189,6 +192,12 @@
 
 </member>
 <member name="T:FSharp.ViewModule.Core.Utilities">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
 
 </member>
 <member name="">
@@ -235,8 +244,20 @@
 <member name="">
 
 </member>
-<member name="">
-
+<member name="M:FSharp.ViewModule.Core.Validation.Validators.validate``1(System.String,``0)">
+<summary>
+ Begin a validation chain for a given property name
+</summary>
+</member>
+<member name="M:FSharp.ViewModule.Core.Validation.Validators.fixErrors``1(FSharp.ViewModule.Core.Validation.ValidationResult{``0})">
+<summary>
+ Fix the current state of errors, bypassing all future validation checks if we&apos;re in an error state
+</summary>
+</member>
+<member name="M:FSharp.ViewModule.Core.Validation.Validators.custom``3(``0,System.String,FSharp.ViewModule.Core.Validation.ValidationResult{``1})">
+<summary>
+ Create a custom validator using a predicate (&apos;a -&gt; bool) and an error message on failure. The error message can use {0} for a placeholder for the property name.
+</summary>
 </member>
 <member name="">
 
@@ -430,11 +451,6 @@
 </member>
 <member name="">
 
-</member>
-<member name="M:FSharp.ViewModule.Core.ViewModel.ViewModelBase.SetErrors(System.Collections.Generic.IEnumerable{FSharp.ViewModule.Core.ValidationResult})">
-<summary>
- Setup all errors for validation
-</summary>
 </member>
 <member name="">
 

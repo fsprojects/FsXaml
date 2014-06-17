@@ -51,6 +51,11 @@ type Converter<'a,'b>(convertFunction : ('a -> ConverterParams -> 'b), defaultCo
             | Some v -> convertBackFunction v param :> obj
         | _ -> defaultConvertBackOnFailure :> obj
 
+    static let notImplementedForward (value : 'a) (p : ConverterParams) : 'b  = 
+        raise(NotImplementedException())
+    static let notImplementedBack (value : 'b) (p : ConverterParams) : 'a  = 
+        raise(NotImplementedException())
+
     do
         self.Convert <- fWrapped
         self.ConvertBack <- fWrappedBack
@@ -58,5 +63,5 @@ type Converter<'a,'b>(convertFunction : ('a -> ConverterParams -> 'b), defaultCo
     new (convertFunction : ('a -> ConverterParams -> 'b), defaultConvertOnFailure : 'b) =
         Converter(convertFunction, defaultConvertOnFailure, Converter.NotImplementedBackConverter, Unchecked.defaultof<'a>)
 
-    static member val NotImplementedForwardConverter = fun (value : 'a) (p : ConverterParams) -> raise(NotImplementedException())
-    static member val NotImplementedBackConverter = fun (value : 'b) (p : ConverterParams) -> raise(NotImplementedException())
+    static member val NotImplementedForwardConverter = notImplementedForward
+    static member val NotImplementedBackConverter = notImplementedBack

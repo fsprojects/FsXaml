@@ -10,7 +10,6 @@ open FSharp.ViewModule.Core
 open FSharp.ViewModule.Core.ViewModel
 open FSharp.ViewModule.Core.Validation
 
-
 type MainViewModel() as self = 
     inherit ViewModelBase()
 
@@ -21,6 +20,7 @@ type MainViewModel() as self =
     let validateName = 
         validate "Last Name" 
         >> notNullOrWhitespace 
+        >> fixErrors
         >> hasLengthAtLeast 3 
         >> noSpaces 
         >> result
@@ -30,7 +30,7 @@ type MainViewModel() as self =
     let okCommand = 
         self.Factory.CommandSyncCheckedParam(
             (fun param -> MessageBox.Show(sprintf "Hello, %s" param) |> ignore), 
-            (fun param -> not(self.HasErrors) && hasValue self.FirstName && hasValue self.LastName), 
+            (fun param -> self.IsValid && hasValue self.FirstName && hasValue self.LastName), 
             [ <@ self.FirstName @> ; <@ self.LastName @> ])   // Or could be: [ <@ self.FullName @> ])
 
     do
@@ -43,14 +43,15 @@ type MainViewModel() as self =
 
     member x.OkCommand = okCommand
 
+    // Note that you can filter the validations based on the propertyName parameter,
+    // which allows for more efficient processing since you can only check relevant info for that property
     override x.Validate propertyName =
-        match propertyName with
-        | "FullName" ->
-            seq {
-                let err = 
-                    match x.FullName with
-                    | "Reed Copsey" -> Some ["That is a poor choice of names"]
-                    | _ -> None
-                yield PropertyValidation(propertyName, "EntityError", err)
-            }
-        | _ -> Seq.empty
+        seq {
+                let err = x.FullName |> (validate propertyName >> notEqual "Reed Copsey" >> resultWithError "That is a poor choice of names")                    
+                // Alternatively, this can be done manually:
+//                  let err = 
+//                        match x.FullName with
+//                        | "Reed Copsey" -> ["That is a poor choice of names"]
+//                        | _ -> []
+                yield PropertyValidation("FullName", "EntityError", err)
+        }

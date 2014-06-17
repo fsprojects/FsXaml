@@ -33,6 +33,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>..\..\bin\FsXaml.Wpf.XML</DocumentationFile>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Users\Reed\Documents\GitHub\FsXaml\demos\WpfSimpleMvvmApplication\bin\Debug\WpfSimpleMvvmApplication.exe</StartProgram>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
@@ -57,10 +59,12 @@
     <Compile Include="Utilities.fs" />
     <Compile Include="Wpf-XamlUtilities.fs" />
     <Compile Include="ValueConverters.fs" />
+    <Compile Include="Wpf-MultiValueConverters.fs" />
     <Compile Include="EventToMailbox.fs" />
     <Compile Include="EventToCommand.fs" />
     <Compile Include="EventToFSEvent.fs" />
     <Compile Include="ViewController.fs" />
+    <Compile Include="Wpf-XmlnsDefinitions.fs" />
     <Compile Include="XamlTypeProviderSupport.fs" />
     <None Include="packages.config" />
   </ItemGroup>
