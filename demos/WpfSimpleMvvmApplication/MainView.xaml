@@ -18,15 +18,15 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>        
-        <TextBlock Margin="3" Grid.Row="1" Grid.Column="0" Text="First:" />
-        <TextBox Margin="3" Grid.Column="1" Grid.Row="1" FontSize="16" Text="{Binding FirstName}"/>
+        <TextBlock Margin="3" Grid.Row="0" Grid.Column="0" Text="First:" />
+        <TextBox Margin="3" Grid.Column="1" Grid.Row="0" FontSize="16" Text="{Binding FirstName}"/>
 
-        <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text="Last:" />
-        <TextBox Margin="3" Grid.Column="1" Grid.Row="2" FontSize="16" Text="{Binding LastName}"/>
+        <TextBlock Margin="3" Grid.Row="1" Grid.Column="0" Text="Last:" />
+        <TextBox Margin="3" Grid.Column="1" Grid.Row="1" FontSize="16" Text="{Binding LastName}"/>
 
-        <TextBlock Margin="3" Grid.Row="3" Grid.Column="0" Text="Full Name:" />
-        <TextBox IsReadOnly="true" Margin="3" Grid.Column="1" Grid.Row="3" FontSize="16" Text="{Binding FullName, Mode=OneWay}"/>
+        <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text="Full Name:" />
+        <TextBox IsReadOnly="true" Foreground="LightGray"  Margin="3" Grid.Column="1" Grid.Row="2" FontSize="16" Text="{Binding FullName, Mode=OneWay}"/>
 
-        <Button Margin="3" Grid.Row="4" Grid.ColumnSpan="2" FontSize="16" Command="{Binding OkCommand}" CommandParameter="{Binding FullName}">Ok</Button>
+        <Button Margin="3" Grid.Row="3" Grid.ColumnSpan="2" FontSize="16" Command="{Binding OkCommand}" CommandParameter="{Binding FullName}">Ok</Button>        
     </Grid>
 </UserControl>
