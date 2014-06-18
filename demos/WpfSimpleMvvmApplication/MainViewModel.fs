@@ -11,10 +11,10 @@ open FSharp.ViewModule.Validation
 
 type MainViewModel() as self = 
     inherit ViewModelBase()
-
+    
     // Using validation with default naming
     let firstName = self.Factory.Backing(<@ self.FirstName @>, "", notNullOrWhitespace >> noSpaces >> notEqual "Reed")
-
+    
     // Using validation with custom name
     let validateName = 
         validate "Last Name" 
@@ -39,7 +39,7 @@ type MainViewModel() as self =
     member x.FirstName with get() = firstName.Value and set value = firstName.Value <- value
     member x.LastName with get() = lastName.Value and set value = lastName.Value <- value
     member x.FullName with get() = x.FirstName + " " + x.LastName 
-
+    
     member x.OkCommand = okCommand
 
     // Note that you can filter the validations based on the propertyName parameter,

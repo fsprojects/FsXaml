@@ -23,6 +23,8 @@ type MainViewModel() as me =
     let trackPositions = me.Factory.Backing(<@ me.TrackPositions @>, true)
     let positions = ObservableCollection<Point>()
     let maxPositions = 20
+
+    let mutable cts = new CancellationTokenSource()
  
     let agent = MailboxProcessor.Start(fun inbox ->
                async {
@@ -42,13 +44,27 @@ type MainViewModel() as me =
                 do! Async.Sleep 100
                 do! Async.SwitchToContext ui
                 positions.RemoveAt(positions.Count - 1)
-            
             me.TrackPositions <- true
         }
 
-    let clearCommand = me.Factory.CommandAsync(clear)
+    let onCancelClear _ =
+        // Force this back on, so we re-track
+        me.TrackPositions <- true
+        
+        // Replace our cancellation token source with a new one so we can re-fire later
+        cts.Dispose()
+        cts <- new CancellationTokenSource()
+        me.Clear.CancellationToken <- cts.Token
+
+
+    let cancelClear () =
+        cts.Cancel()
+
+    let clearCommand = me.Factory.CommandAsync(clear, cts.Token, onCancelClear)
+    let cancelClearCommand = me.Factory.CommandSyncChecked(cancelClear, (fun _ -> not me.TrackPositions), [ <@@ me.TrackPositions @@> ])
     
     member this.MoveAgent = agent
     member this.Positions = positions
     member this.TrackPositions with get() = trackPositions.Value and set(v) = trackPositions.Value <- v
-    member this.Clear = clearCommand
+    member this.Clear : IAsyncNotifyCommand = clearCommand
+    member this.CancelClear = cancelClearCommand
