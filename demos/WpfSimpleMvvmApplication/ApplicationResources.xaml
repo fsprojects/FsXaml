@@ -21,7 +21,6 @@
                         </MultiBinding>                        
                     </Setter.Value>
                 </Setter>
-                <Setter Property="Tag" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
             </Trigger>
         </Style.Triggers>        
         <Setter Property="Validation.ErrorTemplate">

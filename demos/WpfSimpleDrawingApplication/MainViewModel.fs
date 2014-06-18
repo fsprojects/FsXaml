@@ -4,7 +4,7 @@ open System
 open System.Collections.ObjectModel
 open System.ComponentModel
 
-open FSharp.ViewModule.Core.ViewModel
+open FSharp.ViewModule
 
 open FsXaml
 
