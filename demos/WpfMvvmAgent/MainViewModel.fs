@@ -8,7 +8,7 @@ open System.Windows.Input
 
 open FsXaml
 
-open FSharp.ViewModule.Core.ViewModel
+open FSharp.ViewModule
 
 [<StructuredFormatDisplay("{X}:{Y}")>]
 type Point  = 

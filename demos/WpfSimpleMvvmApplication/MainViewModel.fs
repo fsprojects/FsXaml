@@ -6,9 +6,8 @@ open System.Windows.Input
 
 open FsXaml
 
-open FSharp.ViewModule.Core
-open FSharp.ViewModule.Core.ViewModel
-open FSharp.ViewModule.Core.Validation
+open FSharp.ViewModule
+open FSharp.ViewModule.Validation
 
 type MainViewModel() as self = 
     inherit ViewModelBase()
@@ -36,7 +35,7 @@ type MainViewModel() as self =
     do
         // Add in property dependencies
         self.DependencyTracker.AddPropertyDependencies(<@@ self.FullName @@>, [ <@@ self.FirstName @@> ; <@@ self.LastName @@> ])
-    
+
     member x.FirstName with get() = firstName.Value and set value = firstName.Value <- value
     member x.LastName with get() = lastName.Value and set value = lastName.Value <- value
     member x.FullName with get() = x.FirstName + " " + x.LastName 
@@ -47,11 +46,15 @@ type MainViewModel() as self =
     // which allows for more efficient processing since you can only check relevant info for that property
     override x.Validate propertyName =
         seq {
+            if String.IsNullOrWhiteSpace(x.FullName) then
+                yield EntityValidation(["You must provide a name"])
+            else if propertyName = "FullName" then
                 let err = x.FullName |> (validate propertyName >> notEqual "Reed Copsey" >> resultWithError "That is a poor choice of names")                    
                 // Alternatively, this can be done manually:
 //                  let err = 
 //                        match x.FullName with
 //                        | "Reed Copsey" -> ["That is a poor choice of names"]
 //                        | _ -> []
-                yield PropertyValidation("FullName", "EntityError", err)
+                yield PropertyValidation("FullName", err)
+                yield EntityValidation(err)
         }

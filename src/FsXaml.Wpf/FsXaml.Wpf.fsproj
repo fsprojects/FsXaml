@@ -59,10 +59,11 @@
     <Compile Include="Utilities.fs" />
     <Compile Include="Wpf-XamlUtilities.fs" />
     <Compile Include="ValueConverters.fs" />
-    <Compile Include="Wpf-MultiValueConverters.fs" />
+    <Compile Include="Wpf-Converters.fs" />
     <Compile Include="EventToMailbox.fs" />
     <Compile Include="EventToCommand.fs" />
     <Compile Include="EventToFSEvent.fs" />
+    <Compile Include="Behaviors.fs" />
     <Compile Include="ViewController.fs" />
     <Compile Include="Wpf-XmlnsDefinitions.fs" />
     <Compile Include="XamlTypeProviderSupport.fs" />
