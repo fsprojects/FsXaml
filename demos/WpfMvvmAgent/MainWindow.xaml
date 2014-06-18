@@ -37,7 +37,8 @@
         
         <ListView Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" ItemsSource="{Binding Positions}" />
 
-        <Button Margin="5" Grid.Row="2" Grid.ColumnSpan="2" Command="{Binding Clear}">Clear</Button>
+        <Button Margin="5" Grid.Row="2" Grid.ColumnSpan="1" Command="{Binding Clear}">Clear</Button>
+        <Button Margin="5" Grid.Row="2" Grid.Column="1" Command="{Binding CancelClear}">Cancel</Button>
         <Button x:Name="ExitButton" Margin="5" Grid.Row="3" Grid.ColumnSpan="2">Exit</Button>
     </Grid>
 </Window>
