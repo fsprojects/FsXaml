@@ -2,7 +2,7 @@
 module internal FsXaml.TypeProviders.Helper
 open System
 open System.IO
-open Samples.FSharp.ProvidedTypes
+open ProviderImplementation.ProvidedTypes
 
 let findConfigFile resolutionFolder configFileName =
     if Path.IsPathRooted configFileName then 
