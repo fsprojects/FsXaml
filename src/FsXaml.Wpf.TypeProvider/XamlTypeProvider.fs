@@ -17,13 +17,13 @@ open Microsoft.FSharp.Quotations.Patterns
 open Microsoft.FSharp.Quotations.DerivedPatterns
 open Microsoft.FSharp.Quotations.ExprShape
 
-open Samples.FSharp.ProvidedTypes
+open ProviderImplementation.ProvidedTypes
 open FsXaml.TypeProviders.Helper
 
 open System.Reflection
 
-[<assembly:AssemblyVersion("0.9.5.0")>]
-[<assembly:AssemblyFileVersion("0.9.5.0")>]
+[<assembly:AssemblyVersion("0.9.6.0")>]
+[<assembly:AssemblyFileVersion("0.9.6.0")>]
 do()
 
 
@@ -273,7 +273,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                         let outertype = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(factoryType), IsErased = false)
                         let ctor = ProvidedConstructor([])
                         ctor.BaseConstructorCall <- fun _ -> factoryType.GetConstructors().[0], [Expr.Value(resourcePath)]
-                        ctor.InvokeCode <- fun _ -> <@@ 0 @@>
+                        ctor.InvokeCode <- fun _ -> <@@ () @@>
                         outertype.AddMember ctor
                         outertype
                     match root.NodeType with
@@ -297,13 +297,13 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
 
         this.AddNamespace(nameSpace, [ providerType ])
 
-    interface IDisposable with
-        member __.Dispose() = 
-            for watcher in fileSystemWatchers do
-                watcher.Dispose() 
+    override this.Dispose disposing =
+        for watcher in fileSystemWatchers do
+            watcher.Dispose() 
 
-            Diagnostics.Debug.WriteLine ("[FsXaml] {0} instances of FileSystemWatcher have been disposed.", fileSystemWatchers.Count)
-            fileSystemWatchers.Clear()
+        Diagnostics.Debug.WriteLine ("[FsXaml] {0} instances of FileSystemWatcher have been disposed.", fileSystemWatchers.Count)
+        fileSystemWatchers.Clear()
+        base.Dispose disposing
 
 [<assembly:TypeProviderAssembly>] 
 do()
