@@ -61,7 +61,7 @@ type MainViewModel() as me =
         cts.Cancel()
 
     let clearCommand = me.Factory.CommandAsync(clear, cts.Token, onCancelClear)
-    let cancelClearCommand = me.Factory.CommandSyncChecked(cancelClear, (fun _ -> not me.TrackPositions), [ <@@ me.TrackPositions @@> ])
+    let cancelClearCommand = me.Factory.CommandSyncChecked(cancelClear, (fun _ -> me.OperationExecuting), [ <@@ me.OperationExecuting @@> ])
     
     member this.MoveAgent = agent
     member this.Positions = positions

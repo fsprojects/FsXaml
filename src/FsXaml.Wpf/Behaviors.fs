@@ -27,6 +27,24 @@ type AutoSelectText() =
         depObj.SetValue(AutoSelectText.OnLoadedProperty, box(value))
 
 
+type WindowLifetime() =
+    static let onCloseChanged (t : DependencyObject) (e : DependencyPropertyChangedEventArgs) =
+        let hook = e.NewValue :?> bool
+
+        match t, hook with
+        | :? Window as window, true -> window.Close()
+        | _, _ -> ()
+
+    static let closeProperty : DependencyProperty = DependencyProperty.RegisterAttached("Close", typeof<bool>, typeof<WindowLifetime>, UIPropertyMetadata(onCloseChanged))
+    static member CloseProperty with get() = closeProperty 
+
+    static member GetClose (depObj : DependencyObject) =
+        unbox<bool>(depObj.GetValue(WindowLifetime.CloseProperty))
+    
+    static member SetClose (depObj : DependencyObject) (value : bool) =
+        depObj.SetValue(WindowLifetime.CloseProperty, box(value))
+    
+
 type DefaultButton() =
     static let rec getParentWindow (depObj : DependencyObject) =
         let parent = System.Windows.Media.VisualTreeHelper.GetParent(depObj)
@@ -48,7 +66,7 @@ type DefaultButton() =
                     | _ -> window.DialogResult <- value)
         | _ -> ()
 
-    static let dialogResultOnClickProperty : DependencyProperty = DependencyProperty.RegisterAttached("DialogResultOnClick", typeof<Nullable<bool>>, typeof<AutoSelectText>, UIPropertyMetadata(onDialogResultOnClickChanged))
+    static let dialogResultOnClickProperty : DependencyProperty = DependencyProperty.RegisterAttached("DialogResultOnClick", typeof<Nullable<bool>>, typeof<DefaultButton>, UIPropertyMetadata(onDialogResultOnClickChanged))
     static member DialogResultOnClickProperty with get() = dialogResultOnClickProperty 
 
     static member GetDialogResultOnClick (depObj : DependencyObject) =
