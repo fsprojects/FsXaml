@@ -22,8 +22,8 @@ open FsXaml.TypeProviders.Helper
 
 open System.Reflection
 
-[<assembly:AssemblyVersion("0.9.6.0")>]
-[<assembly:AssemblyFileVersion("0.9.6.0")>]
+[<assembly:AssemblyVersion("0.9.7.0")>]
+[<assembly:AssemblyFileVersion("0.9.7.0")>]
 do()
 
 
@@ -244,16 +244,12 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
 
     let schemaContext = System.Xaml.XamlSchemaContext(assemblies, ss)//  (assemblies)
 
-    do System.AppDomain.CurrentDomain.add_AssemblyResolve(fun _ args ->
-        let name = System.Reflection.AssemblyName(args.Name)
-        let existingAssembly = 
-            System.AppDomain.CurrentDomain.GetAssemblies()
-            |> Seq.tryFind(fun a -> System.Reflection.AssemblyName.ReferenceMatchesDefinition(name, a.GetName()))
-        match existingAssembly with
-        | Some a -> a
-        | None -> null
-        )
-
+    do
+        this.Disposing.Add((fun _ ->
+            for watcher in fileSystemWatchers do
+                watcher.Dispose() 
+            fileSystemWatchers.Clear()
+        ))
     do 
         // tempAssembly.AddTypes <| [ providerType ]
         providerType.DefineStaticParameters(
@@ -261,7 +257,6 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
             instantiationFunction = (fun typeName parameterValues ->   
                 let resourcePath = string parameterValues.[0]
                 let resolvedFileName = findConfigFile config.ResolutionFolder resourcePath
-                Debug.WriteLine ("[FsXaml] Creating FileSystemWatcher.")
                 watchForChanges this resolvedFileName |> Option.iter fileSystemWatchers.Add
 
                 use reader = new StreamReader(resolvedFileName)                            
@@ -272,7 +267,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                     let createFactoryType factoryType =
                         let outertype = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(factoryType), IsErased = false)
                         let ctor = ProvidedConstructor([])
-                        ctor.BaseConstructorCall <- fun _ -> factoryType.GetConstructors().[0], [Expr.Value(resourcePath)]
+                        ctor.BaseConstructorCall <- fun args -> factoryType.GetConstructors().[0], args @ [Expr.Value(resourcePath)]
                         ctor.InvokeCode <- fun _ -> <@@ () @@>
                         outertype.AddMember ctor
                         outertype
@@ -297,13 +292,17 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
 
         this.AddNamespace(nameSpace, [ providerType ])
 
-    override this.Dispose disposing =
-        for watcher in fileSystemWatchers do
-            watcher.Dispose() 
-
-        Diagnostics.Debug.WriteLine ("[FsXaml] {0} instances of FileSystemWatcher have been disposed.", fileSystemWatchers.Count)
-        fileSystemWatchers.Clear()
-        base.Dispose disposing
+    override this.ResolveAssembly(args) = 
+        let name = System.Reflection.AssemblyName(args.Name)
+        let existingAssembly = 
+            System.AppDomain.CurrentDomain.GetAssemblies()
+            |> Seq.tryFind(fun a -> System.Reflection.AssemblyName.ReferenceMatchesDefinition(name, a.GetName()))
+        match existingAssembly with
+        | Some a -> a
+        | None -> 
+            // Fallback to default behavior
+            base.ResolveAssembly(args)
+        
 
 [<assembly:TypeProviderAssembly>] 
 do()

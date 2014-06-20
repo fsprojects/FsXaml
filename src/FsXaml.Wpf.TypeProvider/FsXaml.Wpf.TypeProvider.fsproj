@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>..\..\bin\FsXaml.Wpf.TypeProvider.XML</DocumentationFile>
+    <StartAction>Program</StartAction>
+    <StartProgram>D:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\\devenv.exe</StartProgram>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>

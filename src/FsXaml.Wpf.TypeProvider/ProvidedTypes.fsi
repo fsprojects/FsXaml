@@ -427,7 +427,8 @@ type TypeProviderForNamespaces =
     member RegisterRuntimeAssemblyLocationAsProbingFolder : cfg : Core.CompilerServices.TypeProviderConfig -> unit
 
 #endif
-    abstract Dispose : disposing: bool -> unit
-    default Dispose : disposing: bool -> unit
+
+    [<CLIEvent>]
+    member Disposing : IEvent<EventHandler,EventArgs>
 
     interface ITypeProvider
