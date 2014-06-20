@@ -45,5 +45,11 @@ type BooleanConverter<'a when 'a : equality>(trueValue : 'a, falseValue: 'a) =
 type BooleanToVisibilityConverter() =
     inherit BooleanConverter<Visibility>(Visibility.Visible, Visibility.Collapsed)
 
+type BooleanToVisibilityOrHiddenConverter() =
+    inherit BooleanConverter<Visibility>(Visibility.Visible, Visibility.Hidden)
+
 type BooleanToCollapsedConverter() =
     inherit BooleanConverter<Visibility>(Visibility.Collapsed, Visibility.Visible)
+
+type BooleanToInverseConverter() =
+    inherit BooleanConverter<bool>(false, true)

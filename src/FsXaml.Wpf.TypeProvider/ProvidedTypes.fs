@@ -2043,7 +2043,6 @@ type AssemblyGenerator(assemblyFileName) =
                 let cattr = pcinfo.GetCustomAttributesDataImpl() 
                 defineCustomAttrs cb.SetCustomAttribute cattr
                 let ilg = cb.GetILGenerator()
-                ilg.Emit(OpCodes.Ldarg_0)
                 let locals = Dictionary<Quotations.Var,LocalBuilder>()
                 let parameterVars = 
                     [| yield Quotations.Var("this", pcinfo.DeclaringType)
@@ -2052,7 +2051,8 @@ type AssemblyGenerator(assemblyFileName) =
                 let parameters = 
                     [| for v in parameterVars -> Quotations.Expr.Var v |]
                 match pcinfo.GetBaseConstructorCallInternal true with
-                | None ->                      
+                | None ->  
+                    ilg.Emit(OpCodes.Ldarg_0)
                     let cinfo = ptd.BaseType.GetConstructor(BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance, null, [| |], null)
                     ilg.Emit(OpCodes.Call,cinfo)
                 | Some f -> 
@@ -2229,6 +2229,8 @@ type TypeProviderForNamespaces(namespacesAndTypes : list<(string * list<Provided
 
     let invalidateE = new Event<EventHandler,EventArgs>()    
 
+    let disposing = Event<EventHandler,EventArgs>()
+
 #if FX_NO_LOCAL_FILESYSTEM
 #else
     let probingFolders = ResizeArray()
@@ -2239,10 +2241,13 @@ type TypeProviderForNamespaces(namespacesAndTypes : list<(string * list<Provided
     new (namespaceName:string,types:list<ProvidedTypeDefinition>) = new TypeProviderForNamespaces([(namespaceName,types)])
     new () = new TypeProviderForNamespaces([])
 
+    [<CLIEvent>]
+    member this.Disposing = disposing.Publish
+
 #if FX_NO_LOCAL_FILESYSTEM
-    abstract member Dispose : disposing: bool -> unit
-    default this.Dispose(args) =
-        AppDomain.CurrentDomain.remove_AssemblyResolve handler
+    interface System.IDisposable with 
+        member x.Dispose() = 
+            disposing.Trigger(x, EventArgs.Empty)
 #else
     abstract member ResolveAssembly : args : System.ResolveEventArgs -> Assembly
     default this.ResolveAssembly(args) = 
@@ -2264,13 +2269,11 @@ type TypeProviderForNamespaces(namespacesAndTypes : list<(string * list<Provided
         |> IO.Path.GetDirectoryName
         |> this.RegisterProbingFolder
 
-    abstract member Dispose : disposing: bool -> unit
-    default this.Dispose(args) =
-        AppDomain.CurrentDomain.remove_AssemblyResolve handler
-
-#endif
     interface System.IDisposable with 
-        member x.Dispose() = this.Dispose(true)
+        member x.Dispose() = 
+            disposing.Trigger(x, EventArgs.Empty)
+            AppDomain.CurrentDomain.remove_AssemblyResolve handler
+#endif
 
     member __.AddNamespace (namespaceName,types:list<_>) = otherNamespaces.Add (namespaceName,types)
     // FSharp.Data addition: this method is used by Debug.fs

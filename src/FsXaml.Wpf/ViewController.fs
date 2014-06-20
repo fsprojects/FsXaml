@@ -6,13 +6,14 @@ open System.Windows.Controls
 open System.Windows.Markup
 
 type public ViewController() =
-    static let CustomChanged(target : DependencyObject) (eventArgs : DependencyPropertyChangedEventArgs) : unit =
+    static let CustomChanged(target : DependencyObject) (eventArgs : DependencyPropertyChangedEventArgs) : unit =        
         let fe = Utilities.castAs<FrameworkElement> target
         let behaviorType = Utilities.castAs<Type> eventArgs.NewValue
         if fe <> null && behaviorType <> null then
-            let controller = Utilities.castAs<IViewController> <| Activator.CreateInstance behaviorType
-            if controller <> null then
-                fe.Loaded.Add(fun a -> controller.Attach fe)
+            if not(System.ComponentModel.DesignerProperties.GetIsInDesignMode(fe)) then
+                let controller = Utilities.castAs<IViewController> <| Activator.CreateInstance behaviorType
+                if controller <> null then
+                    fe.Loaded.Add(fun a -> controller.Attach fe)
 
     static let CustomProperty : DependencyProperty = DependencyProperty.RegisterAttached("Custom", typeof<Type>, typeof<ViewController>, new UIPropertyMetadata(null, new PropertyChangedCallback(CustomChanged)))
 
