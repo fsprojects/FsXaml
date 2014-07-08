@@ -35,21 +35,31 @@ type Converter<'a,'b>(convertFunction : ('a -> ConverterParams -> 'b), defaultCo
     let fWrapped (value : obj) (targetType : Type) (param : obj) (culture : Globalization.CultureInfo) = 
         let param = { Parameter = param ; CultureInfo = culture }        
         let a = FsXaml.Utilities.downcastAndCreateOption<'a>(value)
-        match targetType with
-        | x when x = typeof<'b> ->
+        let convType = typeof<System.IConvertible>
+        match (targetType,typeof<'b>) with
+        | x,b when x.IsAssignableFrom(b) ->
             match a with
-            | None -> defaultConvertOnFailure :> obj
-            | Some v -> convertFunction v param :> obj
-        | _ -> defaultConvertOnFailure :> obj
+            | None -> box defaultConvertOnFailure
+            | Some v -> box(convertFunction v param)
+        | x,b when convType.IsAssignableFrom(b) && convType.IsAssignableFrom(x) ->
+            match a with
+            | None -> box defaultConvertOnFailure
+            | Some v -> Convert.ChangeType(box(convertFunction v param), x)
+        | _,_ -> box defaultConvertOnFailure
     let fWrappedBack (value : obj) (targetType : Type) (param : obj) (culture : Globalization.CultureInfo) = 
         let param = { Parameter = param ; CultureInfo = culture }        
         let a = FsXaml.Utilities.downcastAndCreateOption<'b>(value)      
-        match targetType with
-        | x when x = typeof<'a> ->
+        let convType = typeof<System.IConvertible>
+        match (targetType,typeof<'a>) with
+        | x,b when x.IsAssignableFrom(b) ->
             match a with
-            | None -> defaultConvertBackOnFailure :> obj
-            | Some v -> convertBackFunction v param :> obj
-        | _ -> defaultConvertBackOnFailure :> obj
+            | None -> box defaultConvertBackOnFailure
+            | Some v -> box(convertBackFunction v param)
+        | x,b when convType.IsAssignableFrom(b) && convType.IsAssignableFrom(x) ->
+            match a with
+            | None -> box defaultConvertBackOnFailure
+            | Some v -> Convert.ChangeType(box(convertBackFunction v param), x)
+        | _,_ -> box defaultConvertBackOnFailure
 
     static let notImplementedForward (value : 'a) (p : ConverterParams) : 'b  = 
         raise(NotImplementedException())
