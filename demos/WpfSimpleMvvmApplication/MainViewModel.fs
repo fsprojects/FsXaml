@@ -27,7 +27,7 @@ type MainViewModel() as self =
 
     let hasValue str = not(System.String.IsNullOrWhiteSpace(str))
     let okCommand = 
-        self.Factory.CommandSyncCheckedParam(
+        self.Factory.CommandSyncParamChecked(
             (fun param -> MessageBox.Show(sprintf "Hello, %s" param) |> ignore), 
             (fun param -> self.IsValid && hasValue self.FirstName && hasValue self.LastName), 
             [ <@ self.FirstName @> ; <@ self.LastName @> ])   // Or could be: [ <@ self.FullName @> ])

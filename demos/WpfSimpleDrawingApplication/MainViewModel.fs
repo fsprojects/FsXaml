@@ -2,42 +2,27 @@
 
 open System
 open System.Collections.ObjectModel
-open System.ComponentModel
-
 open FSharp.ViewModule
 
-open FsXaml
-
-type PointPair = { Start : Point; End : Point }
-
 type MainViewModel() as me =
-    inherit ViewModelBase()
+    inherit EventViewModelBase<MoveEvent>()
 
-    let ptEvent = Event<Point>()
     let lines = ObservableCollection<PointPair>()
+    // Create a event value commands which push through MoveEvent from our binding converters
+    let mouseCommand = me.Factory.EventValueCommand()
+        
+    let handleMove = function
+        | PositionChanged(CaptureStatus.Captured, pt), PositionChanged(_, last) -> 
+            lines.Add({ Start = last; End = pt } )
+        | _, _ -> ()
+
+    // Our drawing mechanism - listen to the events, and handle them
+    do          
+        me.EventStream
+        |> Observable.pairwise
+        |> Observable.subscribe handleMove
+        |> ignore
     
-    let mutable position = { X = 0.0; Y = 0.0 }
-    let mutable mouseButtonState = Released
-
-    // Handles mouse capture for drawing
-    let mouseDownEvent args =
-        mouseButtonState <- fst args
-        position <- snd args
-
-    // Our drawing mechanism
-    let draw =
-        ptEvent.Publish :> IObservable<Point>
-        |> Observable.filter (fun pt -> mouseButtonState = Captured)
-        |> Observable.subscribe 
-            (fun pt ->                 
-                lines.Add({ Start = position; End = pt } )
-                position <- pt
-                )           
-
-    // Create a synchronous command which works with an argument
-    let mouseDownCmd = me.Factory.CommandSyncParam(mouseDownEvent)
-
-    // Our actual properties (for data binding in XAML)
-    member this.MouseDownCommand = mouseDownCmd
-    member this.MoveEvent = ptEvent
-    member this.Lines = lines    
+    member this.MouseCommand = mouseCommand
+    // Our lines for visual binding
+    member __.Lines = lines    

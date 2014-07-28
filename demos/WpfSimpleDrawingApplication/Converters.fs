@@ -7,36 +7,31 @@ open System.Windows.Input
 open System.Windows.Markup
 open FsXaml
 
-[<StructuredFormatDisplay("{X}:{Y}")>]
-type Point  = 
-    { X: float; Y: float }
-    override x.ToString() = sprintf "(%f : %f)" x.X x.Y
+// This would typically be defined in a separate project/namespace along with the XAML, as it's "pure view layer" logic
+// Converters are used to map from View events -> our F# defined types in the ViewModel or Model layer
+module internal MouseConverters =
+    let moveConverter (args : MouseEventArgs) =
+        let source = args.OriginalSource :?> IInputElement
+        let captured = if System.Object.ReferenceEquals(Mouse.Captured, source) then CaptureStatus.Captured else CaptureStatus.Released
+        let pt = args.GetPosition(source)
+        PositionChanged(captured, { X = pt.X; Y = pt.Y })
 
-type MouseCaptureState =
-    | Captured
-    | Released
-
-// The converters to convert from MouseEventArgs and MouseButtonEventArgs -> Point
-type MoveConverter() =
-    interface IEventArgsConverter with
-        member this.Convert (ea : EventArgs) obj =
-            let args = ea :?> MouseEventArgs
-            let source = args.OriginalSource :?> FrameworkElement
-            let pt = args.GetPosition(source)
-            { X = pt.X; Y = pt.Y } :> obj
-
-type ButtonCaptureConverter() =
-    interface IEventArgsConverter with
-        member this.Convert (ea : EventArgs) obj =
-            let args = ea :?> MouseButtonEventArgs
+    let captureConverter (args : MouseButtonEventArgs) =
             match args.ButtonState with
             | MouseButtonState.Pressed ->
-                let source = args.OriginalSource :?> FrameworkElement
+                let source = args.OriginalSource :?> UIElement
                 source.CaptureMouse() |> ignore
-                let pt = args.GetPosition(source)
-                (Captured, { X = pt.X; Y = pt.Y }) :> obj
+                CaptureChanged(Captured)
             | _ ->
-                let source = args.OriginalSource :?> FrameworkElement
+                let source = args.OriginalSource :?> UIElement
                 source.ReleaseMouseCapture()
-                let pt = args.GetPosition(source)
-                (Released, { X = pt.X; Y = pt.Y }) :> obj
+                CaptureChanged(Released)
+
+    let Default = CaptureChanged(Released)
+
+// The converters to convert from MouseEventArgs and MouseButtonEventArgs -> MoveEvent
+type MoveConverter() =
+    inherit EventArgsConverter<MouseEventArgs,MoveEvent>(MouseConverters.moveConverter, MouseConverters.Default)
+
+type ButtonCaptureConverter() =
+    inherit EventArgsConverter<MouseButtonEventArgs,MoveEvent>(MouseConverters.captureConverter, MouseConverters.Default)
