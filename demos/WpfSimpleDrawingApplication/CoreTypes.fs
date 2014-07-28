@@ -1,10 +1,6 @@
 ﻿namespace WpfSimpleDrawingApplication
 
-[<StructuredFormatDisplay("{X}:{Y}")>]
-type Point  = 
-    { X: float; Y: float }
-    override x.ToString() = sprintf "(%f : %f)" x.X x.Y
-
+type Point = { X: float; Y: float }
 type PointPair = { Start : Point; End : Point }
 
 type CaptureStatus =
