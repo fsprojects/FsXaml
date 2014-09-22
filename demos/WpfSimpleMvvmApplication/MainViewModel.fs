@@ -48,10 +48,6 @@ type MainViewModel() as self =
         seq {
             if String.IsNullOrWhiteSpace(x.FullName) then
                 yield EntityValidation(["You must provide a name"])
-            if String.IsNullOrWhiteSpace(x.FirstName) then
-                yield EntityValidation(["You must provide a first name"])
-            if String.IsNullOrWhiteSpace(x.LastName) then
-                yield EntityValidation(["You must provide a last name"])
             else if propertyName = "FullName" then
                 let err = x.FullName |> (validate propertyName >> notEqual "Reed Copsey" >> resultWithError "That is a poor choice of names")                    
                 // Alternatively, this can be done manually:
