@@ -2,7 +2,6 @@
 
 open System
 open System.Collections.ObjectModel
-
 open FSharp.ViewModule
 
 type MainViewModel() as me =
