@@ -75,3 +75,28 @@ type Converter<'a,'b>(convertFunction : ('a -> ConverterParams -> 'b), defaultCo
 
     static member val NotImplementedForwardConverter = notImplementedForward
     static member val NotImplementedBackConverter = notImplementedBack
+
+type EventArgsConverterBase(convertFun) =
+    interface IEventArgsConverter with
+        member __.Convert args param = convertFun args param
+
+type EventArgsConverter<'a, 'b when 'a :> EventArgs>(convertFun, defaultOnFailure : 'b) =
+    inherit EventArgsConverterBase((fun value p ->
+            let a = FsXaml.Utilities.downcastAndCreateOption<'a>(value)
+            let b = 
+                match a with
+                | None -> defaultOnFailure
+                | Some(v) -> convertFun(v)
+            box b))
+
+type EventArgsParamConverter<'a, 'b, 'c when 'a :> EventArgs>(convertFun, defaultOnFailure : 'c) =
+    inherit EventArgsConverterBase((fun value param ->
+            let a = FsXaml.Utilities.downcastAndCreateOption<'a>(value)
+            let b = FsXaml.Utilities.downcastAndCreateOption<'b>(param)
+            let c = 
+                match a, b with
+                | Some(v), Some(p) -> convertFun v p
+                | _, _ -> defaultOnFailure
+            box c))
+
+        

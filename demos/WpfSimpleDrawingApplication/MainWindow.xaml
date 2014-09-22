@@ -24,13 +24,13 @@
             <ItemsControl ItemsSource="{Binding Path=Lines}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseMove">
-                        <fsx:EventToFSharpEvent FSharpEvent="{Binding MoveEvent}" EventArgsConverter="{StaticResource moveConverter}" />
+                        <fsx:EventToCommand Command="{Binding MouseCommand}" EventArgsConverter="{StaticResource moveConverter}" />
                     </i:EventTrigger>
                     <i:EventTrigger EventName="MouseUp">
-                        <fsx:EventToCommand Command="{Binding MouseDownCommand}" EventArgsConverter="{StaticResource buttonCaptureConverter}" />
+                        <fsx:EventToCommand Command="{Binding MouseCommand}" EventArgsConverter="{StaticResource buttonCaptureConverter}" />
                     </i:EventTrigger>
                     <i:EventTrigger EventName="MouseDown">
-                        <fsx:EventToCommand Command="{Binding MouseDownCommand}" EventArgsConverter="{StaticResource buttonCaptureConverter}" />
+                        <fsx:EventToCommand Command="{Binding MouseCommand}" EventArgsConverter="{StaticResource buttonCaptureConverter}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ItemsControl.ItemsPanel>

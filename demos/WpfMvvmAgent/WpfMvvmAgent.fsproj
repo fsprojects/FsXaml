@@ -41,7 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FSharp.ViewModule.Core.Wpf">
-      <HintPath>..\..\packages\FSharp.ViewModule.Core.0.9.5\lib\net45\FSharp.ViewModule.Core.Wpf.dll</HintPath>
+      <HintPath>..\..\packages\FSharp.ViewModule.Core.0.9.9.1\lib\net45\FSharp.ViewModule.Core.Wpf.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FsXaml.Wpf">
