@@ -30,7 +30,7 @@ type MainViewModel() as self =
         self.Factory.CommandSyncParamChecked(
             (fun param -> MessageBox.Show(sprintf "Hello, %s" param) |> ignore), 
             (fun param -> self.IsValid && hasValue self.FirstName && hasValue self.LastName), 
-            [ <@ self.FirstName @> ; <@ self.LastName @> ])   // Or could be: [ <@ self.FullName @> ])
+            [ <@ self.FirstName @> ; <@ self.LastName @> ; <@ self.IsValid @> ])   // Or could be: [ <@ self.FullName @> ])
 
     do
         // Add in property dependencies

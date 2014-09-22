@@ -9,6 +9,6 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 		<TextBlock Text="Enter Your Name:" FontSize="16" Grid.Row="0" />
-		<local:MainView Grid.Row="1" />
+		<local:MainView Grid.Row="1" IsTabStop="False" />
 	</Grid>
 </Window>
