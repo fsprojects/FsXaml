@@ -22,8 +22,15 @@ type XamlFileAccessor(root : FrameworkElement) =
         | true,element -> element
         | false,element -> 
             let element = root.FindName name
-            dict.[name] <- element
-            element
+            let element' = 
+                match element with
+                | null ->
+                    // Fallback to searching the logical tree if our template hasn't been applied
+                    LogicalTreeHelper.FindLogicalNode(root, name) :> obj
+                | _ -> 
+                    element
+            dict.[name] <- element'
+            element'
 
     /// The root element of the XAML document
     member this.Root = root

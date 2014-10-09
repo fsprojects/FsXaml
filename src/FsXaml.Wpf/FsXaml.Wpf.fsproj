@@ -24,6 +24,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>..\..\bin\FsXaml.Wpf.XML</DocumentationFile>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Users\Reed\Documents\GitHub\FsXaml\demos\WpfSimpleMvvmApplication\bin\Debug\WpfSimpleMvvmApplication.exe</StartProgram>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
