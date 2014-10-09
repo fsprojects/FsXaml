@@ -3,7 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:fsxaml="http://github.com/fsprojects/FsXaml"
         xmlns:local="clr-namespace:ViewModels;assembly=WpfSimpleMvvmApplication"         
-        MinHeight="220" MinWidth="300" Height="Auto">
+        xmlns:views="clr-namespace:Views;assembly=WpfSimpleMvvmApplication"         
+        MinHeight="220" MinWidth="300" Height="Auto"
+        fsxaml:ViewController.Custom="{x:Type views:MainViewController}">
     <UserControl.Resources>
         <fsxaml:BooleanToCollapsedConverter x:Key="TrueToCollapsed" />
     </UserControl.Resources>
@@ -30,7 +32,7 @@
         <TextBox Margin="3" Grid.Column="1" Grid.Row="1" FontSize="16" Text="{Binding LastName}"/>
 
         <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text="Full Name:" />
-        <TextBox IsReadOnly="true" IsTabStop="False" Foreground="Gray"  Margin="3" Grid.Column="1" Grid.Row="2" FontSize="16" Text="{Binding FullName, Mode=OneWay}"/>
+        <TextBox x:Name="tbFullName" IsReadOnly="true" IsTabStop="False" Foreground="Gray"  Margin="3" Grid.Column="1" Grid.Row="2" FontSize="16" Text="{Binding FullName, Mode=OneWay}"/>
         <TextBlock Grid.Row="3" Margin="3" Text="Errors:" />
         <Border            
             Margin="3" VerticalAlignment="Stretch"  Grid.Row="4" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="DarkGray">
