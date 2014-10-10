@@ -66,9 +66,9 @@
     <Compile Include="EventToCommand.fs" />
     <Compile Include="EventToFSEvent.fs" />
     <Compile Include="Behaviors.fs" />
+    <Compile Include="XamlTypeProviderSupport.fs" />
     <Compile Include="ViewController.fs" />
     <Compile Include="Wpf-XmlnsDefinitions.fs" />
-    <Compile Include="XamlTypeProviderSupport.fs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

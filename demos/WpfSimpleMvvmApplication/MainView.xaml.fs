@@ -8,16 +8,13 @@ type MainView = XAML<"MainView.xaml", true>
 // Note, in this case, this only displays a message when double clicking on 
 // the full name text box
 type MainViewController() =
+    inherit UserControlViewController<MainView>()
 
     let showMessage _ =
         System.Windows.MessageBox.Show "You double clicked on Full Name!"
         |> ignore
 
-    interface IViewController with
-        member this.Attach fe =            
-            // Use the TypeProvider's Accessor sub-type to gain access to named members
-            let view = MainView(fe)
-                        
-            // Subscribe to the double click event
-            view.tbFullName.MouseDoubleClick.Add showMessage
+    override __.OnLoaded view =                                
+        // Subscribe to the double click event
+        view.tbFullName.MouseDoubleClick.Add showMessage
 

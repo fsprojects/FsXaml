@@ -5,5 +5,7 @@ open System.Windows
 
 [<AllowNullLiteral>]
 type public IViewController =
-    abstract member Attach : FrameworkElement -> unit
+    abstract member Initialized : FrameworkElement -> unit
+    abstract member Loaded : FrameworkElement -> unit
+    abstract member Unloaded : FrameworkElement -> unit
 
