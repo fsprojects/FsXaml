@@ -1559,8 +1559,8 @@ type AssemblyGenerator(assemblyFileName) =
             for minfo in ptd.GetMethods(ALL) do
                 match minfo with 
                 | :? ProvidedMethod as pminfo when not (methMap.ContainsKey pminfo)  -> 
-                    let mb = tb.DefineMethod(minfo.Name, minfo.Attributes, convType minfo.ReturnType, [| for p in minfo.GetParameters() -> convType p.ParameterType |])
-                    for (i,(:? ProvidedParameter as p)) in minfo.GetParameters() |> Seq.mapi (fun i x -> (i,x)) do
+                    let mb = tb.DefineMethod(minfo.Name, minfo.Attributes, convType minfo.ReturnType, [| for p in minfo.GetParameters() -> convType p.ParameterType |])                    
+                    for (i, p) in minfo.GetParameters() |> Seq.mapi (fun i x -> (i,x :?> ProvidedParameter)) do
                         let pb = mb.DefineParameter(i+1, ParameterAttributes.None, p.Name)
                         if p.HasDefaultParameterValue then 
                             pb.SetConstant p.RawDefaultValue
