@@ -28,14 +28,24 @@ type public ViewController() =
 
 [<AbstractClass>]
 type public ViewControllerBase<'T, 'U when 'U :> FrameworkElement>() =
+    let subscriptions = 
+        ResizeArray<System.IDisposable>()
+
+    /// Called when the item and its children have been initialized
     abstract member OnInitialized : 'T -> unit
     default __.OnInitialized _ = ()
 
+    /// Called when the item is loaded to the visual tree
     abstract member OnLoaded : 'T -> unit
     default __.OnLoaded _ = ()
 
+    /// Called when the item is unloaded from the visual tree
     abstract member OnUnloaded : 'T -> unit
     default __.OnUnloaded _ = ()
+
+    /// Adds an IDisposable to the list of objects which will get Dispose called when the item unloads from the visual tree
+    member __.DisposeOnUnload idisposable =
+        subscriptions.Add(idisposable)
 
     interface IViewController with
         member this.Initialized fe =
@@ -51,6 +61,10 @@ type public ViewControllerBase<'T, 'U when 'U :> FrameworkElement>() =
                 this.OnLoaded(t)
             | _ -> ()
         member this.Unloaded fe =
+            // Clear our subscriptions prior to unloading
+            subscriptions |> Seq.iter (fun x -> x.Dispose())
+            subscriptions.Clear()
+
             match fe with
             | :? 'U as typed -> 
                 let t = System.Activator.CreateInstance(typeof<'T>, typed) :?> 'T
@@ -58,10 +72,12 @@ type public ViewControllerBase<'T, 'U when 'U :> FrameworkElement>() =
             | _ -> ()
 
 [<AbstractClass>]
+/// Strongly typed base class for Window ViewControllers
 type public WindowViewController<'T when 'T :> XamlTypeFactory<Window>>() =
     inherit ViewControllerBase<'T, Window>()
 
 [<AbstractClass>]
+/// Strongly typed base class for UserControl ViewControllers
 type public UserControlViewController<'T when 'T :> XamlContainer>() =
     inherit ViewControllerBase<'T, UserControl>()
 

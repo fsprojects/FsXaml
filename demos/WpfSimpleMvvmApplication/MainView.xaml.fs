@@ -14,7 +14,8 @@ type MainViewController() =
         System.Windows.MessageBox.Show "You double clicked on Full Name!"
         |> ignore
 
-    override __.OnLoaded view =                                
-        // Subscribe to the double click event
-        view.tbFullName.MouseDoubleClick.Add showMessage
+    override this.OnLoaded view =                                
+        // Subscribe to the double click event, but also unsubscribe when we unload
+        view.tbFullName.MouseDoubleClick.Subscribe showMessage
+        |> this.DisposeOnUnload
 
