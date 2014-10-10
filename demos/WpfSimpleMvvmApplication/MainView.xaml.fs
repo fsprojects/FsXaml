@@ -2,7 +2,7 @@
 
 open FsXaml
 
-type MainView = XAML<"MainView.xaml">
+type MainView = XAML<"MainView.xaml", true>
 
 // This is to demonstrate being able to add in "code behind"
 // Note, in this case, this only displays a message when double clicking on 
@@ -14,9 +14,10 @@ type MainViewController() =
         |> ignore
 
     interface IViewController with
-        member this.Attach fe =
+        member this.Attach fe =            
             // Use the TypeProvider's Accessor sub-type to gain access to named members
-            let view = MainView.Accessor fe
+            let view = MainView(fe)
+                        
             // Subscribe to the double click event
             view.tbFullName.MouseDoubleClick.Add showMessage
 

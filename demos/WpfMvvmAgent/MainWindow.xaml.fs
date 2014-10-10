@@ -4,7 +4,7 @@ open FsXaml
 
 open System.Windows
 
-type MainWindow = XAML<"MainWindow.xaml">
+type MainWindow = XAML<"MainWindow.xaml", true>
 
 // This is to demonstrate being able to add in "code behind"
 type MainWindowViewController() =
@@ -17,7 +17,7 @@ type MainWindowViewController() =
     interface IViewController with
         member this.Attach fe =
             // Use the TypeProvider's Accessor sub-type to gain access to named members
-            let window = MainWindow.Accessor fe
+            let window = MainWindow(fe :?> Window)
             
             // Subscribe to an event handler on the ExitButton
             window.ExitButton.Click.Add shutdown

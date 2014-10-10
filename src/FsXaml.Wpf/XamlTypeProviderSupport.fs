@@ -1,11 +1,7 @@
 ﻿namespace FsXaml
 
-open System
 open System.Collections.Generic
 open System.Windows
-open System.Windows.Controls
-open System.Windows.Markup
-
 
 /// Provides access to named children of a FrameworkElement
 type XamlFileAccessor(root : FrameworkElement) =
@@ -56,12 +52,45 @@ type XamlResourceAccessor(root : ResourceDictionary) =
     /// The root element of the XAML document
     member this.Root = root
 
+module internal FactoryUtilities =
+    let loadChildIfNull root resourceFile self =
+        match root with
+        | null -> LoadXaml.from resourceFile (self.GetType())
+        | _ -> root
+
 /// Creates the root element of a XAML type defined within a resource file location
-type XamlTypeFactory<'T>(resourceFile: string) =
-    /// Creates the root element
-    member self.CreateRoot() : 'T = LoadXaml.from resourceFile (self.GetType())
+[<AbstractClass>]
+type XamlAppFactory(root: Application, resourceFile: string) as self =
+    let child = FactoryUtilities.loadChildIfNull root resourceFile self
+    let accessor = XamlResourceAccessor(child.Resources)
+    member __.Accessor = accessor    
+    member __.Root : Application = child
+
+/// Creates the root element of a XAML type defined within a resource file location
+[<AbstractClass>]
+type XamlResourceFactory(root: ResourceDictionary, resourceFile: string) as self =
+    let child = FactoryUtilities.loadChildIfNull root resourceFile self
+    let accessor = XamlResourceAccessor(child)
+    member __.Accessor = accessor    
+    member __.Root = child
+
+/// Creates the root element of a XAML type defined within a resource file location
+[<AbstractClass>]
+type XamlTypeFactory<'T when 'T :> FrameworkElement and 'T : null>(root: 'T, resourceFile: string) as self =
+    let child = FactoryUtilities.loadChildIfNull root resourceFile self
+    let accessor = XamlFileAccessor(child)
+    member __.Accessor = accessor    
+    member __.Root : 'T = child
 
 /// Creates a container for a given XAML element (UserControl or similar) defined within a resource file location
-type XamlContainer(resourceFile: string) as self =
+[<AbstractClass>]
+type XamlContainer(content : FrameworkElement, resourceFile) as self =
     inherit System.Windows.Controls.ContentControl()
-    do self.Content <- LoadXaml.from resourceFile (self.GetType())
+
+    let child = FactoryUtilities.loadChildIfNull content resourceFile self
+    let accessor = XamlFileAccessor(child)
+    do                
+        self.Content <- child
+
+    member __.Accessor = accessor
+    member __.Root = child
