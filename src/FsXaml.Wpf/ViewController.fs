@@ -10,11 +10,11 @@ type public ViewController() =
         let behaviorType = Utilities.castAs<Type> eventArgs.NewValue
         if fe <> null && behaviorType <> null then
             if not(System.ComponentModel.DesignerProperties.GetIsInDesignMode(fe)) then
-                let controller = Utilities.castAs<IViewController> <| Activator.CreateInstance behaviorType
-                if controller <> null then
-                    fe.Initialized.Add(fun _ -> controller.Initialized fe)
-                    fe.Loaded.Add(fun _ -> controller.Loaded fe)
-                    fe.Unloaded.Add(fun _ -> controller.Unloaded fe)
+                let vc = Activator.CreateInstance behaviorType
+                let controller = vc :?> IViewController
+                fe.Initialized.Add(fun _ -> controller.Initialized fe)
+                fe.Loaded.Add(fun _ -> controller.Loaded fe)
+                fe.Unloaded.Add(fun _ -> controller.Unloaded fe)
 
     static let CustomProperty : DependencyProperty = DependencyProperty.RegisterAttached("Custom", typeof<Type>, typeof<ViewController>, new UIPropertyMetadata(null, new PropertyChangedCallback(CustomChanged)))
 
