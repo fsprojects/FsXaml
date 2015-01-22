@@ -1,3 +1,6 @@
+[![Issue Stats](http://issuestats.com/github/fsprojects/FsXaml/badge/issue)](http://issuestats.com/github/fsprojects/FsXaml)
+[![Issue Stats](http://issuestats.com/github/fsprojects/FsXaml/badge/pr)](http://issuestats.com/github/fsprojects/FsXaml)
+
 FsXaml
 ======
 
