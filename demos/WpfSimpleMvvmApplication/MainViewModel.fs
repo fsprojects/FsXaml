@@ -29,7 +29,7 @@ type MainViewModel() as self =
     let okCommand = 
         self.Factory.CommandSyncParamChecked(
             (fun param -> MessageBox.Show(sprintf "Hello, %s" param) |> ignore), 
-            (fun param -> self.IsValid && hasValue self.FirstName && hasValue self.LastName), 
+            (fun _ -> self.IsValid && hasValue self.FirstName && hasValue self.LastName), 
             [ <@ self.FirstName @> ; <@ self.LastName @> ; <@ self.IsValid @> ])   // Or could be: [ <@ self.FullName @> ])
 
     do
