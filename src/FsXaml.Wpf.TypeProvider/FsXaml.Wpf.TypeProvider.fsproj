@@ -55,7 +55,6 @@
     <Compile Include="ProvidedTypes.fs" />
     <Compile Include="TypeProvider.Helper.fs" />
     <Compile Include="XamlTypeProvider.fs" />
-    <Compile Include="Test.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
