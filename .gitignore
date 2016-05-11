@@ -172,3 +172,6 @@ TestResults.xml
 
 # Nuget outputs
 nuget/*.nupkg
+
+# Lint settings
+*.FSharpLint
