@@ -13,13 +13,15 @@ open FsXaml.TypeProviders.Helper
 
 open System.Reflection
 
-[<assembly:AssemblyVersion("0.9.9.0")>]
-[<assembly:AssemblyFileVersion("0.9.9.0")>]
+[<assembly:AssemblyVersion("1.9.0.0")>]
+[<assembly:AssemblyFileVersion("1.9.0.0")>]
 do()
-
 
 module XamlTypeUtils =
     let internal wpfAssembly = typeof<System.Windows.Controls.Button>.Assembly
+
+    [<Literal>]
+    let internal AccessorName = "__xaml_accessor";
 
     type internal FilePosition =  
        { Line: int; 
@@ -133,17 +135,17 @@ module XamlTypeUtils =
             |> Seq.toList
         elements    
 
-    let internal addFrameworkElementAccessorPropertiesToXamlType (typeContainingAccessor : Type) (xamlType : ProvidedTypeDefinition) elements  =
-        let pi = typeContainingAccessor.GetProperty("Accessor")
-        let mi = typeof<XamlFileAccessor>.GetMethod("GetChild")
+    let internal addFrameworkElementAccessorPropertiesToXamlType (typeContainingAccessor : Type) (xamlType : ProvidedTypeDefinition) elements =
+        let fi = typeContainingAccessor.GetField(AccessorName, BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance)
+        let mi = typeof<NamedNodeAccessor>.GetMethod("GetChild")
 
         let accessExpr node (args:Expr list) =
             let name = node.Name
             let this = args.[0]
             let thisAsBase = Expr.Coerce(this, typeContainingAccessor)
-            let prop = Expr.PropertyGet(thisAsBase, pi)
+            let field = Expr.FieldGet(thisAsBase, fi)
             let arg = Expr.Value(name)
-            let expr = Expr.Call(prop, mi, [arg])
+            let expr = Expr.Call(field, mi, [arg])
             Expr.Coerce(expr, node.NodeType)
 
         for node in elements do
@@ -152,30 +154,11 @@ module XamlTypeUtils =
                     propertyName = node.Name,
                     propertyType = node.NodeType,
                     GetterCode = accessExpr node)
-            property.AddXmlDoc(sprintf "Gets the %s element" node.Name)
-            property.AddDefinitionLocation(node.Position.Line,node.Position.Column,node.Position.FileName)
-            xamlType.AddMember property
+            // property.AddXmlDoc(sprintf "Gets the %s element" node.Name)
+            // property.AddDefinitionLocation(node.Position.Line,node.Position.Column,node.Position.FileName)
+            xamlType.AddMember property            
 
-    let internal addResourceDictionaryAccessorPropertiesToXamlType (typeContainingAccessor : Type) (xamlType : ProvidedTypeDefinition) elements =
-        let pi = typeContainingAccessor.GetProperty("Accessor")        
-
-        let accessExpr node (args:Expr list) =
-            let name = node.Name            
-            let this = Expr.Coerce(List.head args, typeContainingAccessor)
-            let expr = <@@ (%%Expr.PropertyGet(this, pi) : XamlResourceAccessor).GetResource name @@>
-            Expr.Coerce(expr, node.NodeType)
-        
-        for node in elements do
-            let property = 
-                ProvidedProperty(
-                    propertyName = node.Name,
-                    propertyType = node.NodeType,
-                    GetterCode = accessExpr node)
-            property.AddXmlDoc(sprintf "Gets the %s element" node.Name)
-            property.AddDefinitionLocation(node.Position.Line,node.Position.Column,node.Position.FileName)
-            xamlType.AddMember property        
-
-    let internal addAccessorTypeFromElements (outerType : ProvidedTypeDefinition) elements =
+    let internal addAccessorTypeFromElements (outerType : ProvidedTypeDefinition) elements =        
         let root = List.head elements                
                 
         // Exclude the Root element from generation
@@ -183,15 +166,7 @@ module XamlTypeUtils =
             elements
             |> Seq.filter (fun x -> not x.IsRoot)
 
-        let accessor = 
-            match root.NodeType with
-            | app when app = typeof<System.Windows.Application> ->
-               addResourceDictionaryAccessorPropertiesToXamlType typeof<XamlAppFactory>
-            | rd when rd = typeof<System.Windows.ResourceDictionary> -> 
-                addResourceDictionaryAccessorPropertiesToXamlType typeof<XamlResourceFactory>                
-            | _ -> 
-                addFrameworkElementAccessorPropertiesToXamlType outerType.BaseType
-        accessor outerType elementsToGenerate
+        addFrameworkElementAccessorPropertiesToXamlType outerType outerType elementsToGenerate 
 
 [<TypeProvider>]
 type public XamlTypeProvider(config : TypeProviderConfig) as this = 
@@ -200,11 +175,12 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
     let assembly = Assembly.GetExecutingAssembly()
     let nameSpace = this.GetType().Namespace
     let providerType = ProvidedTypeDefinition(assembly, nameSpace, "XAML", Some typeof<obj>, IsErased = false)
+
     let fileSystemWatchers = ResizeArray<IDisposable>()
      
     let assemblies = 
         config.ReferencedAssemblies 
-        |> Seq.map (fun r -> Assembly.Load(IO.File.ReadAllBytes r))
+        |> Seq.map (IO.File.ReadAllBytes >> Assembly.Load)
         |> Seq.append [XamlTypeUtils.wpfAssembly]
         |> Array.ofSeq
         
@@ -222,12 +198,11 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                 watcher.Dispose() 
             fileSystemWatchers.Clear()
         ))
-    do 
+    do         
         providerType.DefineStaticParameters(
-            parameters = [ ProvidedStaticParameter("XamlResourceLocation", typeof<string>) ; ProvidedStaticParameter("ExposeNamedProperties", typeof<bool>, false) ], 
+            parameters = [ ProvidedStaticParameter("XamlResourceLocation", typeof<string>) ], 
             instantiationFunction = (fun typeName parameterValues ->   
-                let resourcePath = string parameterValues.[0]
-                let exposeParameters = unbox parameterValues.[1]
+                let resourcePath = string parameterValues.[0]                
                 let resolvedFileName = findConfigFile config.ResolutionFolder resourcePath
                 watchForChanges this resolvedFileName |> Option.iter fileSystemWatchers.Add
 
@@ -238,42 +213,87 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                 let tempAssembly = ProvidedAssembly(Path.ChangeExtension(Path.GetTempFileName(), ".dll"))
 
                 let outerType =
-                    let createFactoryType factoryType genericType =
-                        let outertype = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(factoryType), IsErased = false)
-
+                    let createWithoutAccessors feType =                        
+                        let providedType = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(feType), IsErased = false)
+                        providedType.SetAttributes (TypeAttributes.Public ||| TypeAttributes.Class)
+                        let baseConstructorInfo = feType.GetConstructor(BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance, null, [| |], null)
                         let ctor = ProvidedConstructor([])
-                        let ci = factoryType.GetConstructor(BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance, null, [| genericType ; typeof<string>|], null)
-                        ctor.BaseConstructorCall <- fun args -> ci, args @ [Expr.Value(null) ; Expr.Value(resourcePath)]
-                        ctor.InvokeCode <- fun _ -> <@@ () @@>
-                        outertype.AddMember ctor
+                        ctor.BaseConstructorCall <- fun args -> baseConstructorInfo, args                         
 
-                        let ctor = ProvidedConstructor([ProvidedParameter("existingElement", genericType)])
-                        ctor.BaseConstructorCall <- fun args -> ci, args @ [Expr.Value("")]
-                        ctor.InvokeCode <- fun _ -> <@@ () @@>
-                        outertype.AddMember ctor
+                        ctor.InvokeCode <-
+                            fun args ->       
+                                match args with
+                                | [this] ->
+                                    let o = Expr.Coerce(this, typeof<obj>)
+                                    <@@
+                                        LoadXaml.fromDirect resourcePath (%%o : obj)
+                                    @@>
+                                | _ -> failwith "Wrong constructor arguments"
 
-                        if exposeParameters then
-                            XamlTypeUtils.addAccessorTypeFromElements outertype elements
+                        providedType.AddMember ctor
+                        providedType
 
-                        outertype
+                    let createWithAccessors feType =
+                        let accessorType = typeof<NamedNodeAccessor>
+                        let accessorConstructorArgType = typeof<FrameworkElement>
+                        
+                        let providedType = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(feType), IsErased = false)
+                        providedType.SetAttributes (TypeAttributes.Public ||| TypeAttributes.Class)
+                        let baseConstructorInfo = feType.GetConstructor(BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance, null, [| |], null)
+                        let ctor = ProvidedConstructor([])
+                        ctor.BaseConstructorCall <- fun args -> baseConstructorInfo, args                         
 
+                        let addingNamedElements = elements |> Seq.exists (fun x -> not x.IsRoot)
+                        
+                        match addingNamedElements with
+                        | false -> 
+                            // If we didn't add any named elements, we don't need an accessor field or constructor info
+                            ctor.InvokeCode <- 
+                                fun args ->
+                                    match args with
+                                    | [this] ->                                          
+                                        let o = Expr.Coerce(this, typeof<obj>)                                            
+                                        <@@                                                        
+                                            LoadXaml.fromDirect resourcePath (%%o : obj)
+                                        @@>
+                                    | _ -> failwith "Wrong constructor arguments"
+                        | true ->
+                            // We added named elements, so add the accessor field we need
+                            let accessorField = ProvidedField(XamlTypeUtils.AccessorName, accessorType)
+                            providedType.AddMember accessorField
+                            ctor.InvokeCode <- 
+                                fun args ->
+                                    match args with
+                                    | [this] ->                                          
+                                        let o = Expr.Coerce(this, typeof<obj>)                                            
+                                        let accessCtor = accessorType.GetConstructor([| accessorConstructorArgType |])
+                                        let accessCtorArg = Expr.Coerce(this, accessorConstructorArgType)
+                                        let access = Expr.NewObject(accessCtor, [ accessCtorArg ])
+                                        let setfield = Expr.FieldSet(this, accessorField, access)
+                                        <@@
+                                            (%%setfield)                                    
+                                            LoadXaml.fromDirect resourcePath (%%o : obj)
+                                        @@>
+                                    | _ -> failwith "Wrong constructor arguments"
+
+                            XamlTypeUtils.addAccessorTypeFromElements providedType elements                        
+
+                        providedType.AddMember ctor
+                        
+                        providedType
+
+                    // If we're a framework element (UserControl/Window/etc), we can add named elements,
+                    // otherwise, we don't bother
                     match root.NodeType with
-                    | win when typeof<System.Windows.Window>.IsAssignableFrom win ->
-                        createFactoryType (typedefof<XamlTypeFactory<_>>.MakeGenericType(win)) win
-                    | app when typeof<System.Windows.Application>.IsAssignableFrom app ->
-                        createFactoryType typeof<XamlAppFactory> app
-                    | rd when rd = typeof<System.Windows.ResourceDictionary> ->
-                        createFactoryType typeof<XamlResourceFactory> rd
-                    | _ ->
-                        createFactoryType typeof<XamlContainer> typeof<FrameworkElement>
-                        // createContainer()
+                    | fe when typeof<FrameworkElement>.IsAssignableFrom fe -> createWithAccessors fe                         
+                    | other -> createWithoutAccessors other
                 
                 tempAssembly.AddTypes <| [ outerType ]
                 outerType))
 
         this.AddNamespace(nameSpace, [ providerType ])
 
-    override this.ResolveAssembly(args) = 
+    override __.ResolveAssembly(args) = 
         let name = System.Reflection.AssemblyName(args.Name)
         let existingAssembly = 
             System.AppDomain.CurrentDomain.GetAssemblies()

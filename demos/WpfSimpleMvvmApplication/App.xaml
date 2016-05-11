@@ -8,6 +8,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ApplicationResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush Color="Blue" x:Key="blueBrush" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

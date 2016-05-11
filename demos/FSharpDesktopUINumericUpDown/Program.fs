@@ -12,8 +12,7 @@ open FSharp.Desktop.UI
 //     https://github.com/fsprojects/FSharp.Desktop.UI/blob/master/samples/NumericUpDown/Program.fs
 
 type App = FsXaml.XAML<"App.xaml">
-// Pass true to expose all named properties as public properties of MainWindow
-type MainWindow = FsXaml.XAML<"MainWindow.xaml", true>
+type MainWindow = FsXaml.XAML<"MainWindow.xaml">
 
 [<AbstractClass>]
 type NumericUpDownModel() = 
@@ -24,7 +23,7 @@ type NumericUpDownModel() =
 type NumericUpDownEvents = Up | Down
 
 type NumericUpDownView(root : MainWindow) = 
-    inherit View<NumericUpDownEvents, NumericUpDownModel, Window>(root.Root)        
+    inherit View<NumericUpDownEvents, NumericUpDownModel, Window>(root)        
     
     //View implementation 
     override this.EventStreams = [        
@@ -41,12 +40,11 @@ type NumericUpDownView(root : MainWindow) =
         root.input.MouseWheel |> Observable.map (fun args -> if args.Delta > 0 then Up else Down)
     ]
 
-    override this.SetBindings model =   
-        let root = MainWindow(this.Root)
+    override this.SetBindings model =           
         Binding.OfExpression 
             <@
-                root.input.Text <- coerce model.Value
                 //'coerce' means "use WPF default conversions"
+                root.input.Text <- coerce model.Value                
             @> 
 
 let eventHandler event (model: NumericUpDownModel) =
@@ -62,7 +60,7 @@ let main _ =
     let model = NumericUpDownModel.Create()
 
     // Create App() first so global styles are available
-    let app = App().Root
+    let app = App()
     let view = NumericUpDownView(MainWindow())
 
     let mvc = Mvc(model, view, controller)

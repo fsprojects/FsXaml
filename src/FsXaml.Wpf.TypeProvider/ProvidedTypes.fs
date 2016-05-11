@@ -993,8 +993,7 @@ type ProvidedTypeDefinition(container:TypeContainer,className : string, baseType
     // state
     let mutable attributes   = 
         TypeAttributes.Public ||| 
-        TypeAttributes.Class ||| 
-        TypeAttributes.Sealed |||
+        TypeAttributes.Class |||         
         enum (int32 TypeProviderTypeAttributes.IsErased)
 
 
@@ -1454,8 +1453,7 @@ type AssemblyGenerator(assemblyFileName) =
                             // OK, the implied nested type is not defined, define it now
                             let attributes = 
                                   TypeAttributes.Public ||| 
-                                  TypeAttributes.Class ||| 
-                                  TypeAttributes.Sealed 
+                                  TypeAttributes.Class  
                             // Filter out the additional TypeProviderTypeAttributes flags
                             let attributes = adjustTypeAttributes attributes otb.IsSome
                             let tb = 

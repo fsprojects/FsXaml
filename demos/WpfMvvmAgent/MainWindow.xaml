@@ -5,8 +5,7 @@
         xmlns:vms="clr-namespace:ViewModels;assembly=WpfMvvmAgent"    
         xmlns:fsx="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"   
-		Title="MVVM With Agents"  Height="250" Width="500" WindowStartupLocation="CenterScreen"
-        fsx:ViewController.Custom="{x:Type local:MainWindowViewController}">
+		Title="MVVM With Agents"  Height="250" Width="500" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
         <vms:MainViewModel />
     </Window.DataContext>
