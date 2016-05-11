@@ -198,7 +198,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                 watcher.Dispose() 
             fileSystemWatchers.Clear()
         ))
-    do         
+    
         providerType.DefineStaticParameters(
             parameters = [ ProvidedStaticParameter("XamlResourceLocation", typeof<string>) ], 
             instantiationFunction = (fun typeName parameterValues ->   
@@ -210,7 +210,12 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                 let elements = XamlTypeUtils.readElements schemaContext reader resolvedFileName
                 let root = List.head elements
                 
-                let tempAssembly = ProvidedAssembly(Path.ChangeExtension(Path.GetTempFileName(), ".dll"))
+                let assemblyPath =
+                    let tempFolderName = Path.GetTempPath()                    
+                    let filename = "fsxaml_" + Path.GetRandomFileName() + ".dll"
+                    Path.Combine(tempFolderName, filename)
+                                            
+                let tempAssembly = ProvidedAssembly(assemblyPath)
 
                 let outerType =
                     let createWithoutAccessors feType =                        
