@@ -226,7 +226,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                                 | [this] ->
                                     let o = Expr.Coerce(this, typeof<obj>)
                                     <@@
-                                        LoadXaml.fromDirect resourcePath (%%o : obj)
+                                        InjectXaml.from resourcePath (%%o : obj)
                                     @@>
                                 | _ -> failwith "Wrong constructor arguments"
 
@@ -254,7 +254,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                                     | [this] ->                                          
                                         let o = Expr.Coerce(this, typeof<obj>)                                            
                                         <@@                                                        
-                                            LoadXaml.fromDirect resourcePath (%%o : obj)
+                                            InjectXaml.from resourcePath (%%o : obj)
                                         @@>
                                     | _ -> failwith "Wrong constructor arguments"
                         | true ->
@@ -272,7 +272,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                                         let setfield = Expr.FieldSet(this, accessorField, access)
                                         <@@
                                             (%%setfield)                                    
-                                            LoadXaml.fromDirect resourcePath (%%o : obj)
+                                            InjectXaml.from resourcePath (%%o : obj)
                                         @@>
                                     | _ -> failwith "Wrong constructor arguments"
 

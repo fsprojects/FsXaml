@@ -17,5 +17,5 @@ module internal Utilities =
     
     let defaultEventArgsConverter =
         {new IEventArgsConverter with
-            member this.Convert (args : EventArgs) param =
+            member __.Convert (args : EventArgs) param =
                 args :> obj }
