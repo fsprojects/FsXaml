@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"        
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:fsx="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
+        xmlns:fsxaml="http://github.com/fsprojects/FsXaml"
         xmlns:local="clr-namespace:WpfSimpleDrawingApplication;assembly=WpfSimpleDrawingApplication"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
         Title="Drawing using EventToFSharpEvent"
@@ -24,13 +24,13 @@
             <ItemsControl ItemsSource="{Binding Path=Lines}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseMove">
-                        <fsx:EventToCommand Command="{Binding MouseCommand}" EventArgsConverter="{StaticResource moveConverter}" />
+                        <fsxaml:EventToCommand Command="{Binding MouseCommand}" EventArgsConverter="{StaticResource moveConverter}" />
                     </i:EventTrigger>
                     <i:EventTrigger EventName="MouseUp">
-                        <fsx:EventToCommand Command="{Binding MouseCommand}" EventArgsConverter="{StaticResource buttonCaptureConverter}" />
+                        <fsxaml:EventToCommand Command="{Binding MouseCommand}" EventArgsConverter="{StaticResource buttonCaptureConverter}" />
                     </i:EventTrigger>
                     <i:EventTrigger EventName="MouseDown">
-                        <fsx:EventToCommand Command="{Binding MouseCommand}" EventArgsConverter="{StaticResource buttonCaptureConverter}" />
+                        <fsxaml:EventToCommand Command="{Binding MouseCommand}" EventArgsConverter="{StaticResource buttonCaptureConverter}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ItemsControl.ItemsPanel>

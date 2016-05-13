@@ -13,8 +13,8 @@ open FsXaml.TypeProviders.Helper
 
 open System.Reflection
 
-[<assembly:AssemblyVersion("1.9.0.3")>]
-[<assembly:AssemblyFileVersion("1.9.0.3")>]
+[<assembly:AssemblyVersion("1.9.0.4")>]
+[<assembly:AssemblyFileVersion("1.9.0.4")>]
 do()
 
 module XamlTypeUtils =
@@ -39,7 +39,10 @@ module XamlTypeUtils =
         { Line = lineInfo.LineNumber
           Column = lineInfo.LinePosition
           FileName = filename }
-
+    
+    // I didn't remove support for Application/ResourceDictionary here.
+    // It might be nice to try to reimplement this if/when we figure out
+    // how to make it more robust.
     type RootNodeType =
     | FrameworkElement
     | ResourceDictionary
@@ -71,7 +74,7 @@ module XamlTypeUtils =
             | None -> None
             | Some name -> 
                 let propertyType =
-                    // TODO: Add in other missing resource types as discovered.  For now, Color + Brush types aren't found, and need to be handled
+                    // Add in other missing resource types as discovered.  For now, Color + Brush types aren't found, and need to be handled
                     match xaml.LocalName with
                     | "Color" -> typeof<System.Windows.Media.Color>
                     | "SolidColorBrush" -> typeof<System.Windows.Media.SolidColorBrush>

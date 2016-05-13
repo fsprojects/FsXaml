@@ -7,6 +7,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.Wpf", "src\FsXaml.Wp
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.Wpf.TypeProvider", "src\FsXaml.Wpf.TypeProvider\FsXaml.Wpf.TypeProvider.fsproj", "{407071EF-1FC4-4185-96CA-47F02465F52C}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.Wpf.Blend", "src\FsXaml.Wpf.Blend\FsXaml.Wpf.Blend.fsproj", "{050ED670-970B-4A86-B9F5-07225AC9159B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,22 @@ Global
 		{407071EF-1FC4-4185-96CA-47F02465F52C}.Release|ARM.ActiveCfg = Release|Any CPU
 		{407071EF-1FC4-4185-96CA-47F02465F52C}.Release|x64.ActiveCfg = Release|Any CPU
 		{407071EF-1FC4-4185-96CA-47F02465F52C}.Release|x86.ActiveCfg = Release|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Debug|ARM.Build.0 = Debug|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Debug|x64.Build.0 = Debug|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Debug|x86.Build.0 = Debug|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Release|ARM.ActiveCfg = Release|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Release|ARM.Build.0 = Release|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Release|x64.ActiveCfg = Release|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Release|x64.Build.0 = Release|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Release|x86.ActiveCfg = Release|Any CPU
+		{050ED670-970B-4A86-B9F5-07225AC9159B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

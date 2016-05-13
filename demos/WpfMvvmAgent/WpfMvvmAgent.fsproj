@@ -47,6 +47,9 @@
     <Reference Include="FsXaml.Wpf">
       <HintPath>..\..\bin\FsXaml.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="FsXaml.Wpf.Blend">
+      <HintPath>..\..\bin\FsXaml.Wpf.Blend.dll</HintPath>
+    </Reference>
     <Reference Include="FsXaml.Wpf.TypeProvider">
       <HintPath>..\..\bin\FsXaml.Wpf.TypeProvider.dll</HintPath>
     </Reference>

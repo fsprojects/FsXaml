@@ -3,7 +3,7 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:local="clr-namespace:Views;assembly=WpfMvvmAgent"    
         xmlns:vms="clr-namespace:ViewModels;assembly=WpfMvvmAgent"    
-        xmlns:fsx="clr-namespace:FsXaml;assembly=FsXaml.Wpf"
+        xmlns:fsxaml="http://github.com/fsprojects/FsXaml"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"   
 		Title="MVVM With Agents"  Height="250" Width="500" WindowStartupLocation="CenterScreen">
     <Window.DataContext>
@@ -29,7 +29,7 @@
         <Canvas Grid.Row="1"  Background="#eeeeee" Margin="3">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseMove">
-                    <fsx:EventToMailbox Mailbox="{Binding MoveAgent}" EventArgsConverter="{StaticResource moveConverter}" />
+                    <fsxaml:EventToMailbox Mailbox="{Binding MoveAgent}" EventArgsConverter="{StaticResource moveConverter}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </Canvas>

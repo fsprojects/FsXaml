@@ -1,19 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>573fb772-0dbc-4e53-87ea-c61be246ffc3</ProjectGuid>
+    <ProjectGuid>050ed670-970b-4a86-b9f5-07225ac9159b</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>FsXaml.Wpf</RootNamespace>
-    <AssemblyName>FsXaml.Wpf</AssemblyName>
+    <RootNamespace>FsXaml.Wpf.Blend</RootNamespace>
+    <AssemblyName>FsXaml.Wpf.Blend</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.3.0.0</TargetFSharpCoreVersion>
-    <Name>FsXaml.Wpf</Name>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Name>FsXaml.Wpf.Blend</Name>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -24,9 +23,7 @@
     <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>..\..\bin\FsXaml.Wpf.XML</DocumentationFile>
-    <StartAction>Program</StartAction>
-    <StartProgram>C:\Users\Reed\Documents\GitHub\FsXaml\demos\WpfSimpleMvvmApplication\bin\Debug\WpfSimpleMvvmApplication.exe</StartProgram>
+    <DocumentationFile>..\..\bin\FsXaml.Wpf.Blend.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,9 +32,7 @@
     <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>..\..\bin\FsXaml.Wpf.XML</DocumentationFile>
-    <StartAction>Program</StartAction>
-    <StartProgram>C:\Users\Reed\Documents\GitHub\FsXaml\demos\WpfSimpleMvvmApplication\bin\Debug\WpfSimpleMvvmApplication.exe</StartProgram>
+    <DocumentationFile>..\..\bin\FsXaml.Wpf.Blend.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
@@ -56,11 +51,12 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="Contracts.fs" />
-    <Compile Include="Utilities.fs" />
-    <Compile Include="ValueConverters.fs" />
-    <Compile Include="AttachedProperties.fs" />
+    <Content Include="packages.config" />
+    <Compile Include="EventToMailbox.fs" />
+    <Compile Include="EventToCommand.fs" />
+    <Compile Include="EventToFSEvent.fs" />
     <Compile Include="WpfXmlnsDefinitions.fs" />
+    <Compile Include="WpfSupport.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -72,12 +68,22 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\..\packages\Expression.Blend.Sdk.1.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <ItemGroup>
+    <ProjectReference Include="..\FsXaml.Wpf\FsXaml.Wpf.fsproj">
+      <Name>FsXaml.Wpf</Name>
+      <Project>{573fb772-0dbc-4e53-87ea-c61be246ffc3}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

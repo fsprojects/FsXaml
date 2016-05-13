@@ -1,10 +1,10 @@
 ﻿namespace FsXaml
 
 open System
-open System.ComponentModel
+open System.Collections.ObjectModel
 open System.Windows
+open System.Windows.Controls
 open System.Windows.Data
-open System.Windows.Input
 
 
 type ConverterParams = { Parameter : obj; CultureInfo : Globalization.CultureInfo }
@@ -12,7 +12,7 @@ type ConverterParams = { Parameter : obj; CultureInfo : Globalization.CultureInf
 /// Base class for standard WPF style converters, mapped to curried forms for the convert and convert back methods
 type ConverterBase(convertFunction, convertBackFunction) =    
     /// constructor take nullFunction as inputs
-    new(convertFunction) = ConverterBase(convertFunction, ConverterBase.NotImplementedConverter)
+    new(convertFunction : (obj -> Type -> obj -> Globalization.CultureInfo -> obj)) = ConverterBase(convertFunction, ConverterBase.NotImplementedConverter)
 
     static member val NotImplementedConverter = fun (value : obj) (target : Type) (param : obj) (culture : Globalization.CultureInfo) -> raise(NotImplementedException())
 
@@ -81,7 +81,7 @@ type EventArgsConverterBase(convertFun) =
         member __.Convert args param = convertFun args param
 
 type EventArgsConverter<'a, 'b when 'a :> EventArgs>(convertFun, defaultOnFailure : 'b) =
-    inherit EventArgsConverterBase((fun value p ->
+    inherit EventArgsConverterBase((fun value _ ->
             let a = FsXaml.Utilities.downcastAndCreateOption<'a>(value)
             let b = 
                 match a with
@@ -99,4 +99,48 @@ type EventArgsParamConverter<'a, 'b, 'c when 'a :> EventArgs>(convertFun, defaul
                 | _, _ -> defaultOnFailure
             box c))
 
-        
+type ValidationErrorsToStringConverter() =
+    interface System.Windows.Data.IMultiValueConverter with
+        override this.Convert(values, targetType, parameter, culture) =
+            match values.Length with
+            | 0 -> null
+            | _ ->
+                match values.[0] with
+                | :? ReadOnlyObservableCollection<ValidationError> as collection ->
+                    let values = 
+                        collection
+                        |> Seq.map (fun v -> v.ErrorContent :?> string) 
+                    String.Join(Environment.NewLine, values) :> obj                        
+                | _ -> null
+        override this.ConvertBack(value, targetType, parameter, culture) =
+            raise(NotImplementedException())
+
+type BooleanConverter<'a when 'a : equality>(trueValue : 'a, falseValue: 'a) =
+    inherit ConverterBase
+        ((fun b _ _ _ ->
+            try
+                let value : bool = unbox b 
+                match value with
+                | true -> box trueValue
+                | false -> box falseValue
+            with
+            | _ -> DependencyProperty.UnsetValue),
+        (fun v _ _ _ -> 
+            try
+                match v with
+                | value when unbox value = trueValue -> box true
+                | _ -> box false
+            with
+            | _ -> box false))
+    
+type BooleanToVisibilityConverter() =
+    inherit BooleanConverter<Visibility>(Visibility.Visible, Visibility.Collapsed)
+
+type BooleanToVisibilityOrHiddenConverter() =
+    inherit BooleanConverter<Visibility>(Visibility.Visible, Visibility.Hidden)
+
+type BooleanToCollapsedConverter() =
+    inherit BooleanConverter<Visibility>(Visibility.Collapsed, Visibility.Visible)
+
+type BooleanToInverseConverter() =
+    inherit BooleanConverter<bool>(false, true)        

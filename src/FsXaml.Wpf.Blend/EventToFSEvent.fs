@@ -2,10 +2,7 @@
 
 open System
 open System.Windows
-open System.Windows.Input
 open System.Windows.Interactivity
-
-// TODO: Should I add a markup extension to map the binding for an ICommand -> EventToFSharpEvent?
 
 type EventToFSharpEvent() as self =
     inherit TriggerAction<DependencyObject>()

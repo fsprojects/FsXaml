@@ -6,5 +6,7 @@ type App = XAML<"App.xaml">
 [<STAThread>]
 [<EntryPoint>]
 let main argv = 
-    Wpf.installSynchronizationContext()
-    App().Run(Views.MainWindow())
+    Wpf.installSynchronizationContext ()
+    Wpf.installBlendSupport ()
+    Views.MainWindow()
+    |> App().Run 
