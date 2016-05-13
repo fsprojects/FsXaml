@@ -179,9 +179,11 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
     let fileSystemWatchers = ResizeArray<IDisposable>()
      
     let assemblies = 
-        config.ReferencedAssemblies 
-        |> Seq.map (IO.File.ReadAllBytes >> Assembly.Load)
-        |> Seq.append [XamlTypeUtils.wpfAssembly]
+        config.ReferencedAssemblies
+        |> Seq.choose (fun asm -> 
+            try
+            | _ -> None)
+        |> Seq.append [XamlTypeUtils.wpfAssembly]        
         |> Array.ofSeq
         
     let ss = 
