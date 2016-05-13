@@ -13,8 +13,8 @@ open FsXaml.TypeProviders.Helper
 
 open System.Reflection
 
-[<assembly:AssemblyVersion("1.9.0.0")>]
-[<assembly:AssemblyFileVersion("1.9.0.0")>]
+[<assembly:AssemblyVersion("1.9.0.3")>]
+[<assembly:AssemblyFileVersion("1.9.0.3")>]
 do()
 
 module XamlTypeUtils =
@@ -182,6 +182,10 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
         config.ReferencedAssemblies
         |> Seq.choose (fun asm -> 
             try
+                // This is a fix for #34: Previously, 64bit libraries could fail to load, which would make the type provider fail.
+                // By filtering out assemblies that don't load, we should still allow all relevent WPF assemblies to load
+                asm |> (IO.File.ReadAllBytes >> Assembly.Load >> Some)
+            with 
             | _ -> None)
         |> Seq.append [XamlTypeUtils.wpfAssembly]        
         |> Array.ofSeq
