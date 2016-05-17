@@ -175,3 +175,7 @@ nuget/*.nupkg
 
 # Lint settings
 *.FSharpLint
+
+# Paket binary
+.paket/paket.exe
+
