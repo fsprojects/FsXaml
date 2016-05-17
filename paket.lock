@@ -1,0 +1,24 @@
+NUGET
+  remote: https://www.nuget.org/api/v2
+  specs:
+    Castle.Core (3.3.3) - framework: >= net45
+    Expression.Blend.Sdk (1.0.2) - framework: >= net45
+    FSharp.Desktop.UI (0.7.1) - framework: >= net45
+      Castle.Core (>= 3.3.3)
+      Rx-Main (>= 2.2.5)
+    FSharp.ViewModule.Core (0.9.9.3) - framework: >= net45
+    NuGet.CommandLine (3.4.3)
+    Rx-Core (2.2.5) - framework: >= net45
+      Rx-Interfaces (>= 2.2.5)
+    Rx-Interfaces (2.2.5) - framework: >= net45
+    Rx-Linq (2.2.5) - framework: >= net45
+      Rx-Core (>= 2.2.5)
+      Rx-Interfaces (>= 2.2.5)
+    Rx-Main (2.2.5) - framework: >= net45
+      Rx-Core (>= 2.2.5)
+      Rx-Interfaces (>= 2.2.5)
+      Rx-Linq (>= 2.2.5)
+      Rx-PlatformServices (>= 2.2.5)
+    Rx-PlatformServices (2.2.5) - framework: >= net45
+      Rx-Core (>= 2.2.5)
+      Rx-Interfaces (>= 2.2.5)

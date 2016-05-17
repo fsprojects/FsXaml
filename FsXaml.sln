@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{C3EAAD39-4F55-49BA-BBD8-2125A5F21307}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.Wpf", "src\FsXaml.Wpf\FsXaml.Wpf.fsproj", "{573FB772-0DBC-4E53-87EA-C61BE246FFC3}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.Wpf.TypeProvider", "src\FsXaml.Wpf.TypeProvider\FsXaml.Wpf.TypeProvider.fsproj", "{407071EF-1FC4-4185-96CA-47F02465F52C}"
