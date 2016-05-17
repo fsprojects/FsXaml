@@ -1,5 +1,3 @@
-source http://hpsdownloads.lov.is.keysight.com/nuget
-source \\nuget.0x223e.com\nuget
 source https://www.nuget.org/api/v2/
 
 nuget NuGet.CommandLine
