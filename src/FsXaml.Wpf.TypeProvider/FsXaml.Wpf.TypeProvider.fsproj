@@ -18,10 +18,10 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <Tailcalls>false</Tailcalls>
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>.\bin\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>..\..\bin\FsXaml.Wpf.TypeProvider.XML</DocumentationFile>
+    <DocumentationFile>.\bin\Debug\FsXaml.Wpf.TypeProvider.XML</DocumentationFile>
     <StartAction>Program</StartAction>
     <StartProgram>D:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</StartProgram>
   </PropertyGroup>
@@ -29,10 +29,10 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <Tailcalls>true</Tailcalls>
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>.\bin\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>..\..\bin\FsXaml.Wpf.TypeProvider.XML</DocumentationFile>
+    <DocumentationFile>.\bin\Release\FsXaml.Wpf.TypeProvider.XML</DocumentationFile>
     <StartAction>Program</StartAction>
     <StartProgram>D:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</StartProgram>
   </PropertyGroup>
