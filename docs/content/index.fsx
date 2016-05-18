@@ -4,8 +4,8 @@
 #I "../../bin"
 
 (**
-F# Project Scaffold
-===================
+FsXaml
+======================
 
 Documentation
 
@@ -13,14 +13,12 @@ Documentation
   <div class="span1"></div>
   <div class="span6">
     <div class="well well-small" id="nuget">
-      The F# ProjectTemplate library can be <a href="https://nuget.org/packages/FSharp.ProjectTemplate">installed from NuGet</a>:
-      <pre>PM> Install-Package FSharp.ProjectTemplate</pre>
+      The FsXaml library can be <a href="https://nuget.org/packages/FsXaml">installed from NuGet</a>:
+      <pre>PM> Install-Package FsXaml</pre>
     </div>
   </div>
   <div class="span1"></div>
 </div>
-
-<img src="img/logo.png" alt="F# Project" style="float:right;width:150px;margin:10px" />
 
 Example
 -------
@@ -28,8 +26,8 @@ Example
 This example demonstrates using a function defined in this sample library.
 
 *)
-#r "FSharp.ProjectTemplate.dll"
-open FSharp.ProjectTemplate
+#r "FsXaml.dll"
+open FsXaml
 
 printfn "hello = %i" <| Library.hello 0
 
@@ -40,7 +38,7 @@ Samples & documentation
 -----------------------
 
 The library comes with comprehensible documentation. 
-It can include a tutorials automatically generated from `*.fsx` files in [the content folder][content]. 
+It can include tutorials automatically generated from `*.fsx` files in [the content folder][content]. 
 The API reference is automatically generated from Markdown comments in the library implementation.
 
  * [Tutorial](tutorial.html) contains a further explanation of this sample library.
@@ -53,17 +51,17 @@ Contributing and copyright
 --------------------------
 
 The project is hosted on [GitHub][gh] where you can [report issues][issues], fork 
-the project and submit pull requests. If you're adding new public API, please also 
+the project and submit pull requests. If you're adding a new public API, please also 
 consider adding [samples][content] that can be turned into a documentation. You might
-also want to read [library design notes][readme] to understand how it works.
+also want to read the [library design notes][readme] to understand how it works.
 
 The library is available under Public Domain license, which allows modification and 
 redistribution for both commercial and non-commercial purposes. For more information see the 
 [License file][license] in the GitHub repository. 
 
-  [content]: https://github.com/fsprojects/FSharp.ProjectScaffold/tree/master/docs/content
-  [gh]: https://github.com/fsprojects/FSharp.ProjectScaffold
-  [issues]: https://github.com/fsprojects/FSharp.ProjectScaffold/issues
-  [readme]: https://github.com/fsprojects/FSharp.ProjectScaffold/blob/master/README.md
-  [license]: https://github.com/fsprojects/FSharp.ProjectScaffold/blob/master/LICENSE.txt
+  [content]: https://github.com/fsprojects/FsXaml/tree/master/docs/content
+  [gh]: https://github.com/fsprojects/FsXaml
+  [issues]: https://github.com/fsprojects/FsXaml/issues
+  [readme]: https://github.com/fsprojects/FsXaml/blob/master/README.md
+  [license]: https://github.com/fsprojects/FsXaml/blob/master/LICENSE.txt
 *)
