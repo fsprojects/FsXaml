@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>EventToFSharpEvent - FsXaml</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="@ReedCopsey"/>
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+
+    <link type="text/css" rel="stylesheet" href="/FsXaml/content/style.css" />
+    <script type="text/javascript" src="/FsXaml/content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="http://github.com/fsprojects/FsXaml">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="/FsXaml/index.html">FsXaml</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+
+
+
+<h1>EventToFSharpEvent</h1>
+<p>
+  <span>Namespace: FsXaml</span><br />
+</p>
+<div class="xmldoc">
+</div>
+  <h3>Constructors</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Constructor</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '63', 63)" onmouseover="showTip(event, '63', 63)">
+            new()
+          </code>
+          <div class="tip" id="63">
+            <strong>Signature:</strong> unit -&gt; EventToFSharpEvent<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L7-7" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+              <p>CompiledName: <code>.ctor</code></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Instance members</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Instance member</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '64', 64)" onmouseover="showTip(event, '64', 64)">
+            EventArgsConverter()
+          </code>
+          <div class="tip" id="64">
+            <strong>Signature:</strong> unit -&gt; IEventArgsConverter<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L66-66" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The optional converter used to convert the EventArgs into another type
+for passing to the FSharpEvent's parameter.  This allows strong typed conversion
+while preventing the ViewModel from requiring a hard binding to WPF</p>
+
+
+              <p>CompiledName: <code>set_EventArgsConverter</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '65', 65)" onmouseover="showTip(event, '65', 65)">
+            EventArgsConverter()
+          </code>
+          <div class="tip" id="65">
+            <strong>Signature:</strong> unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L65-65" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The optional converter used to convert the EventArgs into another type
+for passing to the FSharpEvent's parameter.  This allows strong typed conversion
+while preventing the ViewModel from requiring a hard binding to WPF</p>
+
+
+              <p>CompiledName: <code>get_EventArgsConverter</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '66', 66)" onmouseover="showTip(event, '66', 66)">
+            EventArgsConverterParameter()
+          </code>
+          <div class="tip" id="66">
+            <strong>Signature:</strong> unit -&gt; obj<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L71-71" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The converter used to map the EventArgs of the event to the VM</p>
+
+
+              <p>CompiledName: <code>set_EventArgsConverterParameter</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '67', 67)" onmouseover="showTip(event, '67', 67)">
+            EventArgsConverterParameter()
+          </code>
+          <div class="tip" id="67">
+            <strong>Signature:</strong> unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L70-70" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The converter used to map the EventArgs of the event to the VM</p>
+
+
+              <p>CompiledName: <code>get_EventArgsConverterParameter</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '68', 68)" onmouseover="showTip(event, '68', 68)">
+            FSharpEvent()
+          </code>
+          <div class="tip" id="68">
+            <strong>Signature:</strong> unit -&gt; obj<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L48-48" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The MailboxProcessor</p>
+
+
+              <p>CompiledName: <code>set_FSharpEvent</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '69', 69)" onmouseover="showTip(event, '69', 69)">
+            FSharpEvent()
+          </code>
+          <div class="tip" id="69">
+            <strong>Signature:</strong> unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L47-47" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The MailboxProcessor</p>
+
+
+              <p>CompiledName: <code>get_FSharpEvent</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '70', 70)" onmouseover="showTip(event, '70', 70)">
+            FSharpEventParameter()
+          </code>
+          <div class="tip" id="70">
+            <strong>Signature:</strong> unit -&gt; obj<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L53-53" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The paramter passed to the MailboxProcessor.  If this is set, the EventArgs are ignored</p>
+
+
+              <p>CompiledName: <code>set_FSharpEventParameter</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '71', 71)" onmouseover="showTip(event, '71', 71)">
+            FSharpEventParameter()
+          </code>
+          <div class="tip" id="71">
+            <strong>Signature:</strong> unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L52-52" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The paramter passed to the MailboxProcessor.  If this is set, the EventArgs are ignored</p>
+
+
+              <p>CompiledName: <code>get_FSharpEventParameter</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '72', 72)" onmouseover="showTip(event, '72', 72)">
+            PassEventArgsToFSharpEvent()
+          </code>
+          <div class="tip" id="72">
+            <strong>Signature:</strong> unit -&gt; bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L59-59" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Boolean indicating whether the EventArgs passed to the
+event handler will be forwarded to the event's Trigger method
+when the event is fired.  The EventArgsConverterParameter will get used
+to map the types across as needed</p>
+
+
+              <p>CompiledName: <code>set_PassEventArgsToFSharpEvent</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '73', 73)" onmouseover="showTip(event, '73', 73)">
+            PassEventArgsToFSharpEvent()
+          </code>
+          <div class="tip" id="73">
+            <strong>Signature:</strong> unit -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L59-59" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>Boolean indicating whether the EventArgs passed to the
+event handler will be forwarded to the event's Trigger method
+when the event is fired.  The EventArgsConverterParameter will get used
+to map the types across as needed</p>
+
+
+              <p>CompiledName: <code>get_PassEventArgsToFSharpEvent</code></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Static members</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Static member</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '74', 74)" onmouseover="showTip(event, '74', 74)">
+            EventArgsConverterParameterProperty
+          </code>
+          <div class="tip" id="74">
+            <strong>Signature:</strong> DependencyProperty<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L41-41" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The converter parameter used to map the EventArgs of the event to the VM</p>
+
+
+              <p>CompiledName: <code>get_EventArgsConverterParameterProperty</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '75', 75)" onmouseover="showTip(event, '75', 75)">
+            EventArgsConverterProperty
+          </code>
+          <div class="tip" id="75">
+            <strong>Signature:</strong> DependencyProperty<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L38-38" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The converter used to map the EventArgs of the event to the VM</p>
+
+
+              <p>CompiledName: <code>get_EventArgsConverterProperty</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '76', 76)" onmouseover="showTip(event, '76', 76)">
+            FSharpEventParameterProperty
+          </code>
+          <div class="tip" id="76">
+            <strong>Signature:</strong> DependencyProperty<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L35-35" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The paramter passed to the MailboxProcessor<'a>.  If this is set, the EventArgs are ignored</p>
+
+
+              <p>CompiledName: <code>get_FSharpEventParameterProperty</code></p>
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '77', 77)" onmouseover="showTip(event, '77', 77)">
+            FSharpEventProperty
+          </code>
+          <div class="tip" id="77">
+            <strong>Signature:</strong> DependencyProperty<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/fsprojects/FsXaml/tree/master/src/FsXaml.Wpf.Blend/EventToFSEvent.fs#L32-32" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          <p>The MailboxProcessor<'a></p>
+
+
+              <p>CompiledName: <code>get_FSharpEventProperty</code></p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+        </div>
+        <div class="span3">
+          <img src="/FsXaml/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">FsXaml</li>
+            <li><a href="/FsXaml/index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="http://nuget.org/packages/FsXaml">Get Library via NuGet</a></li>
+            <li><a href="http://github.com/fsprojects/FsXaml">Source Code on GitHub</a></li>
+            <li><a href="/FsXaml/license.html">License</a></li>
+            <li><a href="/FsXaml/release-notes.html">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="/FsXaml/tutorial.html">Sample tutorial</a></li>
+
+            <li class="nav-header">Documentation</li>
+            <li><a href="/FsXaml/reference/index.html">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="http://github.com/fsprojects/FsXaml"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"/></a>
+  </body>
+  </html>
