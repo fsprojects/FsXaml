@@ -3,8 +3,6 @@
 open System
 open System.Reflection
 
-[<assembly:AssemblyVersion("2.0.0.0")>]
-[<assembly:AssemblyFileVersion("2.0.0.0")>]
 [<assembly:System.Runtime.CompilerServices.InternalsVisibleTo("FsXaml.Wpf.Blend")>]
 do()
 
