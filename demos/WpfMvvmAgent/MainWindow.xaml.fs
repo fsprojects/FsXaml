@@ -7,7 +7,7 @@ open System.Windows
 type MainWindowBase = XAML<"MainWindow.xaml">
 
 // This is to demonstrate being able to add in "code behind"
-type MainWindow() as self =
+type MainWindow() =
     inherit MainWindowBase()
 
     let shutdown _ =
@@ -15,10 +15,8 @@ type MainWindow() as self =
         |> ignore
         Application.Current.Shutdown()
 
-    do
+    override this.OnInitialize() =
         // Subscribe to an event handler on the ExitButton
-        self.Loaded.Subscribe(fun _ -> 
-            self.ExitButton.Click.Add shutdown
-            ) |> ignore
+        this.Loaded.Add (fun _ -> this.ExitButton.Click.Add shutdown) 
         
 

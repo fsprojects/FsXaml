@@ -2,6 +2,7 @@
 
 open System
 open System.IO
+
 open System.Xml
 open System.Windows
 
@@ -13,15 +14,15 @@ open FsXaml.TypeProviders.Helper
 
 open System.Reflection
 
-[<assembly:AssemblyVersion("2.0.0.0")>]
-[<assembly:AssemblyFileVersion("2.0.0.0")>]
-do()
 
 module XamlTypeUtils =
     let internal wpfAssembly = typeof<System.Windows.Controls.Button>.Assembly
 
     [<Literal>]
     let internal AccessorName = "__xaml_accessor";
+
+    [<Literal>]
+    let internal InitializedComponentFieldName = "__components_initialized";
 
     type internal FilePosition =  
        { Line: int; 
@@ -226,84 +227,119 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                                             
                 let tempAssembly = ProvidedAssembly(assemblyPath)
 
-                let outerType =
-                    let createWithoutAccessors feType =                        
-                        let providedType = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(feType), IsErased = false)
-                        providedType.SetAttributes (TypeAttributes.Public ||| TypeAttributes.Class)
-                        let baseConstructorInfo = feType.GetConstructor(BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance, null, [| |], null)
-                        let ctor = ProvidedConstructor([])
-                        ctor.BaseConstructorCall <- fun args -> baseConstructorInfo, args                         
+                let outerType (ic : ProvidedMethod) (initialized : ProvidedField) (oninitialize : ProvidedMethod) =
+                    let providedType = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(root.NodeType), IsErased = false)
+                    providedType.SetAttributes (TypeAttributes.Public ||| TypeAttributes.Class)
+                    let baseConstructorInfo = root.NodeType.GetConstructor(BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance, null, [| |], null)
+                    let ctor = ProvidedConstructor([])
+                    ctor.BaseConstructorCall <- fun args -> baseConstructorInfo, args                         
+                    // Constructor calls this.InitializeComponent()
+                    ctor.InvokeCode <-
+                        fun args ->       
+                            match args with
+                            | [this] -> Expr.Call(this, ic, [ ])                                 
+                            | _ -> failwith "Wrong constructor arguments"
+                    providedType.AddMember ctor
 
-                        ctor.InvokeCode <-
-                            fun args ->       
-                                match args with
+                    // Setup InitializeComponent now
+                    let setupWithoutAccessors () =
+                        ic.InvokeCode <-
+                            fun args ->
+                                match args with 
                                 | [this] ->
                                     let o = Expr.Coerce(this, typeof<obj>)
+                                    let isInit = Expr.FieldGet(this, initialized)
+                                    let setInit = Expr.FieldSet(this, initialized, Expr.Value(true))
                                     <@@
-                                        InjectXaml.from resourcePath (%%o : obj)
+                                        if (not (%%isInit : bool)) then
+                                            (%%setInit)                                            
+                                            InjectXaml.from resourcePath (%%o : obj)
+                                            (%%Expr.Call(this, oninitialize, [ ]))
                                     @@>
                                 | _ -> failwith "Wrong constructor arguments"
 
-                        providedType.AddMember ctor
-                        providedType
-
-                    let createWithAccessors feType =
+                    let setupWithAccessors () =
+                        // We added named elements, so add the accessor field we need
                         let accessorType = typeof<NamedNodeAccessor>
                         let accessorConstructorArgType = typeof<FrameworkElement>
-                        
-                        let providedType = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(feType), IsErased = false)
-                        providedType.SetAttributes (TypeAttributes.Public ||| TypeAttributes.Class)
-                        let baseConstructorInfo = feType.GetConstructor(BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance, null, [| |], null)
-                        let ctor = ProvidedConstructor([])
-                        ctor.BaseConstructorCall <- fun args -> baseConstructorInfo, args                         
+                        let accessorField = ProvidedField(XamlTypeUtils.AccessorName, accessorType)
+                        providedType.AddMember accessorField
 
-                        let addingNamedElements = elements |> Seq.exists (fun x -> not x.IsRoot)
-                        
-                        match addingNamedElements with
-                        | false -> 
-                            // If we didn't add any named elements, we don't need an accessor field or constructor info
-                            ctor.InvokeCode <- 
-                                fun args ->
-                                    match args with
-                                    | [this] ->                                          
-                                        let o = Expr.Coerce(this, typeof<obj>)                                            
-                                        <@@                                                        
-                                            InjectXaml.from resourcePath (%%o : obj)
-                                        @@>
-                                    | _ -> failwith "Wrong constructor arguments"
-                        | true ->
-                            // We added named elements, so add the accessor field we need
-                            let accessorField = ProvidedField(XamlTypeUtils.AccessorName, accessorType)
-                            providedType.AddMember accessorField
-                            ctor.InvokeCode <- 
-                                fun args ->
-                                    match args with
-                                    | [this] ->                                          
-                                        let o = Expr.Coerce(this, typeof<obj>)                                            
-                                        let accessCtor = accessorType.GetConstructor([| accessorConstructorArgType |])
-                                        let accessCtorArg = Expr.Coerce(this, accessorConstructorArgType)
-                                        let access = Expr.NewObject(accessCtor, [ accessCtorArg ])
-                                        let setfield = Expr.FieldSet(this, accessorField, access)
-                                        <@@
+                        ic.InvokeCode <-
+                            fun args ->
+                                match args with 
+                                | [this] ->
+                                    let o = Expr.Coerce(this, typeof<obj>)
+                                    let isInit = Expr.FieldGet(this, initialized)
+                                    let setInit = Expr.FieldSet(this, initialized, Expr.Value(true))
+                                    let accessCtor = accessorType.GetConstructor([| accessorConstructorArgType |])
+                                    let accessCtorArg = Expr.Coerce(this, accessorConstructorArgType)
+                                    let access = Expr.NewObject(accessCtor, [ accessCtorArg ])
+                                    let setfield = Expr.FieldSet(this, accessorField, access)
+                                    <@@
+                                        if (not (%%isInit : bool)) then                                            
+                                            (%%setInit)
                                             (%%setfield)                                    
                                             InjectXaml.from resourcePath (%%o : obj)
-                                        @@>
-                                    | _ -> failwith "Wrong constructor arguments"
-
-                            XamlTypeUtils.addAccessorTypeFromElements providedType elements                        
-
-                        providedType.AddMember ctor
-                        
-                        providedType
-
+                                            (%%Expr.Call(this, oninitialize, [ ]))
+                                    @@>
+                                | _ -> failwith "Wrong constructor arguments"
+                        XamlTypeUtils.addAccessorTypeFromElements providedType elements                        
+                            
+                    let addingNamedElements = elements |> Seq.exists (fun x -> not x.IsRoot)
                     // If we're a framework element (UserControl/Window/etc), we can add named elements,
                     // otherwise, we don't bother
-                    match root.NodeType with
-                    | fe when typeof<FrameworkElement>.IsAssignableFrom fe -> createWithAccessors fe                         
-                    | other -> createWithoutAccessors other
+                    match addingNamedElements, root.NodeType with
+                    | true, fe when typeof<FrameworkElement>.IsAssignableFrom fe -> setupWithAccessors()
+                    | _ -> setupWithoutAccessors()
+
+                    providedType
                 
+                // Implement IComponentConnector                
+                let icc = typeof<System.Windows.Markup.IComponentConnector>
+
+                let initialized = ProvidedField(XamlTypeUtils.InitializedComponentFieldName, typeof<bool>)
+
+                let oninitialize = ProvidedMethod("OnInitialize", [ ], typeof<System.Void>)
+                oninitialize.SetMethodAttrs(MethodAttributes.Virtual ||| MethodAttributes.NewSlot ||| MethodAttributes.Public)
+                oninitialize.InvokeCode <- fun _ -> <@@ () @@>                
+
+                // Make InitializeComponent public, since that matches C# expectations
+                // However, we're making it virtual, so subclasses can do extra work before/after if desired
+                let icc_ic = icc.GetMethod("InitializeComponent")
+                let ic = ProvidedMethod("InitializeComponent", [ ], typeof<System.Void>)
+                ic.SetMethodAttrs( 
+                    MethodAttributes.Private 
+                    ||| MethodAttributes.HideBySig 
+                    ||| MethodAttributes.NewSlot 
+                    ||| MethodAttributes.Virtual 
+                    ||| MethodAttributes.Final)
+                let icc_con = icc.GetMethod("Connect")
+
+                let con = ProvidedMethod("Connect", [ ProvidedParameter("connectionId", typeof<int>) ; ProvidedParameter("target", typeof<obj>) ], typeof<System.Void>)
+                con.SetMethodAttrs( 
+                    MethodAttributes.Private 
+                    ||| MethodAttributes.HideBySig 
+                    ||| MethodAttributes.NewSlot 
+                    ||| MethodAttributes.Virtual 
+                    ||| MethodAttributes.Final)
+                con.InvokeCode <- fun _ -> <@@ () @@>
+
+                let outerType = outerType ic initialized oninitialize
+
+                outerType.AddMember initialized
+                outerType.AddMember oninitialize
+
+                outerType.AddInterfaceImplementation icc
+                outerType.DefineMethodOverride(ic, icc_ic)
+                outerType.AddMember ic
+
+                outerType.DefineMethodOverride(con, icc_con)
+                outerType.AddMember con 
+
                 tempAssembly.AddTypes <| [ outerType ]
                 outerType))
+
 
         this.AddNamespace(nameSpace, [ providerType ])
 

@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="MainViewModel.fs" />
     <Resource Include="ApplicationResources.xaml" />
+    <Resource Include="ErrorView.xaml" />
     <Resource Include="MainView.xaml" />
     <Compile Include="MainView.xaml.fs" />
     <Resource Include="MainWindow.xaml" />

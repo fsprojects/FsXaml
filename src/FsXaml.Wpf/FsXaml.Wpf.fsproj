@@ -61,6 +61,7 @@
     <Compile Include="ValueConverters.fs" />
     <Compile Include="AttachedProperties.fs" />
     <Compile Include="WpfXmlnsDefinitions.fs" />
+    <Compile Include="AssemblyInfo.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

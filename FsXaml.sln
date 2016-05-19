@@ -17,12 +17,13 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.Tests", "tests\FsXaml.Tests\FsXaml.Tests.fsproj", "{88CB91BE-0CFB-498F-899E-39BD5AC2C6C4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2A0F3842-B390-4E28-AF0E-7671BF8ECBBE}"
+	ProjectSection(SolutionItems) = preProject
+		RELEASE_NOTES.md = RELEASE_NOTES.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{51978E8A-6DE3-4332-B380-C3A19CAAEF32}"
 	ProjectSection(SolutionItems) = preProject
 		docs\content\index.fsx = docs\content\index.fsx
-		docs\content\license.md = docs\content\license.md
-		docs\content\release-notes.md = docs\content\release-notes.md
 		docs\content\tutorial.fsx = docs\content\tutorial.fsx
 	EndProjectSection
 EndProject

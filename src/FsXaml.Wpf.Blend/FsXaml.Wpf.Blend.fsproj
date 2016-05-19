@@ -57,6 +57,7 @@
     <Compile Include="EventToFSEvent.fs" />
     <Compile Include="WpfXmlnsDefinitions.fs" />
     <Compile Include="WpfSupport.fs" />
+    <Compile Include="AssemblyInfo.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
