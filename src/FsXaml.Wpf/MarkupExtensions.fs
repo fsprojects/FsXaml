@@ -1,6 +1,7 @@
 ﻿namespace FsXaml
 
 open System
+open System.Reflection
 open System.Windows
 open System.Windows.Data
 open System.Windows.Input
@@ -9,6 +10,7 @@ open System.Windows.Markup
 module ServiceProvider = 
     let private getService<'t> (serviceProvider : IServiceProvider) = serviceProvider.GetService typeof<'t> :?> 't
     let ProvideValueTarget serviceProvider = getService<IProvideValueTarget> serviceProvider
+    let XamlTypeResolver serviceProvider = getService<IXamlTypeResolver> serviceProvider
 
 module Reflection = 
     let tryGetMethod (t: Type) methodName =
@@ -81,3 +83,19 @@ type HandlerExtension(observerBinding : Binding, map : obj) as me =
         RoutedEventHandler onEvent :> _
     
     member __.ObserverBinding = observerBinding
+
+[<MarkupExtensionReturnType(typeof<MethodInfo>)>]
+type FunctionExtension(name : String) = 
+    inherit MarkupExtension()
+    let name = name
+    override this.ProvideValue(serviceProvider : IServiceProvider) =
+        let resolver = ServiceProvider.XamlTypeResolver serviceProvider
+        if obj.ReferenceEquals(resolver, null) then null
+        else
+            let m = System.Text.RegularExpressions.Regex.Match(name, @"(?<qn>\w+:\w+)\.(?<method>\w+)")
+            if m.Success then
+                let t = resolver.Resolve(m.Groups.["qn"].Value)
+                let methodName = m.Groups.["method"].Value
+                t.GetMethod(methodName, BindingFlags.Static ||| BindingFlags.Public ||| BindingFlags.NonPublic) :>_
+            else null
+                
