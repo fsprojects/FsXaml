@@ -18,6 +18,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpDesktopUINumericUpDow
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsharpAttachedProperty", "demos\FsharpAttachedProperty\FsharpAttachedProperty.fsproj", "{7D568A2D-1014-437C-879C-05E3D5F3A515}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WpfSimpleDrawingApplication2", "demos\WpfSimpleDrawingApplication2\WpfSimpleDrawingApplication2.fsproj", "{6A3A3470-CA82-4139-846B-0670144D8D1A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
