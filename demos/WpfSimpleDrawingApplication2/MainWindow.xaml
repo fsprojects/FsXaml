@@ -11,21 +11,15 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"
                    HorizontalAlignment="Center"
                    FontSize="14"
-                   Text="draw with the mouse anywhere in the region below" />
-        <Border Grid.Row="1"
-                BorderBrush="Black"
-                BorderThickness="1"
-                ClipToBounds="True">
-            <ItemsControl HorizontalAlignment="Stretch"
-                          VerticalAlignment="Stretch"
-                          Background="Transparent"
-                          ItemsSource="{Binding Path=Lines}"
-                          MouseMove="{fsxaml:Handler {Binding OnMouseMove},
-                                                     {x:Static local:Map.MouseEventArgsToPoint}}">
+                   Text="draw with the mouse anywhere in the regions below" />
+
+        <GroupBox Grid.Row="1" Header="fsxaml:Function map">
+            <ItemsControl ItemsSource="{Binding Path=Lines}" MouseMove="{fsxaml:Handler {Binding OnMouseMove}, {fsxaml:Function local:Map.mouseEventArgsToPoint}}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <Canvas HorizontalAlignment="Stretch"
@@ -44,6 +38,28 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
-        </Border>
+        </GroupBox>
+
+        <GroupBox Grid.Row="2" Header="x:Static map">
+            <ItemsControl ItemsSource="{Binding Path=Lines}" MouseMove="{fsxaml:Handler {Binding OnMouseMove}, {x:Static local:Map.MouseEventArgsToPoint}}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="White" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Line Stroke="Black"
+                              StrokeThickness="1"
+                              X1="{Binding Start.X}"
+                              X2="{Binding End.X}"
+                              Y1="{Binding Start.Y}"
+                              Y2="{Binding End.Y}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
     </Grid>
 </Window>

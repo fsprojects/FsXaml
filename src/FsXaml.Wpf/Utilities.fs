@@ -109,3 +109,14 @@ module Reflection =
         match mi with
         | Some mi -> mi.Invoke(source, [| arg |])
         | None -> failwithf "Could not find method: %s"  methodName
+
+module DesignMode =
+    let dependencyObject = DependencyObject()
+
+    let ThrowIfDesignMode message =
+        if System.ComponentModel.DesignerProperties.GetIsInDesignMode dependencyObject then
+            failwith message
+
+    let ThrowIfNotDesignMode message =
+        if not (System.ComponentModel.DesignerProperties.GetIsInDesignMode dependencyObject) then
+            failwith message
