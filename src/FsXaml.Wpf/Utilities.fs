@@ -113,10 +113,14 @@ module Reflection =
 module DesignMode =
     let dependencyObject = DependencyObject()
 
-    let ThrowIfDesignMode message =
-        if System.ComponentModel.DesignerProperties.GetIsInDesignMode dependencyObject then
-            failwith message
+    let InDesignMode = System.ComponentModel.DesignerProperties.GetIsInDesignMode dependencyObject
 
-    let ThrowIfNotDesignMode message =
-        if not (System.ComponentModel.DesignerProperties.GetIsInDesignMode dependencyObject) then
+    let failIfDesignModef format message =
+        if InDesignMode then
+            failwithf format message
+
+    let failIfDesignMode message = failIfDesignModef "%s" message
+
+    let failIfNotDesignMode message =
+        if not InDesignMode then
             failwith message

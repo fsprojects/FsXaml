@@ -20,7 +20,6 @@ type ToArrayConverter() =
             values.Clone()
         member x.ConvertBack(_, _, _, _) : obj [] = failwith "Not supported"
 
-        
 [<MarkupExtensionReturnType(typeof<MethodInfo>)>]
 type FunctionExtension(name : String) = 
     inherit MarkupExtension()
@@ -44,9 +43,9 @@ type HandlerExtension(observerBinding : Binding, map : obj) as me =
         let verifyMapMethod (mi:MethodInfo) =
             let paramaters = mi.GetParameters()
             if not (paramaters.Length = 1) || not (typeof<EventArgs>.IsAssignableFrom(paramaters.[0].ParameterType)) then
-                failwithf "Invalid map method: %s first argument must be a subtype of System.EventArgs" (map.GetType().FullName)
+                DesignMode.failIfDesignModef "Invalid map method: %s first argument must be a subtype of System.EventArgs" (map.GetType().FullName)
             if mi.ReturnType = typeof<Void> then
-                 failwithf "Invalid map method: %s cannot have returntype void" (map.GetType().FullName)
+                 DesignMode.failIfDesignModef "Invalid map method: %s cannot have returntype void" (map.GetType().FullName)
 
         let (|InvokeMethod|_|) (value : obj) = 
             if obj.ReferenceEquals(value, null) then None
@@ -66,9 +65,11 @@ type HandlerExtension(observerBinding : Binding, map : obj) as me =
             verifyMapMethod mi
             invoke mi map
         | :? FunctionExtension -> 
-            DesignMode.ThrowIfNotDesignMode "map cannot be of type FunctionExtension. Should never get here"
-            invoke null null
-        | _ -> failwithf "Invalid map method: %s" (map.GetType().FullName)
+            DesignMode.failIfNotDesignMode "map cannot be of type FunctionExtension. (Should never get here)"
+            fun e -> e
+        | _ -> 
+            DesignMode.failIfDesignModef "Invalid map method: %s" (map.GetType().FullName)
+            fun e -> e
 
     let observerBinding = observerBinding
     let map = getMapMethod map
