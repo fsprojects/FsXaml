@@ -87,3 +87,40 @@ module Wpf =
 
     let installSynchronizationContext () =
         installAndGetSynchronizationContext() |> ignore
+
+module Reflection = 
+    let tryGetMethod (t: Type) methodName =
+        let tryGetMethod (t: Type) methodName =
+            let mi = t.GetMethod methodName
+            if obj.ReferenceEquals(mi, null) then None
+            else Some(mi)
+        t.GetInterfaces()
+        |> Array.tryPick (fun i -> tryGetMethod i methodName)
+
+    let private tryGetAnyMethod source methodName =
+        let t = source.GetType()
+        let mi = t.GetMethod methodName
+        if obj.ReferenceEquals(mi, null) then
+            tryGetMethod t methodName
+        else Some(mi)
+
+    let invoke source methodName arg = 
+        let mi = tryGetAnyMethod source methodName
+        match mi with
+        | Some mi -> mi.Invoke(source, [| arg |])
+        | None -> failwithf "Could not find method: %s"  methodName
+
+module DesignMode =
+    let dependencyObject = DependencyObject()
+
+    let InDesignMode = System.ComponentModel.DesignerProperties.GetIsInDesignMode dependencyObject
+
+    let failIfDesignModef format message =
+        if InDesignMode then
+            failwithf format message
+
+    let failIfDesignMode message = failIfDesignModef "%s" message
+
+    let failIfNotDesignMode message =
+        if not InDesignMode then
+            failwith message

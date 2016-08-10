@@ -11,7 +11,7 @@ open FsXaml
 // Converters are used to map from View events -> our F# defined types in the ViewModel or Model layer
 module Map =
     let mouseEventArgsToPoint (args : MouseEventArgs) =
-        let source = args.OriginalSource :?> IInputElement
+        let source = args.Source :?> IInputElement
         let pt = args.GetPosition(source)
         { X = pt.X; Y = pt.Y }
     let MouseEventArgsToPoint = mouseEventArgsToPoint

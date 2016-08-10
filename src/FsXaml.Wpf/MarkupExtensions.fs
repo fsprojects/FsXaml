@@ -12,28 +12,6 @@ module ServiceProvider =
     let ProvideValueTarget serviceProvider = getService<IProvideValueTarget> serviceProvider
     let XamlTypeResolver serviceProvider = getService<IXamlTypeResolver> serviceProvider
 
-module Reflection = 
-    let tryGetMethod (t: Type) methodName =
-        let tryGetMethod (t: Type) methodName =
-            let mi = t.GetMethod methodName
-            if obj.ReferenceEquals(mi, null) then None
-            else Some(mi)
-        t.GetInterfaces()
-        |> Array.tryPick (fun i -> tryGetMethod i methodName)
-
-    let private tryGetAnyMethod source methodName =
-        let t = source.GetType()
-        let mi = t.GetMethod methodName
-        if obj.ReferenceEquals(mi, null) then
-            tryGetMethod t methodName
-        else Some(mi)
-
-    let invoke source methodName arg = 
-        let mi = tryGetAnyMethod source methodName
-        match mi with
-        | Some mi -> mi.Invoke(source, [| arg |])
-        | None -> failwithf "Could not find method: %s"  methodName
-
 type ToArrayConverter() = 
     static member Default = ToArrayConverter()
     interface IMultiValueConverter with
@@ -42,11 +20,77 @@ type ToArrayConverter() =
             values.Clone()
         member x.ConvertBack(_, _, _, _) : obj [] = failwith "Not supported"
 
+type ClassNameAndMethodName = 
+    { QualifiedName : string
+      MethoodName : string }
+
+[<MarkupExtensionReturnType(typeof<MethodInfo>)>]
+type FunctionExtension(name : String) = 
+    inherit MarkupExtension()
+    let name = name
+    
+    let classNameAndMethodName = 
+        let m = System.Text.RegularExpressions.Regex.Match(name, @"^ *(?<qn>\w+:\w+)\.(?<method>\w+) *$")
+        if m.Success then 
+            Some { QualifiedName = m.Groups.["qn"].Value
+                   MethoodName = m.Groups.["method"].Value }
+        else
+            DesignMode.failIfDesignModef 
+                "Illegal method pattern %s. Expected a format like: local:MapModule.MapFunction" name
+            None
+    
+    override this.ProvideValue(serviceProvider : IServiceProvider) = 
+        let resolver = ServiceProvider.XamlTypeResolver serviceProvider
+        if obj.ReferenceEquals(resolver, null) then null
+        else
+            match classNameAndMethodName with
+            | Some x ->
+                let typ = resolver.Resolve(x.QualifiedName)
+                let mi = typ.GetMethod(x.MethoodName, BindingFlags.Static ||| BindingFlags.Public)
+                if obj.ReferenceEquals(mi, null) then 
+                    DesignMode.failIfDesignModef "Could find a static public method for %s" name
+                mi :> _            
+            | None -> null         
+
 [<MarkupExtensionReturnType(typeof<RoutedEventHandler>)>]
 type HandlerExtension(observerBinding : Binding, map : obj) as me = 
     inherit MarkupExtension()
+    
+    let getMapMethod (map : obj) = 
+        let verifyMapMethod (mi : MethodInfo) = 
+            let paramaters = mi.GetParameters()
+            if not (paramaters.Length = 1) || not (typeof<EventArgs>.IsAssignableFrom(paramaters.[0].ParameterType)) then 
+                DesignMode.failIfDesignModef 
+                    "Invalid map method: %s first argument must be a subtype of System.EventArgs" 
+                    (map.GetType().FullName)
+            if mi.ReturnType = typeof<Void> then 
+                DesignMode.failIfDesignModef "Invalid map method: %s cannot have returntype void" 
+                    (map.GetType().FullName)
+        
+        let (|InvokeMethod|_|) (value : obj) = 
+            if obj.ReferenceEquals(value, null) then None
+            else 
+                let invokeMethod = value.GetType().GetMethod("Invoke")
+                if obj.ReferenceEquals(invokeMethod, null) then None
+                else Some(invokeMethod)
+        
+        let invoke (mi : MethodInfo) self arg = mi.Invoke(self, [| arg |])
+        match map with
+        | :? MethodInfo as mi -> 
+            verifyMapMethod mi
+            invoke mi null
+        | InvokeMethod(mi) -> 
+            verifyMapMethod mi
+            invoke mi map
+        | :? FunctionExtension -> 
+            DesignMode.failIfNotDesignMode "map cannot be of type FunctionExtension. (Should never get here)"
+            fun e -> e
+        | _ -> 
+            DesignMode.failIfDesignModef "Invalid map method: %A" map
+            fun e -> e
+    
     let observerBinding = observerBinding
-    let map = map
+    let map = getMapMethod map
     static let HandlersProperty = 
         DependencyProperty.RegisterAttached
             ("Handlers", typeof<ResizeArray<HandlerExtension>>, typeof<HandlerExtension>, PropertyMetadata(null))
@@ -73,7 +117,7 @@ type HandlerExtension(observerBinding : Binding, map : obj) as me =
         observers.[index]
     
     let onEvent (sender : obj) (e : RoutedEventArgs) = 
-        let mapped = Reflection.invoke map "Invoke" e
+        let mapped = map (e)
         let observer = getObserver (sender :?> FrameworkElement)
         Reflection.invoke observer "OnNext" mapped |> ignore
     
@@ -83,19 +127,3 @@ type HandlerExtension(observerBinding : Binding, map : obj) as me =
         RoutedEventHandler onEvent :> _
     
     member __.ObserverBinding = observerBinding
-
-[<MarkupExtensionReturnType(typeof<MethodInfo>)>]
-type FunctionExtension(name : String) = 
-    inherit MarkupExtension()
-    let name = name
-    override this.ProvideValue(serviceProvider : IServiceProvider) =
-        let resolver = ServiceProvider.XamlTypeResolver serviceProvider
-        if obj.ReferenceEquals(resolver, null) then null
-        else
-            let m = System.Text.RegularExpressions.Regex.Match(name, @"(?<qn>\w+:\w+)\.(?<method>\w+)")
-            if m.Success then
-                let t = resolver.Resolve(m.Groups.["qn"].Value)
-                let methodName = m.Groups.["method"].Value
-                t.GetMethod(methodName, BindingFlags.Static ||| BindingFlags.Public ||| BindingFlags.NonPublic) :>_
-            else null
-                

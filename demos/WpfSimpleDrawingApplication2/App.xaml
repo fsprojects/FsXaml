@@ -1,8 +1,38 @@
-﻿<Application
-  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
-    StartupUri="MainWindow.xaml"
-  >
+﻿<Application xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:WpfSimpleDrawingApplication2;assembly=WpfSimpleDrawingApplication2"
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <DataTemplate x:Key="BluePointTemplate" DataType="{x:Type local:Point}">
+            <Ellipse Width="20"
+                     Height="20"
+                     Fill="Blue"
+                     Opacity="0.3" />
+        </DataTemplate>
+
+        <Style x:Key="PointChartStyle" TargetType="{x:Type ItemsControl}">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Canvas Background="Transparent" />
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type ContentPresenter}">
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <!--hardcoding here, quick and dirty. Perhaps better to bind to ActualWidth/2 with converter.-->
+                                <TranslateTransform X="-10" Y="-10" />
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>
