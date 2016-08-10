@@ -4,16 +4,10 @@ open System
 open System.Collections.ObjectModel
 
 type MainViewModel() =
-    let lines = ObservableCollection<PointPair>()
-    let mutable previous = None
-    let handleMove p = 
-        match previous with 
-        | Some p1 -> lines.Add({ Start = p1; End = p } )
-        | _ -> ()
-        previous <- Some p
+    let points = ObservableCollection<Point>()
 
-    let onMouseMove = RelayObserver handleMove
+    let onMouseLeftDown = RelayObserver (fun p -> points.Add(p))
     
-    member this.OnMouseMove = onMouseMove
+    member this.OnMouseLeftDown = onMouseLeftDown
     // Our lines for visual binding
-    member __.Lines = lines    
+    member __.Points = points    
