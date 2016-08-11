@@ -14,6 +14,7 @@ let ``click up then down``() =
     Assert.True(System.IO.File.Exists(startInfo.FileName))
     use application = Application.AttachOrLaunch(startInfo)
     let window = application.GetWindow("Up/Down")
+    window.WaitWhileBusy()
     let upButton = window.Get<Button>("upButton")
     let downButton = window.Get<Button>("downButton")
     let input = window.Get<TextBox>("input")

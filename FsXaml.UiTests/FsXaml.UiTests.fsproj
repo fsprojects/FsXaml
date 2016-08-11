@@ -51,6 +51,7 @@
     <Compile Include="WpfMvvmAgentTests.fs" />
     <Compile Include="WpfSimpleDrawingApplicationTests.fs" />
     <Compile Include="WpfSimpleDrawingApplication2Tests.fs" />
+    <Compile Include="WpfSimpleMvvmApplicationTests.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
