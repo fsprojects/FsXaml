@@ -3,7 +3,7 @@
         xmlns:fsxaml="http://github.com/fsprojects/FsXaml"
         xmlns:local="clr-namespace:WpfSimpleDrawingApplication2;assembly=WpfSimpleDrawingApplication2"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="Drawing using EventToFSharpEvent">
+        Title="Drawing using Handler">
     <Window.DataContext>
         <local:MainViewModel />
     </Window.DataContext>
