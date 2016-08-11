@@ -1,6 +1,10 @@
 source https://www.nuget.org/api/v2/
+framework: >= net45
 
 nuget FSharp.Core redirects: force
+nuget Expression.Blend.Sdk 1.0.2
+nuget FSharp.Desktop.UI 0.7.1
+nuget FSharp.ViewModule.Core 0.9.9.3
 
 group Build
   source https://nuget.org/api/v2
@@ -9,15 +13,6 @@ group Build
   nuget FAKE
   nuget FSharp.Formatting
   nuget NuGet.CommandLine
-  nuget Castle.Core 3.3.3 framework: >= net45
-  nuget Expression.Blend.Sdk 1.0.2 framework: >= net45
-  nuget FSharp.Desktop.UI 0.7.1 framework: >= net45
-  nuget FSharp.ViewModule.Core 0.9.9.3 framework: >= net45
-  nuget Rx-Core 2.2.5 framework: >= net45
-  nuget Rx-Interfaces 2.2.5 framework: >= net45
-  nuget Rx-Linq 2.2.5 framework: >= net45
-  nuget Rx-Main 2.2.5 framework: >= net45
-  nuget Rx-PlatformServices 2.2.5 framework: >= net45
 
   github fsharp/FAKE modules/Octokit/Octokit.fsx
 
@@ -26,4 +21,3 @@ group Test
   
   nuget NUnit ~> 2
   nuget NUnit.Runners ~> 2
-
