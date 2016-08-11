@@ -50,5 +50,8 @@ GITHUB
 GROUP Test
 NUGET
   remote: https://www.nuget.org/api/v2
+    Castle.Core (3.3.3)
     NUnit (2.6.4)
     NUnit.Runners (2.6.4)
+    TestStack.White (0.13.3)
+      Castle.Core (>= 3.3)

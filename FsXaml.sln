@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{2668B496
 		build.sh = build.sh
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.UiTests", "FsXaml.UiTests\FsXaml.UiTests.fsproj", "{E8F1981D-C5E6-43D3-B3F7-392BA596A4DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
