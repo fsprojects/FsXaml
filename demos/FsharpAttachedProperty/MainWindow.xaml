@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FsharpAttachedProperty;assembly=FsharpAttachedProperty"
         Title="MainWindow"
-        Width="250"
+        SizeToContent="Width"
         Height="250"
         WindowStartupLocation="CenterScreen">
     <Grid>
