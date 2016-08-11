@@ -16,7 +16,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ListView Grid.Row="0" ItemsSource="{Binding EntityErrors}" Visibility="{Binding IsValid, Converter={StaticResource TrueToCollapsed}}" HorizontalContentAlignment="Stretch">
+        <ListView x:Name="ErrorList"  Grid.Row="0" ItemsSource="{Binding EntityErrors}" Visibility="{Binding IsValid, Converter={StaticResource TrueToCollapsed}}" HorizontalContentAlignment="Stretch">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Background="Red" Foreground="white" HorizontalAlignment="Stretch"  Text="{Binding}"/>

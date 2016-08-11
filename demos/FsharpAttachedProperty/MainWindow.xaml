@@ -1,9 +1,9 @@
 ﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:FsharpAttachedProperty;assembly=FsharpAttachedProperty"
-        Title="MainWindow"
-        SizeToContent="Width"
+        Title="Bind icon with attached property"
         Height="250"
+        SizeToContent="Width"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -14,8 +14,9 @@
             <TextBlock Text="Below is a sample of a button with an attached property for icon" />
             <TextBlock Text="(clicking it does not do anything)" />
         </StackPanel>
-        
-        <Button Grid.Row="1"
+
+        <Button x:Name="IconButton"
+                Grid.Row="1"
                 Height="50"
                 HorizontalAlignment="Center"
                 local:Icon.Geometry="F1 M 52,19L 38,35L 50,35L 25,60L 35,39L 24,39L 36,19L 52,19 Z "

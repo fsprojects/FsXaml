@@ -21,3 +21,4 @@ group Test
   
   nuget NUnit ~> 2
   nuget NUnit.Runners ~> 2
+  nuget TestStack.White

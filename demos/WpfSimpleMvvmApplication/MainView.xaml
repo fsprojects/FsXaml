@@ -28,10 +28,10 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>        
         <TextBlock Margin="3" Grid.Row="0" Grid.Column="0" Text="First:" />
-        <TextBox Margin="3" Grid.Column="1" Grid.Row="0" FontSize="16" Text="{Binding FirstName}"/>
+        <TextBox x:Name="FirstName"  Margin="3" Grid.Column="1" Grid.Row="0" FontSize="16" Text="{Binding FirstName}"/>
 
         <TextBlock Margin="3" Grid.Row="1" Grid.Column="0" Text="Last:" />
-        <TextBox Margin="3" Grid.Column="1" Grid.Row="1" FontSize="16" Text="{Binding LastName}"/>
+        <TextBox x:Name="LastName"  Margin="3" Grid.Column="1" Grid.Row="1" FontSize="16" Text="{Binding LastName}"/>
 
         <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text="Full Name:" />
         <TextBox x:Name="tbFullName" IsReadOnly="true" IsTabStop="False" Foreground="Gray"  Margin="3" Grid.Column="1" Grid.Row="2" FontSize="16" Text="{Binding FullName, Mode=OneWay}"/>
