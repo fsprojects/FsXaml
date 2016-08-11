@@ -1,4 +1,4 @@
-﻿module FsXaml.RefelectionTests
+﻿module FsXaml.Tests.RefelectionTests
 
 open System
 open FsXaml

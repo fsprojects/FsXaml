@@ -1,4 +1,4 @@
-module FsXaml.Tests
+module FsXaml.Tests.Tests
 
 open FsXaml
 open NUnit.Framework
