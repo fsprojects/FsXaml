@@ -49,6 +49,7 @@
     <Compile Include="FsharpAttachedPropertyTests.fs" />
     <Compile Include="FSharpDesktopUINumericUpDownTests.fs" />
     <Compile Include="WpfMvvmAgentTests.fs" />
+    <Compile Include="WpfSimpleDrawingApplicationTests.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
