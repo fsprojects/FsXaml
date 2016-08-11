@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{E2A9D29D-8458-429B-8B12-E88DDBC779D6}"
 	ProjectSection(SolutionItems) = preProject
 		paket.dependencies = paket.dependencies
+		paket.lock = paket.lock
 	EndProjectSection
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "WpfSimpleDrawingApplication", "demos\WpfSimpleDrawingApplication\WpfSimpleDrawingApplication.fsproj", "{15DC6C88-D98F-46D1-8359-85CFC4D32DEE}"
