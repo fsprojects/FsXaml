@@ -50,8 +50,13 @@ module InjectXaml =
             use writer = new XamlObjectWriter(reader.SchemaContext, writerSettings)
 
             while reader.Read() do
-                writer.WriteNode(reader)
-
+                try
+                    writer.WriteNode(reader)
+                with 
+                | :? XamlObjectWriterException as xowe 
+                    -> let msg = (file, reader.LineNumber, reader.LinePosition) 
+                                 |||> sprintf "XamlObjectWriterException caught writing XAML from %s. Reader at line %d, position %d." 
+                       raise (new Exception( msg, xowe ))
             writer.Result
             |> ignore
 
