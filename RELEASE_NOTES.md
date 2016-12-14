@@ -10,4 +10,11 @@
 * Generated types include virtual OnInitialize method to simplify wiring up code behind
 * Resolved issues with ElementName bindings and logical tree disconnects
 
+#### 2.2.0 - Dec 14 2016
+* Improved error messages on parse failures
+* Updated Blend Libs to new Expression SDK for .NET 4+
+* Added ability to filter converted options in EventToCommand
+
+
+
 
