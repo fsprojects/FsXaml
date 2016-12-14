@@ -2,7 +2,6 @@ FRAMEWORK: >= NET45
 NUGET
   remote: https://www.nuget.org/api/v2
     Castle.Core (3.3.3)
-    Expression.Blend.Sdk (1.0.2)
     FSharp.Core (4.0.0.1) - redirects: force
     FSharp.Desktop.UI (0.7.1)
       Castle.Core (>= 3.3.3)
@@ -22,6 +21,7 @@ NUGET
     Rx-PlatformServices (2.2.5)
       Rx-Core (>= 2.2.5)
       Rx-Interfaces (>= 2.2.5)
+    System.Windows.Interactivity.WPF (2.0.20525)
 
 GROUP Build
 NUGET

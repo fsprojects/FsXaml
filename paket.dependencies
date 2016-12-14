@@ -2,7 +2,7 @@ source https://www.nuget.org/api/v2/
 framework: >= net45
 
 nuget FSharp.Core redirects: force
-nuget Expression.Blend.Sdk 1.0.2
+nuget System.Windows.Interactivity.WPF 2.0.20525
 nuget FSharp.Desktop.UI 0.7.1
 nuget FSharp.ViewModule.Core 0.9.9.3
 
