@@ -5,8 +5,16 @@ open System.Windows
 open System.Windows.Input
 open System.Windows.Interactivity
 
+open System.Reflection
+open Microsoft.FSharp.Quotations.Patterns
+
 type EventToCommand() as self =
     inherit TriggerAction<DependencyObject>()
+
+    let getModuleType = function
+        | Call (_, methodInfo, _) -> methodInfo.DeclaringType
+        | _ -> failwith "Expression is not a method."
+    let optionModuleType = getModuleType <@ Option.isSome None @>
 
     let getCommand() =
         match self.Command with
@@ -50,6 +58,7 @@ type EventToCommand() as self =
     static let commandParameterProperty : DependencyProperty = DependencyProperty.Register("CommandParameter", typeof<obj>, typeof<EventToCommand>, UIPropertyMetadata(PropertyChangedCallback(onCommandParameterChanged)))
     static let eventArgsConverterParameterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverterParameter", typeof<obj>, typeof<EventToCommand>, UIPropertyMetadata(null))
     static let eventArgsConverterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverter", typeof<IEventArgsConverter>, typeof<EventToCommand>, UIPropertyMetadata(Utilities.defaultEventArgsConverter))
+    static let filterOptionEventArgsProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverter", typeof<bool>, typeof<EventToCommand>, UIPropertyMetadata(false))
     
 
     let mutable toggleIsEnabled = false
@@ -67,6 +76,9 @@ type EventToCommand() as self =
 
     /// The converter parameter used to map the EventArgs of the command to the VM
     static member EventArgsConverterParameterProperty with get() = eventArgsConverterParameterProperty
+
+    /// Option which allows event args to be set to None to prevent command execution
+    static member FilterOptionEventArgsProperty with get () = filterOptionEventArgsProperty
 
     // Dependency Property properties
 
@@ -98,6 +110,11 @@ type EventToCommand() as self =
         with get() = this.GetValue(EventToCommand.EventArgsConverterParameterProperty)
         and set(v) = this.SetValue(EventToCommand.EventArgsConverterParameterProperty, v)
 
+    /// When set to true, event args that evaluate to option types are unwrapped and used as a filter
+    member this.FilterOptionEventArgs 
+        with get() : bool = this.GetValue(EventToCommand.FilterOptionEventArgsProperty) :?> _
+        and set(v : bool) = this.SetValue(EventToCommand.FilterOptionEventArgsProperty, v)
+
     /// Boolean indicating whether to toggle the enabled value of the associated control
     /// based on the ICommand's CanExecute state
     member this.ToggleIsEnabled
@@ -113,6 +130,12 @@ type EventToCommand() as self =
         | :? FrameworkElement as fe -> Some fe
         | _ -> None
 
+    member private this.Execute (p : obj) =
+        if this.Command.CanExecute(p) then 
+            this.Command.Execute(p)        
+
+    member private this.ExecuteOption<'a> (p : 'a option) =
+        p |> Option.iter this.Execute 
 
     override this.Invoke param =
         let command = this.Command 
@@ -121,14 +144,27 @@ type EventToCommand() as self =
             match this.AssociatedFrameworkElement with
             | Some fe -> not fe.IsEnabled
             | _ -> true
+        
+        let unwrapOptionAndExecute p =
+            if this.FilterOptionEventArgs then
+                if p <> null then
+                    let t = p.GetType ()
+                    if t.IsGenericType && t.GetGenericTypeDefinition () = typedefof<Option<_>> then     
+                        let args = t.GetGenericArguments ()
+                        let exec = this.GetType().GetMethod("ExecuteOption", BindingFlags.Instance ||| BindingFlags.NonPublic)
+                        let exec' = exec.MakeGenericMethod args
+                        exec'.Invoke(this, [| p |]) |> ignore
+                    else
+                        this.Execute p
+            else
+                this.Execute p
 
         match associatedElementDisabled, command with
         | (true, _) -> ()
         | (_, null) -> ()
-        | (false, someCommand) ->
+        | (false, _) ->
             let parameter = getParameter param
-            if someCommand.CanExecute(parameter) then 
-                someCommand.Execute(parameter)
+            unwrapOptionAndExecute parameter
 
     override this.OnAttached() =
         base.OnAttached()
