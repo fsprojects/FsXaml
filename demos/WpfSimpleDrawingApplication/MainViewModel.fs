@@ -2,7 +2,8 @@
 
 open System
 open System.Collections.ObjectModel
-open FSharp.ViewModule
+open ViewModule
+open ViewModule.FSharp
 
 type MainViewModel() as me =
     inherit EventViewModelBase<MoveEvent>()

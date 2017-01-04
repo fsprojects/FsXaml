@@ -6,7 +6,8 @@ NUGET
     FSharp.Desktop.UI (0.7.1)
       Castle.Core (>= 3.3.3)
       Rx-Main (>= 2.2.5)
-    FSharp.ViewModule.Core (0.9.9.3)
+    FSharp.ViewModule.Core (1.0)
+      FSharp.Core
     Rx-Core (2.2.5)
       Rx-Interfaces (>= 2.2.5)
     Rx-Interfaces (2.2.5)
@@ -18,17 +19,17 @@ NUGET
       Rx-Interfaces (>= 2.2.5)
       Rx-Linq (>= 2.2.5)
       Rx-PlatformServices (>= 2.2.5)
-    Rx-PlatformServices (2.2.5)
-      Rx-Core (>= 2.2.5)
-      Rx-Interfaces (>= 2.2.5)
+    Rx-PlatformServices (2.3)
+      Rx-Core (>= 2.2)
+      Rx-Interfaces (>= 2.2)
     System.Windows.Interactivity.WPF (2.0.20525)
 
 GROUP Build
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.26)
+    FAKE (4.47.4)
     FSharp.Compiler.Service (2.0.0.6)
-    FSharp.Formatting (2.14.2)
+    FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
       FSharpVSPowerTools.Core (>= 2.3 < 2.4)
     FSharpVSPowerTools.Core (2.3)
@@ -39,14 +40,14 @@ NUGET
     Microsoft.Net.Http (2.2.29) - framework: net10, net11, net20, net30, net35, net40, net40-full
       Microsoft.Bcl (>= 1.1.10)
       Microsoft.Bcl.Build (>= 1.0.14)
-    NuGet.CommandLine (3.4.3)
-    Octokit (0.19)
+    NuGet.CommandLine (3.5)
+    Octokit (0.23)
       Microsoft.Net.Http  - framework: net10, net11, net20, net30, net35, net40, net40-full
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (32e262c11174b196dc8af16a577c8c3aa0ab0b2b)
-      Octokit
+    modules/Octokit/Octokit.fsx (73e7fea28f73811155feaab0c6ce63f51e48139e)
+      Octokit (>= 0.20)
 GROUP Test
 NUGET
   remote: https://www.nuget.org/api/v2

@@ -6,8 +6,9 @@ open System.Windows.Input
 
 open FsXaml
 
-open FSharp.ViewModule
-open FSharp.ViewModule.Validation
+open ViewModule
+open ViewModule.FSharp
+open ViewModule.Validation.FSharp
 
 type MainViewModel() as self = 
     inherit ViewModelBase()
