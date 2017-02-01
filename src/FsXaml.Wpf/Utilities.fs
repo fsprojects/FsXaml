@@ -78,6 +78,19 @@ type NamedNodeAccessor(root : FrameworkElement) =
             dict.[name] <- element
             element
 
+/// Provides access to keyed children of a ResourceDictionary
+type KeyNodeAccessor(root : ResourceDictionary) =
+    let dict = new Dictionary<_,_>()
+        
+    /// Gets a named child element by name
+    member __.GetChild name = 
+        match dict.TryGetValue name with
+        | true , element -> element
+        | false , _ -> 
+            let element = root.Item[name] 
+            dict.[name] <- element
+            element
+
 module Wpf =
     // Gets, and potentially installs, the WPF synchronization context
     let installAndGetSynchronizationContext () =
