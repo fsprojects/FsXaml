@@ -24,7 +24,7 @@
 #### 3.1.0 - Feb 2 2017
 * Changed event handlers to be abstract, providing better compile time experience
 * Improved error messages when XAML is poorly formed
-
+* Improved generated XML Doc comments
 
 
 

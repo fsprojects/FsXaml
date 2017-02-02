@@ -28,6 +28,14 @@ module internal XamlTypeUtils =
         m.InvokeCode <- fun _ -> <@@ () @@>
         m
 
+    let withMethodDocComments comments (m : ProvidedMethod) =
+        m.AddXmlDoc comments
+        m
+
+    let withPropertyDocComments comments (p : ProvidedProperty) =
+        p.AddXmlDoc comments
+        p
+
     let private addAccessorsForElements (providedType : ProvidedTypeDefinition) xamlInfo =          
         let accessorType =
             match xamlInfo.RootNodeType with
@@ -51,7 +59,9 @@ module internal XamlTypeUtils =
 
         for accessorPropertyToCreate in elements do
             let name,xamlType = accessorPropertyToCreate
-            let property = ProvidedProperty(name, xamlType.UnderlyingType, GetterCode = createMemberAccessorGetter accessorPropertyToCreate)
+            let property = 
+                ProvidedProperty(name, xamlType.UnderlyingType, GetterCode = createMemberAccessorGetter accessorPropertyToCreate)
+                |> withPropertyDocComments (sprintf "Gets the %s named %s" xamlType.UnderlyingType.Name name)
             providedType.AddMember property          
 
     let private addEventHandler (providedType : ProvidedTypeDefinition) name (xamlType : XamlType) =
@@ -66,6 +76,7 @@ module internal XamlTypeUtils =
             let handler = 
                 ProvidedMethod(name, eventHandlerParams, typeof<System.Void>)
                 |> withEmptyInvokeCode
+                |> withMethodDocComments (sprintf "Handles the %s event" name)
 
             handler.SetMethodAttrs(MethodAttributes.Virtual ||| MethodAttributes.NewSlot ||| MethodAttributes.Public ||| MethodAttributes.Abstract)
             
@@ -73,6 +84,7 @@ module internal XamlTypeUtils =
                                
     let createProvidedType assembly nameSpace typeName rootTypeInXaml resourcePath (initializeComponentMethod : ProvidedMethod) (initializedField : ProvidedField) xamlInfo =
         let providedType = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(rootTypeInXaml), IsErased = false)
+        providedType.AddXmlDoc (sprintf "%s defined in %s" rootTypeInXaml.Name resourcePath)
                     
         // If our xamlInfo contains event handlers, we write the class as abstract
         let typeAttributes =
