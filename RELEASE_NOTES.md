@@ -15,7 +15,7 @@
 * Updated Blend Libs to new Expression SDK for .NET 4+
 * Added ability to filter converted options in EventToCommand
 
-#### 3.0.0.beta1 - Feb 1 2017
+#### 3.0.0 - Feb 1 2017
 * Rewrote XAML parsing to be more in line with runtime loading
 * Added initial support for events
 * Removed OnInitialized support, as Loaded event can be triggered in XAML instead
