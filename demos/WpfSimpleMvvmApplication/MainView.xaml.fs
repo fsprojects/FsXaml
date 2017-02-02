@@ -11,14 +11,9 @@ type MainViewBase = XAML<"MainView.xaml">
 type MainView() =
     inherit MainViewBase()
 
-    let showMessage _ =
+    // Note the event handler for the XAML-specified event.    
+    // Unlike in C#, the type provider exposes this as a virtual method,
+    // which you can override as needed
+    override this.OnFullNameDoubleClick (_,_) =
         System.Windows.MessageBox.Show "You double clicked on Full Name!"
         |> ignore
-
-    // You can override OnInitialize to wire up custom event handlers and such
-    // without requiring a self referencing type definition
-    // This occurs immediately after the XAML load phase 
-    override this.OnInitialize() =
-        let subscribeToDoubleClick _ = this.tbFullName.MouseDoubleClick.Add showMessage
-                    
-        this.Loaded.Add subscribeToDoubleClick

@@ -61,35 +61,34 @@ module InjectXaml =
             |> ignore
 
 /// Provides access to named children of a FrameworkElement
-type NamedNodeAccessor(root : FrameworkElement) =
-    let dict = new Dictionary<_,_>()
+[<Struct;NoEquality;NoComparison>] 
+type NamedNodeAccessor =
+    [<DefaultValue>] val mutable dict : Dictionary<obj,obj>
         
     /// Gets a named child element by name
-    member __.GetChild name = 
-        match dict.TryGetValue name with
+    member this.GetChild (root : FrameworkElement) name = 
+        match this.dict with
+        | null -> 
+            this.dict <- Dictionary<obj,obj>()
+        | _ -> ()
+
+        match this.dict.TryGetValue name with
         | true , element -> element
         | false , _ -> 
             let element = 
-                match root.FindName name with            
+                match root.FindName (string name) with            
                 | null ->
                     // Fallback to searching the logical tree if our template hasn't been applied
-                    LogicalTreeHelper.FindLogicalNode(root, name) :> obj
+                    LogicalTreeHelper.FindLogicalNode(root, string name) :> obj
                 | e -> e
-            dict.[name] <- element
+            this.dict.[name] <- element
             element
 
 /// Provides access to keyed children of a ResourceDictionary
-type KeyNodeAccessor(root : ResourceDictionary) =
-    let dict = new Dictionary<_,_>()
-        
+[<Struct;NoEquality;NoComparison>] 
+type KeyNodeAccessor =        
     /// Gets a named child element by name
-    member __.GetChild name = 
-        match dict.TryGetValue name with
-        | true , element -> element
-        | false , _ -> 
-            let element = root.Item[name] 
-            dict.[name] <- element
-            element
+    member __.GetChild (root : ResourceDictionary) (name : obj) = root.[name]
 
 module Wpf =
     // Gets, and potentially installs, the WPF synchronization context

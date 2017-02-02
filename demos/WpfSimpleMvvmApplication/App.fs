@@ -9,5 +9,5 @@ type Res = XAML<"ApplicationResources.xaml">
 let main argv = 
     let app = App();
     let res = Res()
-    let conv = res.["validationConverter"]
+    let conv = res.validationConverter
     app.Run()

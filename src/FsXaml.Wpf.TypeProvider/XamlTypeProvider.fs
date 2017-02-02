@@ -2,17 +2,15 @@
 
 open System
 open System.IO
-
+open System.Reflection
 open System.Xaml
-open System.Windows
 
 open Microsoft.FSharp.Core.CompilerServices
 open Microsoft.FSharp.Quotations
 
 open ProviderImplementation.ProvidedTypes
-open FsXaml.TypeProviders.Helper
 
-open System.Reflection
+open FsXaml.TypeProviders.Helper
 
 
 module XamlTypeUtils =
@@ -32,9 +30,10 @@ module XamlTypeUtils =
             let name,tp = node
             let this = args.[0]
             let thisAsBase = Expr.Coerce(this, typeContainingAccessor)
+            let thisAsBaseBase = Expr.Coerce(this, typeContainingAccessor.BaseType)
             let field = Expr.FieldGet(thisAsBase, fi)
             let arg = Expr.Value(name)
-            let expr = Expr.Call(field, mi, [arg])
+            let expr = Expr.Call(field, mi, [thisAsBaseBase ; arg])
             Expr.Coerce(expr, tp.UnderlyingType)
 
         for node in elements do
@@ -101,7 +100,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                                             
                 let tempAssembly = ProvidedAssembly(assemblyPath)
 
-                let outerType (ic : ProvidedMethod) (initialized : ProvidedField) (oninitialize : ProvidedMethod) =
+                let outerType (ic : ProvidedMethod) (initialized : ProvidedField) =
                     let providedType = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(rootType), IsErased = false)
                     providedType.SetAttributes (TypeAttributes.Public ||| TypeAttributes.Class)
                     let baseConstructorInfo = rootType.GetConstructor(BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance, null, [| |], null)
@@ -114,8 +113,9 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                             | [this] -> Expr.Call(this, ic, [ ])                                 
                             | _ -> failwith "Wrong constructor arguments"
                     providedType.AddMember ctor
+                    
                     // Setup InitializeComponent now
-                    let setupWithoutAccessors () =
+                    let setupType () =
                         ic.InvokeCode <-
                             fun args ->
                                 match args with 
@@ -126,48 +126,28 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                                     <@@
                                         if (not (%%isInit : bool)) then
                                             (%%setInit)                                            
-                                            InjectXaml.from resourcePath (%%o : obj)
-                                            (%%Expr.Call(this, oninitialize, [ ]))
+                                            InjectXaml.from resourcePath (%%o : obj)                                            
                                     @@>
                                 | _ -> failwith "Wrong constructor arguments"
-                    let setupWithAccessors rootNodeType =
-                        let accessorType, accessorConstructorArgType = 
+                    
+                    let addAccessors rootNodeType =
+                        let accessorType = 
                             match rootNodeType with
-                            | RootNodeType.ResourceDictionary -> 
-                                typeof<KeyNodeAccessor>, typeof<ResourceDictionary>
-                            | RootNodeType.FrameworkElement ->
-                                typeof<NamedNodeAccessor>, typeof<FrameworkElement>
+                            | RootNodeType.ResourceDictionary -> typeof<KeyNodeAccessor>
+                            | RootNodeType.FrameworkElement   -> typeof<NamedNodeAccessor>
+                            | _ -> typeof<obj>
                         let accessorField = ProvidedField(XamlTypeUtils.AccessorName, accessorType)
-                        providedType.AddMember accessorField
-
-                        ic.InvokeCode <-
-                            fun args ->
-                                match args with 
-                                | [this] ->
-                                    let o = Expr.Coerce(this, typeof<obj>)
-                                    let isInit = Expr.FieldGet(this, initialized)
-                                    let setInit = Expr.FieldSet(this, initialized, Expr.Value(true))
-                                    let accessCtor = accessorType.GetConstructor([| accessorConstructorArgType |])
-                                    let accessCtorArg = Expr.Coerce(this, accessorConstructorArgType)
-                                    let access = Expr.NewObject(accessCtor, [ accessCtorArg ])
-                                    let setfield = Expr.FieldSet(this, accessorField, access)
-                                    <@@
-                                        if (not (%%isInit : bool)) then                                            
-                                            (%%setInit)
-                                            (%%setfield)                                    
-                                            InjectXaml.from resourcePath (%%o : obj)
-                                            (%%Expr.Call(this, oninitialize, [ ]))
-                                    @@>
-                                | _ -> failwith "Wrong constructor arguments"
+                        providedType.AddMember accessorField                        
                         XamlTypeUtils.addAccessorTypeFromElements providedType xamlInfo
                             
+                    setupType ()
                     // If we're a framework element (UserControl/Window/etc), we can add named elements,
                     // otherwise, we don't bother
                     match xamlInfo.RootNodeType, xamlInfo.Members with
-                    | _, [] -> setupWithoutAccessors()
-                    | RootNodeType.FrameworkElement, _ -> setupWithAccessors RootNodeType.FrameworkElement
-                    | RootNodeType.ResourceDictionary, _ -> setupWithAccessors RootNodeType.ResourceDictionary
-                    | _ -> setupWithoutAccessors()
+                    | _, [] -> ()
+                    | RootNodeType.FrameworkElement, _   -> addAccessors RootNodeType.FrameworkElement
+                    | RootNodeType.ResourceDictionary, _ -> addAccessors RootNodeType.ResourceDictionary
+                    | _ -> ()
 
                     providedType
                 
@@ -175,10 +155,6 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                 let icc = typeof<System.Windows.Markup.IComponentConnector>
 
                 let initialized = ProvidedField(XamlTypeUtils.InitializedComponentFieldName, typeof<bool>)
-
-                let oninitialize = ProvidedMethod("OnInitialize", [ ], typeof<System.Void>)
-                oninitialize.SetMethodAttrs(MethodAttributes.Virtual ||| MethodAttributes.NewSlot ||| MethodAttributes.Public)
-                oninitialize.InvokeCode <- fun _ -> <@@ () @@>                
 
                 // Make InitializeComponent public, since that matches C# expectations
                 // However, we're making it virtual, so subclasses can do extra work before/after if desired
@@ -200,7 +176,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                     ||| MethodAttributes.Virtual 
                     ||| MethodAttributes.Final)
 
-                let outerType = outerType ic initialized oninitialize
+                let outerType = outerType ic initialized
                 
                 let createHandler name (typ : XamlType) =
                     let eht = typ.UnderlyingType
@@ -227,8 +203,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                 con.InvokeCode <- fun _ -> <@@ () @@>
 
                 outerType.AddMember initialized
-                outerType.AddMember oninitialize
-
+                
                 outerType.AddInterfaceImplementation icc
                 outerType.DefineMethodOverride(ic, icc_ic)
                 outerType.AddMember ic
