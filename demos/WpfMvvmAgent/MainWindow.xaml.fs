@@ -15,8 +15,8 @@ type MainWindow() =
         |> ignore
         Application.Current.Shutdown()
 
-    override this.OnInitialize() =
+    override this.OnLoaded (_,_) =
         // Subscribe to an event handler on the ExitButton
-        this.Loaded.Add (fun _ -> this.ExitButton.Click.Add shutdown) 
+        this.ExitButton.Click.Add shutdown
         
 

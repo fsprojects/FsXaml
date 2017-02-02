@@ -29,11 +29,10 @@ module XamlTypeUtils =
         let accessExpr (node : string * XamlType) (args:Expr list) =
             let name,tp = node
             let this = args.[0]
-            let thisAsBase = Expr.Coerce(this, typeContainingAccessor)
-            let thisAsBaseBase = Expr.Coerce(this, typeContainingAccessor.BaseType)
-            let field = Expr.FieldGet(thisAsBase, fi)
+            let thisAsBase = Expr.Coerce(this, typeContainingAccessor.BaseType)            
+            let field = Expr.FieldGet(this, fi)
             let arg = Expr.Value(name)
-            let expr = Expr.Call(field, mi, [thisAsBaseBase ; arg])
+            let expr = Expr.Call(field, mi, [thisAsBase ; arg])
             Expr.Coerce(expr, tp.UnderlyingType)
 
         for node in elements do
