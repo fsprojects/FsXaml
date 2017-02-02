@@ -65,6 +65,7 @@
     <Compile Include="ProvidedTypes.fs" />
     <Compile Include="TypeProvider.Helper.fs" />
     <Compile Include="XamlParser.fs" />
+    <Compile Include="XamlTypeUtils.fs" />
     <Compile Include="XamlTypeProvider.fs" />
     <Compile Include="AssemblyInfo.fs" />
     <None Include="Script1.fsx" />

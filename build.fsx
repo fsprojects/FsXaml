@@ -385,7 +385,7 @@ Target "All" DoNothing
 "All"
 #if MONO
 #else
-  =?> ("SourceLink", Pdbstr.tryFind().IsSome )
+  =?> ("SourceLink", false) // Pdbstr.tryFind().IsSome )
 #endif
   ==> "NuGet"
   ==> "BuildPackage"

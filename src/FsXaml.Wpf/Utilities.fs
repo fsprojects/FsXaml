@@ -9,6 +9,9 @@ open System.Windows.Markup
 open System.Windows.Threading
 open System.Xaml
 
+type FsXamlParseException (message : string, wrapped : exn) =
+    inherit System.Exception(message, wrapped)
+
 module internal Utilities =
     let internal castAs<'T when 'T : null> (o:obj) = 
         match o with
@@ -49,14 +52,24 @@ module InjectXaml =
             writerSettings.RootObjectInstance <- root
             use writer = new XamlObjectWriter(reader.SchemaContext, writerSettings)
 
-            while reader.Read() do
-                try
+            try
+                while reader.Read() do                
                     writer.WriteNode(reader)
-                with 
-                | :? XamlObjectWriterException as xowe 
-                    -> let msg = (file, reader.LineNumber, reader.LinePosition) 
-                                 |||> sprintf "XamlObjectWriterException caught writing XAML from %s. Reader at line %d, position %d." 
-                       raise (new Exception( msg, xowe ))
+            with 
+            | :? XamlException as xamlException -> // From writer
+                let message =
+                    if reader.HasLineInfo then
+                        sprintf "Error parsing XAML contents from %s.\n  Error at line %d, column %d.\n  Element beginning at line %d, column %d." file xamlException.LineNumber xamlException.LinePosition reader.LineNumber reader.LinePosition
+                    else
+                        sprintf "Error parsing XAML contents from %s.\n  Error at line %d, column %d." file xamlException.LineNumber xamlException.LinePosition
+                raise <| FsXamlParseException(message, xamlException)
+            | :? System.Xml.XmlException as xmlE  -> // From reader
+                let message =
+                    if reader.HasLineInfo then
+                        sprintf "Error parsing XAML contents from %s.\n  Error at line %d, column %d.\n  Element beginning at line %d, column %d." file xmlE.LineNumber xmlE.LinePosition reader.LineNumber reader.LinePosition
+                    else
+                        sprintf "Error parsing XAML contents from %s.\n  Error at line %d, column %d." file xmlE.LineNumber xmlE.LinePosition                        
+                raise <| FsXamlParseException(message, xmlE)
             writer.Result
             |> ignore
 
