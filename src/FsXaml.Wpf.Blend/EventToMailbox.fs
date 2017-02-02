@@ -16,7 +16,7 @@ type EventToMailbox() as self =
     let getParameter (param : obj) =
         match self.MailboxParameter, self.PassEventArgsToMailbox with
         | (null, true) -> self.EventArgsConverter.Convert (param :?> EventArgs) self.EventArgsConverterParameter
-        | param -> param :> obj            
+        | param, _ -> param :> obj            
 
     // Dependency Properties
     static let mailboxProperty : DependencyProperty = DependencyProperty.Register("Mailbox", typeof<obj>, typeof<EventToMailbox>, UIPropertyMetadata(null))
