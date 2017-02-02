@@ -19,6 +19,7 @@
 * Rewrote XAML parsing to be more in line with runtime loading
 * Added initial support for events
 * Removed OnInitialized support, as Loaded event can be triggered in XAML instead
+* Fixed issue with EventToMailbox
 
 
 
