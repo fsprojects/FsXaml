@@ -5,13 +5,13 @@ open System.Reflection
 [<assembly: AssemblyTitleAttribute("FsXaml.Wpf")>]
 [<assembly: AssemblyProductAttribute("FsXaml")>]
 [<assembly: AssemblyDescriptionAttribute("F# Tools for working with XAML Projects")>]
-[<assembly: AssemblyVersionAttribute("3.0.0")>]
-[<assembly: AssemblyFileVersionAttribute("3.0.0")>]
+[<assembly: AssemblyVersionAttribute("3.1.0")>]
+[<assembly: AssemblyFileVersionAttribute("3.1.0")>]
 do ()
 
 module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "FsXaml.Wpf"
     let [<Literal>] AssemblyProduct = "FsXaml"
     let [<Literal>] AssemblyDescription = "F# Tools for working with XAML Projects"
-    let [<Literal>] AssemblyVersion = "3.0.0"
-    let [<Literal>] AssemblyFileVersion = "3.0.0"
+    let [<Literal>] AssemblyVersion = "3.1.0"
+    let [<Literal>] AssemblyFileVersion = "3.1.0"

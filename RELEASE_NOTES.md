@@ -21,5 +21,11 @@
 * Removed OnInitialized support, as Loaded event can be triggered in XAML instead
 * Fixed issue with EventToMailbox
 
+#### 3.1.0 - Feb 2 2017
+* Changed event handlers to be abstract, providing better compile time experience
+* Improved error messages when XAML is poorly formed
+
+
+
 
 
