@@ -58,13 +58,10 @@ type EventToCommand() as self =
     static let commandParameterProperty : DependencyProperty = DependencyProperty.Register("CommandParameter", typeof<obj>, typeof<EventToCommand>, UIPropertyMetadata(PropertyChangedCallback(onCommandParameterChanged)))
     static let eventArgsConverterParameterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverterParameter", typeof<obj>, typeof<EventToCommand>, UIPropertyMetadata(null))
     static let eventArgsConverterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverter", typeof<IEventArgsConverter>, typeof<EventToCommand>, UIPropertyMetadata(Utilities.defaultEventArgsConverter))
-    static let filterOptionEventArgsProperty : DependencyProperty = DependencyProperty.Register("FilterOptionEventArgs", typeof<bool>, typeof<EventToCommand>, UIPropertyMetadata(false))
-    
+    static let filterOptionEventArgsProperty : DependencyProperty = DependencyProperty.Register("FilterOptionEventArgs", typeof<bool>, typeof<EventToCommand>, UIPropertyMetadata(false))    
 
     let mutable toggleIsEnabled = false
-
-    // Dependency Property as properties - note that these should be static fields, but that's not possible with F#
-
+    
     /// The ICommand
     static member CommandProperty with get() = commandProperty
     
