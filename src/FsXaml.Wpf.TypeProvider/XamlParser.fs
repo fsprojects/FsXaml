@@ -52,7 +52,7 @@ module internal XamlParser =
                     false
                 | Some t ->
                     match rootType, t.Member.IsDirective, t.Member.Name, t.Member.IsEvent with
-                    | RootNodeType.FrameworkElement, true, "Name", false 
+                    | RootNodeType.FrameworkElement, _, "Name", false
                     | RootNodeType.Application, true, "Key", false 
                     | RootNodeType.ResourceDictionary, true, "Key", false -> 
                         if reader.Read() then

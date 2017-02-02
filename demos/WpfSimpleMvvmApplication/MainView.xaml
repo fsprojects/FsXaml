@@ -34,7 +34,7 @@
         <TextBox x:Name="LastName"  Margin="3" Grid.Column="1" Grid.Row="1" FontSize="16" Text="{Binding LastName}"/>
 
         <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text="Full Name:" />
-        <TextBox x:Name="tbFullName" MouseDoubleClick="OnFullNameDoubleClick"  IsReadOnly="true" IsTabStop="False" Foreground="Gray"  Margin="3" Grid.Column="1" Grid.Row="2" FontSize="16" Text="{Binding FullName, Mode=OneWay}"/>
+        <TextBox Name="tbFullName" MouseDoubleClick="OnFullNameDoubleClick"  IsReadOnly="true" IsTabStop="False" Foreground="Gray"  Margin="3" Grid.Column="1" Grid.Row="2" FontSize="16" Text="{Binding FullName, Mode=OneWay}"/>
         <TextBlock Grid.Row="3" Margin="3" Text="Errors:" />
         <Border            
             Margin="3" VerticalAlignment="Stretch"  Grid.Row="4" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="DarkGray">

@@ -15,5 +15,6 @@ type MainView() =
     // Unlike in C#, the type provider exposes this as a virtual method,
     // which you can override as needed
     override this.OnFullNameDoubleClick (_,_) =
-        System.Windows.MessageBox.Show "You double clicked on Full Name!"
+        sprintf "You double clicked on Full Name! [%s]" this.tbFullName.Text
+        |> System.Windows.MessageBox.Show 
         |> ignore
