@@ -105,4 +105,4 @@ module internal XamlParser =
                 else
                     sprintf "Error parsing XAML contents from %s.\n  Error at line %d, column %d." fileName xmlE.LineNumber xmlE.LinePosition
 
-            raise <| FsXaml.FsXamlParseException(message,xmlE)
+            raise <| XamlException(message,xmlE)

@@ -34,23 +34,23 @@ module internal XamlTypeUtils =
         p
 
     let private addAccessorsForElements (providedType : ProvidedTypeDefinition) xamlInfo =          
-        let accessorType =
+        let accessorType = typeof<MemberAccessor>
+        let accessorMethod =
             match xamlInfo.RootNodeType with
-            | FrameworkElement -> typeof<NamedNodeAccessor>                              
-            | ResourceDictionary -> typeof<KeyNodeAccessor>                              
+            | FrameworkElement -> "GetNamedMember"
+            | ResourceDictionary -> "GetResourceByKey"
             | _ -> failwith "Unsupported node type"
         let elements = xamlInfo.Members
                 
-        let accessorMethod = accessorType.GetMethod("GetNamedItem", BindingFlags.Static ||| BindingFlags.Public)
+        let accessorMethodUntyped = accessorType.GetMethod(accessorMethod, BindingFlags.Static ||| BindingFlags.Public)        
 
         let createMemberAccessorGetter (node : string * XamlType) (args:Expr list) =
             let name,xamlType = node
+            let accessorMethod = accessorMethodUntyped.MakeGenericMethod(xamlType.UnderlyingType)
             let this = args.[0]
             let thisAsBaseType = Expr.Coerce(this, providedType.BaseType)                        
             let nameOfXamlProperty = Expr.Value(name)
-            let callAccessorMethod = Expr.Call(accessorMethod, [thisAsBaseType ; nameOfXamlProperty])
-            let castToProperType = Expr.Coerce(callAccessorMethod, xamlType.UnderlyingType)
-            castToProperType 
+            Expr.Call(accessorMethod, [thisAsBaseType ; nameOfXamlProperty])                        
 
         for accessorPropertyToCreate in elements do
             let name,xamlType = accessorPropertyToCreate

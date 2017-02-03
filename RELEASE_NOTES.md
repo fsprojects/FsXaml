@@ -32,12 +32,10 @@
 * Improved error messages when XAML is poorly formed
 * Improved generated XML Doc comments
 
-#### 3.1.2 - Feb 2 2017
+#### 3.1.2 - Feb 3 2017
 * Reworked accessors to work around exceptions due to invalid programs in some types
 * Allowed Name to be used as well as x:Name for finding members
-* Changed event handlers to be abstract, providing better compile time experience
-* Improved error messages when XAML is poorly formed
-* Improved generated XML Doc comments
+* Searches embedded resources as well as resources for xaml
 
 
 
