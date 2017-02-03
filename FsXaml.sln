@@ -19,6 +19,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsXaml.Tests", "tests\FsXam
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2A0F3842-B390-4E28-AF0E-7671BF8ECBBE}"
 	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
 		RELEASE_NOTES.md = RELEASE_NOTES.md
 	EndProjectSection
 EndProject
