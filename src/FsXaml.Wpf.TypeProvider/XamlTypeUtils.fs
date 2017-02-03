@@ -10,9 +10,6 @@ module internal XamlTypeUtils =
     let wpfAssembly = typeof<System.Windows.Controls.Button>.Assembly
 
     [<Literal>]
-    let AccessorName = "__xaml_accessor";
-
-    [<Literal>]
     let InitializedComponentFieldName = "__components_initialized";  
 
     let asInterfaceImplementation (m : ProvidedMethod) =
@@ -43,17 +40,15 @@ module internal XamlTypeUtils =
             | ResourceDictionary -> typeof<KeyNodeAccessor>                              
             | _ -> failwith "Unsupported node type"
         let elements = xamlInfo.Members
-        
-        let getAccessorField = providedType.GetField(AccessorName, BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance)
-        let accessorMethod = accessorType.GetMethod("GetChild")
+                
+        let accessorMethod = accessorType.GetMethod("GetNamedItem", BindingFlags.Static ||| BindingFlags.Public)
 
         let createMemberAccessorGetter (node : string * XamlType) (args:Expr list) =
             let name,xamlType = node
             let this = args.[0]
-            let thisAsBaseType = Expr.Coerce(this, providedType.BaseType)            
-            let accessorField = Expr.FieldGet(this, getAccessorField)
+            let thisAsBaseType = Expr.Coerce(this, providedType.BaseType)                        
             let nameOfXamlProperty = Expr.Value(name)
-            let callAccessorMethod = Expr.Call(accessorField, accessorMethod, [thisAsBaseType ; nameOfXamlProperty])
+            let callAccessorMethod = Expr.Call(accessorMethod, [thisAsBaseType ; nameOfXamlProperty])
             let castToProperType = Expr.Coerce(callAccessorMethod, xamlType.UnderlyingType)
             castToProperType 
 
@@ -121,13 +116,6 @@ module internal XamlTypeUtils =
                 | _ -> failwith "Wrong constructor arguments"
                                         
         let addAccessors rootNodeType =
-            let accessorType = 
-                match rootNodeType with
-                | RootNodeType.ResourceDictionary -> typeof<KeyNodeAccessor>
-                | RootNodeType.FrameworkElement   -> typeof<NamedNodeAccessor>
-                | _ -> typeof<obj>
-            let accessorField = ProvidedField(AccessorName, accessorType)
-            providedType.AddMember accessorField                        
             addAccessorsForElements providedType xamlInfo
                             
         // If we're a framework element (UserControl/Window/etc), we can add named elements,

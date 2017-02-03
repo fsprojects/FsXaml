@@ -74,34 +74,32 @@ module InjectXaml =
             |> ignore
 
 /// Provides access to named children of a FrameworkElement
-[<Struct;NoEquality;NoComparison>] 
-type NamedNodeAccessor =
-    [<DefaultValue>] val mutable dict : Dictionary<obj,obj>
+[<Sealed;AbstractClass>] 
+type NamedNodeAccessor () =
+    static let mutable weakTable = System.Runtime.CompilerServices.ConditionalWeakTable<FrameworkElement,Dictionary<string,obj>>()
         
     /// Gets a named child element by name
-    member this.GetChild (root : FrameworkElement) name = 
-        match this.dict with
-        | null -> 
-            this.dict <- Dictionary<obj,obj>()
-        | _ -> ()
+    static member GetNamedItem (root : FrameworkElement) name = 
+        let dict = weakTable.GetOrCreateValue root
 
-        match this.dict.TryGetValue name with
-        | true , element -> element
-        | false , _ -> 
-            let element = 
-                match root.FindName (string name) with            
-                | null ->
-                    // Fallback to searching the logical tree if our template hasn't been applied
-                    LogicalTreeHelper.FindLogicalNode(root, string name) :> obj
-                | e -> e
-            this.dict.[name] <- element
-            element
+        lock dict (fun _ ->
+            match dict.TryGetValue name with
+            | true , element -> element
+            | false , _ -> 
+                let element = 
+                    match root.FindName (name) with            
+                    | null ->
+                        // Fallback to searching the logical tree if our template hasn't been applied
+                        LogicalTreeHelper.FindLogicalNode(root, name) :> obj
+                    | e -> e
+                dict.[name] <- element
+                element)
 
 /// Provides access to keyed children of a ResourceDictionary
-[<Struct;NoEquality;NoComparison>] 
+[<Sealed;AbstractClass>] 
 type KeyNodeAccessor =        
     /// Gets a named child element by name
-    member __.GetChild (root : ResourceDictionary) (name : obj) = root.[name]
+    static member GetNamedItem (root : ResourceDictionary) (name : string) = root.[name]
 
 module Wpf =
     // Gets, and potentially installs, the WPF synchronization context
