@@ -37,6 +37,9 @@
 * Allowed Name to be used as well as x:Name for finding members
 * Searches embedded resources as well as resources for xaml
 
+#### 3.1.3 - Feb 17 2017
+* Corrected bug relating to named local user controls
+* Signed assemblies with strong name
 
 
 

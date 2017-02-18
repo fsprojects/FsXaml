@@ -44,19 +44,22 @@ module internal XamlTypeUtils =
                 
         let accessorMethodUntyped = accessorType.GetMethod(accessorMethod, BindingFlags.Static ||| BindingFlags.Public)        
 
-        let createMemberAccessorGetter (node : string * XamlType) (args:Expr list) =
-            let name,xamlType = node
-            let accessorMethod = accessorMethodUntyped.MakeGenericMethod(xamlType.UnderlyingType)
+        let createMemberAccessorGetter name (underlyingType : Type) (args:Expr list) =            
+            let accessorMethod = accessorMethodUntyped.MakeGenericMethod(underlyingType)
             let this = args.[0]
-            let thisAsBaseType = Expr.Coerce(this, providedType.BaseType)                        
+            let thisAsBaseType = Expr.Coerce(this, providedType.BaseType)         
             let nameOfXamlProperty = Expr.Value(name)
             Expr.Call(accessorMethod, [thisAsBaseType ; nameOfXamlProperty])                        
 
         for accessorPropertyToCreate in elements do
             let name,xamlType = accessorPropertyToCreate
+            let underlyingType, typeName = 
+                match xamlType.UnderlyingType with
+                | null -> typeof<obj>, xamlType.ToString()
+                | t -> t, t.Name            
             let property = 
-                ProvidedProperty(name, xamlType.UnderlyingType, GetterCode = createMemberAccessorGetter accessorPropertyToCreate)
-                |> withPropertyDocComments (sprintf "Gets the %s named %s" xamlType.UnderlyingType.Name name)
+                ProvidedProperty(name, underlyingType, GetterCode = createMemberAccessorGetter name underlyingType)
+                |> withPropertyDocComments (sprintf "Gets the %s named %s" typeName name)
             providedType.AddMember property          
 
     let private addEventHandler (providedType : ProvidedTypeDefinition) name (xamlType : XamlType) =

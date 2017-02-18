@@ -4,6 +4,7 @@ open System
 open System.Reflection
 
 [<assembly:System.Runtime.CompilerServices.InternalsVisibleTo("FsXaml.Wpf.Blend")>]
+[<assembly: AssemblyKeyFile(@"..\..\FsXaml.snk")>]
 do()
 
 /// Used for one-way conversion from EventArgs -> other types when used with EventToCommand 

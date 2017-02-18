@@ -2,9 +2,13 @@
 
 open System
 open System.IO
+open System.Reflection
 open System.Windows
 open System.Windows.Markup
 open System.Xaml
+
+[<assembly: AssemblyKeyFile(@"..\..\FsXaml.snk")>]
+do()
 
 type internal RootNodeType =
     | FrameworkElement
