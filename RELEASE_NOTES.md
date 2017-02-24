@@ -44,6 +44,8 @@
 #### 3.1.4 - Feb 24 2017
 * Corrected bug with assembly version references in Blend packages
 
+#### 3.1.5 - Feb 24 2017
+* Corrected bug with assembly version references in Blend packages
 
 
 

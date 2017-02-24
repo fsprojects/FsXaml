@@ -3,7 +3,6 @@
 open System
 open System.Reflection
 
-[<assembly:System.Runtime.CompilerServices.InternalsVisibleTo("FsXaml.Wpf.Blend")>]
 [<assembly: AssemblyKeyFile(@"..\..\FsXaml.snk")>]
 do()
 

@@ -21,7 +21,7 @@ type EventToFSharpEvent() as self =
     static let fSharpEventProperty : DependencyProperty = DependencyProperty.Register("FSharpEvent", typeof<obj>, typeof<EventToFSharpEvent>, UIPropertyMetadata(null))
     static let fSharpEventParameterProperty : DependencyProperty = DependencyProperty.Register("FSharpEventParameter", typeof<obj>, typeof<EventToFSharpEvent>, UIPropertyMetadata(null))
     static let eventArgsConverterParameterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverterParameter", typeof<obj>, typeof<EventToFSharpEvent>, UIPropertyMetadata(null))
-    static let eventArgsConverterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverter", typeof<IEventArgsConverter>, typeof<EventToFSharpEvent>, UIPropertyMetadata(Utilities.defaultEventArgsConverter))
+    static let eventArgsConverterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverter", typeof<IEventArgsConverter>, typeof<EventToFSharpEvent>, UIPropertyMetadata(DefaultConverters.eventArgsIdConverter))
     
 
     let mutable toggleIsEnabled = false

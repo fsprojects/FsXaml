@@ -57,7 +57,7 @@ type EventToCommand() as self =
     static let commandProperty : DependencyProperty = DependencyProperty.Register("Command", typeof<ICommand>, typeof<EventToCommand>, UIPropertyMetadata(PropertyChangedCallback(onCommandChanged)))
     static let commandParameterProperty : DependencyProperty = DependencyProperty.Register("CommandParameter", typeof<obj>, typeof<EventToCommand>, UIPropertyMetadata(PropertyChangedCallback(onCommandParameterChanged)))
     static let eventArgsConverterParameterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverterParameter", typeof<obj>, typeof<EventToCommand>, UIPropertyMetadata(null))
-    static let eventArgsConverterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverter", typeof<IEventArgsConverter>, typeof<EventToCommand>, UIPropertyMetadata(Utilities.defaultEventArgsConverter))
+    static let eventArgsConverterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverter", typeof<IEventArgsConverter>, typeof<EventToCommand>, UIPropertyMetadata(DefaultConverters.eventArgsIdConverter))
     static let filterOptionEventArgsProperty : DependencyProperty = DependencyProperty.Register("FilterOptionEventArgs", typeof<bool>, typeof<EventToCommand>, UIPropertyMetadata(false))    
 
     let mutable toggleIsEnabled = false

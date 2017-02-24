@@ -22,7 +22,7 @@ type EventToMailbox() as self =
     static let mailboxProperty : DependencyProperty = DependencyProperty.Register("Mailbox", typeof<obj>, typeof<EventToMailbox>, UIPropertyMetadata(null))
     static let mailboxParameterProperty : DependencyProperty = DependencyProperty.Register("MailboxParameter", typeof<obj>, typeof<EventToMailbox>, UIPropertyMetadata(null))
     static let eventArgsConverterParameterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverterParameter", typeof<obj>, typeof<EventToMailbox>, UIPropertyMetadata(null))
-    static let eventArgsConverterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverter", typeof<IEventArgsConverter>, typeof<EventToMailbox>, UIPropertyMetadata(Utilities.defaultEventArgsConverter))
+    static let eventArgsConverterProperty : DependencyProperty = DependencyProperty.Register("EventArgsConverter", typeof<IEventArgsConverter>, typeof<EventToMailbox>, UIPropertyMetadata(DefaultConverters.eventArgsIdConverter))
     
 
     let mutable toggleIsEnabled = false

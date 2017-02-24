@@ -20,11 +20,6 @@ module internal Utilities =
         | :? 'T as res -> Some res
         | _ -> None
     
-    let defaultEventArgsConverter =
-        {new IEventArgsConverter with
-            member __.Convert (args : EventArgs) param =
-                args :> obj }
-
 module InjectXaml =
     [<Literal>]
     let private errorText = "Unable to load XAML data. Verify that all .xaml files are compiled as \"Resource\""

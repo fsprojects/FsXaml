@@ -7,6 +7,14 @@ open System.Windows.Controls
 open System.Windows.Data
 
 
+[<RequireQualifiedAccess>]
+module DefaultConverters =
+    let eventArgsIdConverter =
+        {new IEventArgsConverter with
+            member __.Convert (args : EventArgs) param =
+                args :> obj }
+
+
 type ConverterParams = { Parameter : obj; CultureInfo : Globalization.CultureInfo }
 
 /// Base class for standard WPF style converters, mapped to curried forms for the convert and convert back methods
