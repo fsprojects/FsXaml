@@ -41,5 +41,9 @@
 * Corrected bug relating to named local user controls
 * Signed assemblies with strong name
 
+#### 3.1.4 - Feb 24 2017
+* Corrected bug with assembly version references in Blend packages
+
+
 
 
