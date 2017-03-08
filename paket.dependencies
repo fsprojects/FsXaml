@@ -5,6 +5,7 @@ nuget FSharp.Core redirects: force
 nuget System.Windows.Interactivity.WPF 2.0.20525
 nuget FSharp.Desktop.UI 0.7.1
 nuget FSharp.ViewModule.Core 1.0.0.0
+nuget Gjallarhorn.Bindable.Wpf
 
 group Build
   source https://nuget.org/api/v2

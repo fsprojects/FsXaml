@@ -8,6 +8,12 @@ NUGET
       Rx-Main (>= 2.2.5)
     FSharp.ViewModule.Core (1.0)
       FSharp.Core
+    Gjallarhorn (0.0.9-beta)
+    Gjallarhorn.Bindable (0.0.9-beta)
+      Gjallarhorn (>= 0.0.9-beta)
+    Gjallarhorn.Bindable.Wpf (0.0.9-beta)
+      Gjallarhorn (>= 0.0.9-beta)
+      Gjallarhorn.Bindable (>= 0.0.9-beta)
     Rx-Core (2.2.5)
       Rx-Interfaces (>= 2.2.5)
     Rx-Interfaces (2.2.5)

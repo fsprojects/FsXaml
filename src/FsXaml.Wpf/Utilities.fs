@@ -63,12 +63,16 @@ module InjectXaml =
         let s = System.IO.Packaging.PackUriHelper.UriSchemePack
         let t = root.GetType()
         
-        let ms = 
+        use ms = 
             try
-                getResourceStream file t.Assembly
+                getResourceStream file t.Assembly :> Stream
             with
-            | _ -> 
-                getEmbeddedResourceStream file t.Assembly
+            | _ ->
+                try
+                    getEmbeddedResourceStream file t.Assembly :> _
+                with
+                | _ ->
+                    System.IO.File.OpenRead file :> _
 
         use stream = new StreamReader(ms)
         use reader = new XamlXmlReader(stream, XamlReader.GetWpfSchemaContext())
