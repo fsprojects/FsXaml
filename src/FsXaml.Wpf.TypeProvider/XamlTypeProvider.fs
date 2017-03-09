@@ -40,10 +40,25 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
         ))
     
         providerType.DefineStaticParameters(
-            parameters = [ ProvidedStaticParameter("XamlResourceLocation", typeof<string>) ], 
+            parameters =
+                [
+                    ProvidedStaticParameter("XamlResourceLocation", typeof<string>, parameterDefaultValue = "")
+                    ProvidedStaticParameter("XamlFileLocation",     typeof<string>, parameterDefaultValue = "")
+                ], 
             instantiationFunction = (fun typeName parameterValues ->   
-                let resourcePath = string parameterValues.[0]                
-                let resolvedFileName = findConfigFile config.ResolutionFolder resourcePath
+                let resourcePath = string parameterValues.[0]
+                let filePath     = string parameterValues.[1]
+
+                let path, loadFromResource =
+                    match resourcePath = "", filePath = "" with
+                    |  true, true  ->
+                        failwith "Must specify either XamlResourceLocation or XamlFileLocation (but not both)"
+                    | false, false ->
+                        failwith "Can't specify both XamlResourceLocation and XamlFileLocation (but must specify one or the other)"
+                    |  true, false -> filePath, false
+                    | false, true  -> resourcePath, true
+
+                let resolvedFileName = findConfigFile config.ResolutionFolder path
                 watchForChanges this resolvedFileName |> Option.iter fileSystemWatchers.Add
 
                 use reader = File.OpenRead resolvedFileName
@@ -77,7 +92,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                     |> XamlTypeUtils.withEmptyInvokeCode
 
                 let generatedType = 
-                    XamlTypeUtils.createProvidedType assembly nameSpace typeName rootTypeInXaml resourcePath initializeComponentMethod initializedField xamlInfo 
+                    XamlTypeUtils.createProvidedType assembly nameSpace typeName rootTypeInXaml (path, loadFromResource) initializeComponentMethod initializedField xamlInfo 
 
                 generatedType.AddMember initializedField                
 
