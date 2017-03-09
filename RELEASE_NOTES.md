@@ -47,5 +47,8 @@
 #### 3.1.5 - Feb 24 2017
 * Corrected bug with assembly version references in Blend packages
 
+#### 3.1.6 - Mar 8 2017
+* Added ability to use FsXaml from within FSI
+
 
 

@@ -24,18 +24,21 @@ let [<Literal>] XamlFile = __SOURCE_DIRECTORY__ + "/FsXamlInteractiveWindow.xaml
 
 type MainWindow = XAML<XamlFileLocation = XamlFile>
 
-let bindingSource = Binding.createSource ()
+let makeBinding () =
+    let bindingSource = Binding.createSource ()
 
-bindingSource.ConstantToView ("XAML loaded from: " + XamlFile, "Title")
+    bindingSource.ConstantToView ("XAML loaded from: " + XamlFile, "Title")
 
-bindingSource
-|> Binding.createCommand "ClickCommand"
-|> Observable.map (fun _ -> 1)
-|> Observable.scan (+) 0
-|> Observable.map (sprintf "Clicks: %d")
-|> Signal.fromObservable "Click me"
-|> Binding.toView bindingSource "ButtonText"
+    bindingSource
+    |> Binding.createCommand "ClickCommand"
+    |> Observable.map (fun _ -> 1)
+    |> Observable.scan (+) 0
+    |> Observable.map (sprintf "Clicks: %d")
+    |> Signal.fromObservable "Click me"
+    |> Binding.toView bindingSource "ButtonText"
+
+    bindingSource
 
 [1..2]
-|> List.iter (fun _ -> MainWindow(DataContext = bindingSource).ShowDialog() |> ignore)
+|> List.iter (fun _ -> MainWindow(DataContext = makeBinding()).ShowDialog() |> ignore)
 
