@@ -20,14 +20,13 @@ open Gjallarhorn
 
 Gjallarhorn.Wpf.Platform.install true |> ignore
 
-let [<Literal>] xamlFile = __SOURCE_DIRECTORY__ + "/FsXamlInteractiveWindow.xaml"
+let [<Literal>] XamlFile = __SOURCE_DIRECTORY__ + "/FsXamlInteractiveWindow.xaml"
 
-type MainWindow = XAML<xamlFile>
-
+type MainWindow = XAML<XamlFileLocation = XamlFile>
 
 let bindingSource = Binding.createSource ()
 
-bindingSource.ConstantToView ("XAML loaded from: " + xamlFile, "Title")
+bindingSource.ConstantToView ("XAML loaded from: " + XamlFile, "Title")
 
 bindingSource
 |> Binding.createCommand "ClickCommand"

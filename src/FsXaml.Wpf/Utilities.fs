@@ -59,20 +59,19 @@ module InjectXaml =
                 ms.Position <- 0L
                 ms
 
-    let from (file : string) (root : obj) =
+    let from (file : string) (loadFromResource : bool) (root : obj) =
         let s = System.IO.Packaging.PackUriHelper.UriSchemePack
         let t = root.GetType()
         
-        use ms = 
-            try
-                getResourceStream file t.Assembly :> Stream
-            with
-            | _ ->
+        use ms =
+            if loadFromResource then
                 try
-                    getEmbeddedResourceStream file t.Assembly :> _
+                    getResourceStream file t.Assembly :> Stream
                 with
                 | _ ->
-                    System.IO.File.OpenRead file :> _
+                    getEmbeddedResourceStream file t.Assembly :> _
+            else
+                System.IO.File.OpenRead file :> _
 
         use stream = new StreamReader(ms)
         use reader = new XamlXmlReader(stream, XamlReader.GetWpfSchemaContext())

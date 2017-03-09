@@ -80,9 +80,9 @@ module internal XamlTypeUtils =
             
             providedType.AddMember handler     
                                
-    let createProvidedType assembly nameSpace typeName rootTypeInXaml resourcePath (initializeComponentMethod : ProvidedMethod) (initializedField : ProvidedField) xamlInfo =
+    let createProvidedType assembly nameSpace typeName rootTypeInXaml (path, loadFromResource) (initializeComponentMethod : ProvidedMethod) (initializedField : ProvidedField) xamlInfo =
         let providedType = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(rootTypeInXaml), IsErased = false)
-        providedType.AddXmlDoc (sprintf "%s defined in %s" rootTypeInXaml.Name resourcePath)
+        providedType.AddXmlDoc (sprintf "%s defined in %s" rootTypeInXaml.Name path)
                     
         // If our xamlInfo contains event handlers, we write the class as abstract
         let typeAttributes =
@@ -114,7 +114,7 @@ module internal XamlTypeUtils =
                     <@@
                         if (not (%%isInit : bool)) then
                             (%%setInit)                                            
-                            InjectXaml.from resourcePath (%%o : obj)                                            
+                            InjectXaml.from path loadFromResource (%%o : obj)                                            
                     @@>
                 | _ -> failwith "Wrong constructor arguments"
                                         
