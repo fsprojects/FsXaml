@@ -17,28 +17,57 @@
 open FsXaml
 open Gjallarhorn.Bindable
 open Gjallarhorn
+open System.Windows
 
 Gjallarhorn.Wpf.Platform.install true |> ignore
+// Create our application once, and force it to not shutdown.  
+// This lets us interact with the Windows we create from within FSI,
+// create them multiple times, etc.
+let app = Application(ShutdownMode = ShutdownMode.OnExplicitShutdown)
 
+// Create our Window type - Note use of XamlFileLocation
 let [<Literal>] XamlFile = __SOURCE_DIRECTORY__ + "/FsXamlInteractiveWindow.xaml"
-
 type MainWindow = XAML<XamlFileLocation = XamlFile>
 
-let makeBinding () =
-    let bindingSource = Binding.createSource ()
+// Model, message, and update function
+type Model = { Value : int }
+type Msg = 
+    | Increment
+    | Decrement
+    | Reset
+let update msg model =
+    match msg with
+    | Increment -> { model with Value = model.Value + 1 }
+    | Decrement -> { model with Value = model.Value - 1 }
+    | Reset -> { Value = 0 }
 
-    bindingSource.ConstantToView ("XAML loaded from: " + XamlFile, "Title")
+// Create our Gjallarhorn component for binding. 
+// Converts from ISignal<Model> -> IObservable<Msg> using BindingSource
+let makeBinding (bindingSource : BindingSource) (click : ISignal<Model>) =    
 
-    bindingSource
-    |> Binding.createCommand "ClickCommand"
-    |> Observable.map (fun _ -> 1)
-    |> Observable.scan (+) 0
-    |> Observable.map (sprintf "Clicks: %d")
-    |> Signal.fromObservable "Click me"
-    |> Binding.toView bindingSource "ButtonText"
+    bindingSource.ConstantToView ("XAML loaded from: " + XamlFile, "LoadInfo")
 
-    bindingSource
+    click
+    |> Signal.map (fun c -> string c.Value)
+    |> Binding.toView bindingSource "Value"
 
-[1..2]
-|> List.iter (fun _ -> MainWindow(DataContext = makeBinding()).ShowDialog() |> ignore)
+    let i = 
+        bindingSource
+        |> Binding.createCommand "Increment"    
+        |> Observable.map (fun _ -> Increment)    
+    let d = 
+        bindingSource
+        |> Binding.createCommand "Decrement"    
+        |> Observable.map (fun _ -> Decrement)    
+    Observable.merge i d // Output our message stream
+    
+let context = Binding.createSource ()
+let model = Mutable.createAsync { Value = 0 }
+let postMessage = update >> model.Update >> ignore
+makeBinding context model
+|> Observable.add postMessage
+
+MainWindow(DataContext = context, Topmost = true).Show() 
+
+
 

@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="350" Width="600">
+        Title="WPF from FSI!" Height="150" Width="400" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Button Height="30" Width="100" Command="{Binding ClickCommand}" Content="{Binding ButtonText}"/>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+        <Button  Command="{Binding Decrement}" Content="-" Grid.Column="0" Height="30" Width="60" Margin="10" />
+        <TextBox Text="{Binding Value}" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold" Grid.Column="1" Height="30" Margin="10" />
+        <Button  Command="{Binding Increment}" Content="+" Grid.Column="2" Height="30" Width="60" Margin="10" />
+    
+        <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding LoadInfo}" />
     </Grid>
 </Window>
