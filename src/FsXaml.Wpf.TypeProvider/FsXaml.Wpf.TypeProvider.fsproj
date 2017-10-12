@@ -18,10 +18,10 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <Tailcalls>false</Tailcalls>
-    <OutputPath>.\bin\Debug</OutputPath>
+    <OutputPath>..\..\bin\FsXaml.Wpf.TypeProvider\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>.\bin\Debug\FsXaml.Wpf.TypeProvider.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\FsXaml.Wpf\FsXaml.Wpf.TypeProvider.XML</DocumentationFile>
     <StartAction>Program</StartAction>
     <StartProgram>D:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</StartProgram>
   </PropertyGroup>
