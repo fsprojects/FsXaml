@@ -8,8 +8,8 @@
 #r "../bin/fsxaml.wpf/fsxaml.wpf.dll"
 #r "../bin/fsxaml.wpf.typeprovider/fsxaml.wpf.typeprovider.dll"
 
-#r @"..\packages\Gjallarhorn\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Gjallarhorn.dll"
-#r @"..\packages\Gjallarhorn.Bindable\lib\portable-net45+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Gjallarhorn.Bindable.dll"
+#r @"..\packages\Gjallarhorn\lib\portable-net45+win8+wp8+wpa81\Gjallarhorn.dll"
+#r @"..\packages\Gjallarhorn.Bindable\lib\portable-net45+win8+wp8+wpa81\Gjallarhorn.Bindable.dll"
 #r @"..\packages\Gjallarhorn.Bindable.Wpf\lib\net45\Gjallarhorn.Bindable.Wpf.dll"
 
 // Define your library scripting code here
