@@ -52,9 +52,9 @@ GITHUB
     modules/Octokit/Octokit.fsx (e672bab0bef3a196e1c72a832b26521cf9428116)
       Octokit (>= 0.20)
   remote: fsprojects/FSharp.TypeProviders.StarterPack
-    src/ProvidedTypes.fs (130750141e9033f2f6f82368745a18fafe98d305)
-    src/ProvidedTypes.fsi (130750141e9033f2f6f82368745a18fafe98d305)
-    src/ProvidedTypesTesting.fs (130750141e9033f2f6f82368745a18fafe98d305)
+    src/ProvidedTypes.fs (ab397235f8f952025757f6bc1806adc5ffcc59b9)
+    src/ProvidedTypes.fsi (ab397235f8f952025757f6bc1806adc5ffcc59b9)
+    src/ProvidedTypesTesting.fs (ab397235f8f952025757f6bc1806adc5ffcc59b9)
 GROUP Test
 RESTRICTION: >= net45
 NUGET

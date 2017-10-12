@@ -72,7 +72,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                     let filename = "fsxaml_" + Path.GetRandomFileName() + ".dll"
                     Path.Combine(tempFolderName, filename)
                                             
-                let providedAssembly = ProvidedAssembly(assemblyPath, ctxt)                
+                let providedAssembly = ProvidedAssembly(ctxt)                
                 
                 // Implement IComponentConnector                
                 let iComponentConnectorType = typeof<System.Windows.Markup.IComponentConnector>
