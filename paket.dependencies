@@ -1,5 +1,5 @@
 source https://www.nuget.org/api/v2/
-framework: >= net45
+frameworks: >= net45
 
 nuget FSharp.Core redirects: force
 nuget System.Windows.Interactivity.WPF 2.0.20525
@@ -9,6 +9,7 @@ nuget Gjallarhorn.Bindable.Wpf
 
 group Build
   source https://nuget.org/api/v2
+  frameworks: >= net45
   
   nuget SourceLink.Fake
   nuget FAKE
@@ -16,9 +17,13 @@ group Build
   nuget NuGet.CommandLine
 
   github fsharp/FAKE modules/Octokit/Octokit.fsx
+  github fsprojects/FSharp.TypeProviders.StarterPack src/ProvidedTypes.fsi
+  github fsprojects/FSharp.TypeProviders.StarterPack src/ProvidedTypes.fs
+  github fsprojects/FSharp.TypeProviders.StarterPack src/ProvidedTypesTesting.fs
 
 group Test
   source https://nuget.org/api/v2
+  frameworks: >= net45
   
   nuget NUnit ~> 2
   nuget NUnit.Runners ~> 2

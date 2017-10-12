@@ -21,9 +21,7 @@ module internal XamlTypeUtils =
             ||| MethodAttributes.Final)
         m
 
-    let withEmptyInvokeCode (m : ProvidedMethod) =
-        m.InvokeCode <- fun _ -> <@@ () @@>
-        m
+    let emptyInvokeCode = fun _ -> <@@ () @@>
 
     let withMethodDocComments comments (m : ProvidedMethod) =
         m.AddXmlDoc comments
@@ -33,7 +31,7 @@ module internal XamlTypeUtils =
         p.AddXmlDoc comments
         p
 
-    let private addAccessorsForElements (providedType : ProvidedTypeDefinition) xamlInfo =          
+    let private addAccessorsForElements (ctxt: ProvidedTypesContext) (providedType : ProvidedTypeDefinition) xamlInfo =          
         let accessorType = typeof<MemberAccessor>
         let accessorMethod =
             match xamlInfo.RootNodeType with
@@ -58,30 +56,30 @@ module internal XamlTypeUtils =
                 | null -> typeof<obj>, xamlType.ToString()
                 | t -> t, t.Name            
             let property = 
-                ProvidedProperty(name, underlyingType, GetterCode = createMemberAccessorGetter name underlyingType)
+                ctxt.ProvidedProperty(name, underlyingType, getterCode = createMemberAccessorGetter name underlyingType)
                 |> withPropertyDocComments (sprintf "Gets the %s named %s" typeName name)
             providedType.AddMember property          
 
-    let private addEventHandler (providedType : ProvidedTypeDefinition) name (xamlType : XamlType) =
+    let private addEventHandler (ctxt: ProvidedTypesContext) (providedType : ProvidedTypeDefinition) name (xamlType : XamlType) =
         let eventHandlerType = xamlType.UnderlyingType
         // Sanity check that we're actually an event handler
         if eventHandlerType.BaseType.IsAssignableFrom(typeof<MulticastDelegate>) then
             let invokeMethodInfo = eventHandlerType.GetMethod "Invoke"
             let eventHandlerParams =
                 invokeMethodInfo.GetParameters()
-                |> Array.map (fun pi -> ProvidedParameter(pi.Name, pi.ParameterType))
+                |> Array.map (fun pi -> ctxt.ProvidedParameter(pi.Name, pi.ParameterType))
                 |> List.ofArray
             let handler = 
-                ProvidedMethod(name, eventHandlerParams, typeof<System.Void>)
-                |> withEmptyInvokeCode
+                ctxt.ProvidedMethod(name, eventHandlerParams, typeof<System.Void>, invokeCode = emptyInvokeCode)
                 |> withMethodDocComments (sprintf "Handles the %s event" name)
 
             handler.SetMethodAttrs(MethodAttributes.Virtual ||| MethodAttributes.NewSlot ||| MethodAttributes.Public ||| MethodAttributes.Abstract)
             
             providedType.AddMember handler     
                                
-    let createProvidedType assembly nameSpace typeName rootTypeInXaml (path, loadFromResource) (initializeComponentMethod : ProvidedMethod) (initializedField : ProvidedField) xamlInfo =
-        let providedType = ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(rootTypeInXaml), IsErased = false)
+    let createProvidedType (ctxt: ProvidedTypesContext) assembly nameSpace typeName rootTypeInXaml (path, loadFromResource) (initializeComponentMethod : ProvidedMethod) (initializedField : ProvidedField) xamlInfo =
+        let providedType = 
+            ctxt.ProvidedTypeDefinition(assembly, nameSpace, typeName, Some(rootTypeInXaml), isErased = false)
         providedType.AddXmlDoc (sprintf "%s defined in %s" rootTypeInXaml.Name path)
                     
         // If our xamlInfo contains event handlers, we write the class as abstract
@@ -93,33 +91,19 @@ module internal XamlTypeUtils =
         providedType.SetAttributes typeAttributes
                     
         let baseConstructorInfo = rootTypeInXaml.GetConstructor(BindingFlags.Public ||| BindingFlags.NonPublic ||| BindingFlags.Instance, null, [| |], null)
-        let providedConstructor = ProvidedConstructor([])
-        providedConstructor.BaseConstructorCall <- fun args -> baseConstructorInfo, args                         
         // Constructor calls this.InitializeComponent()
-        providedConstructor.InvokeCode <-
-            fun args ->       
-                match args with
-                | [this] -> Expr.Call(this, initializeComponentMethod, [ ])                                 
-                | _ -> failwith "Wrong constructor arguments"
+        let providedConstructor = 
+            ctxt.ProvidedConstructor([],
+                invokeCode =
+                    (fun args ->       
+                        match args with
+                        | [this] -> Expr.Call(this, initializeComponentMethod, [ ])                                 
+                        | _ -> failwith "Wrong constructor arguments"))
+        providedConstructor.BaseConstructorCall <- fun args -> baseConstructorInfo, args                         
         providedType.AddMember providedConstructor
 
-        // Setup InitializeComponent now
-        initializeComponentMethod.InvokeCode <-
-            fun args ->
-                match args with 
-                | [this] ->
-                    let o = Expr.Coerce(this, typeof<obj>)
-                    let isInit = Expr.FieldGet(this, initializedField)
-                    let setInit = Expr.FieldSet(this, initializedField, Expr.Value(true))
-                    <@@
-                        if (not (%%isInit : bool)) then
-                            (%%setInit)                                            
-                            InjectXaml.from path loadFromResource (%%o : obj)                                            
-                    @@>
-                | _ -> failwith "Wrong constructor arguments"
-                                        
         let addAccessors rootNodeType =
-            addAccessorsForElements providedType xamlInfo
+            addAccessorsForElements ctxt providedType xamlInfo
                             
         // If we're a framework element (UserControl/Window/etc), we can add named elements,
         // otherwise, we don't bother
@@ -130,6 +114,6 @@ module internal XamlTypeUtils =
         | _ -> ()
 
         // Add our event handlers
-        xamlInfo.Events |> List.iter (fun (n, typ) -> addEventHandler providedType n typ)                     
+        xamlInfo.Events |> List.iter (fun (n, typ) -> addEventHandler ctxt providedType n typ)                     
 
         providedType
