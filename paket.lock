@@ -1,19 +1,22 @@
-FRAMEWORK: >= NET45
+RESTRICTION: >= net45
 NUGET
   remote: https://www.nuget.org/api/v2
-    Castle.Core (3.3.3)
+    Castle.Core (4.2.1)
     FSharp.Core (4.0.0.1) - redirects: force
     FSharp.Desktop.UI (0.7.1)
       Castle.Core (>= 3.3.3)
       Rx-Main (>= 2.2.5)
     FSharp.ViewModule.Core (1.0)
       FSharp.Core
-    Gjallarhorn (0.0.9-beta)
-    Gjallarhorn.Bindable (0.0.9-beta)
-      Gjallarhorn (>= 0.0.9-beta)
-    Gjallarhorn.Bindable.Wpf (0.0.9-beta)
-      Gjallarhorn (>= 0.0.9-beta)
-      Gjallarhorn.Bindable (>= 0.0.9-beta)
+    Gjallarhorn (1.1)
+      FSharp.Core (>= 4.0.0.1)
+    Gjallarhorn.Bindable (0.11)
+      FSharp.Core (4.0.0.1)
+      Gjallarhorn (>= 0.11)
+    Gjallarhorn.Bindable.Wpf (0.11)
+      FSharp.Core (4.0.0.1)
+      Gjallarhorn (>= 0.11)
+      Gjallarhorn.Bindable (>= 0.11)
     Rx-Core (2.2.5)
       Rx-Interfaces (>= 2.2.5)
     Rx-Interfaces (2.2.5)
@@ -31,33 +34,32 @@ NUGET
     System.Windows.Interactivity.WPF (2.0.20525)
 
 GROUP Build
+RESTRICTION: >= net45
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.61.2)
+    FAKE (4.63.2)
     FSharp.Compiler.Service (2.0.0.6)
     FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
       FSharpVSPowerTools.Core (>= 2.3 < 2.4)
     FSharpVSPowerTools.Core (2.3)
       FSharp.Compiler.Service (>= 2.0.0.3)
-    Microsoft.Bcl (1.1.10) - framework: net10, net11, net20, net30, net35, net40, net40-full
-      Microsoft.Bcl.Build (>= 1.0.14)
-    Microsoft.Bcl.Build (1.0.21) - import_targets: false, framework: net10, net11, net20, net30, net35, net40, net40-full
-    Microsoft.Net.Http (2.2.29) - framework: net10, net11, net20, net30, net35, net40, net40-full
-      Microsoft.Bcl (>= 1.1.10)
-      Microsoft.Bcl.Build (>= 1.0.14)
-    NuGet.CommandLine (3.5)
-    Octokit (0.23)
-      Microsoft.Net.Http  - framework: net10, net11, net20, net30, net35, net40, net40-full
+    NuGet.CommandLine (4.3)
+    Octokit (0.27)
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (1ada6a9c84aada940bd7e6a7b63c0dc62e2fa56e)
+    modules/Octokit/Octokit.fsx (e672bab0bef3a196e1c72a832b26521cf9428116)
       Octokit (>= 0.20)
+  remote: fsprojects/FSharp.TypeProviders.StarterPack
+    src/ProvidedTypes.fs (130750141e9033f2f6f82368745a18fafe98d305)
+    src/ProvidedTypes.fsi (130750141e9033f2f6f82368745a18fafe98d305)
+    src/ProvidedTypesTesting.fs (130750141e9033f2f6f82368745a18fafe98d305)
 GROUP Test
+RESTRICTION: >= net45
 NUGET
   remote: https://www.nuget.org/api/v2
-    Castle.Core (3.3.3)
+    Castle.Core (4.2.1)
     NUnit (2.6.4)
     NUnit.Runners (2.6.4)
     TestStack.White (0.13.3)
