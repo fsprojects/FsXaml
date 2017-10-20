@@ -13,12 +13,11 @@ open FsXaml.TypeProviders.Helper
 
 [<TypeProvider>]
 type public XamlTypeProvider(config : TypeProviderConfig) as this = 
-    inherit TypeProviderForNamespaces()
+    inherit TypeProviderForNamespaces(config)
 
     let assembly = Assembly.GetExecutingAssembly()
-    let nameSpace = this.GetType().Namespace
-    let ctxt = ProvidedTypesContext.Create(config)
-    let providerType = ctxt.ProvidedTypeDefinition(assembly, nameSpace, "XAML", Some typeof<obj>, isErased = false)
+    let nameSpace = this.GetType().Namespace    
+    let providerType = ProvidedTypeDefinition(assembly, nameSpace, "XAML", Some typeof<obj>, isErased = false)
 
     let fileSystemWatchers = ResizeArray<IDisposable>()
      
@@ -44,8 +43,8 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
         providerType.DefineStaticParameters(
             parameters =
                 [
-                    ctxt.ProvidedStaticParameter("XamlResourceLocation", typeof<string>, parameterDefaultValue = "")
-                    ctxt.ProvidedStaticParameter("XamlFileLocation",     typeof<string>, parameterDefaultValue = "")
+                    ProvidedStaticParameter("XamlResourceLocation", typeof<string>, parameterDefaultValue = "")
+                    ProvidedStaticParameter("XamlFileLocation",     typeof<string>, parameterDefaultValue = "")
                 ], 
             instantiationFunction = (fun typeName parameterValues ->   
                 let resourcePath = string parameterValues.[0]
@@ -71,14 +70,15 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                     let tempFolderName = Path.GetTempPath()                    
                     let filename = "fsxaml_" + Path.GetRandomFileName() + ".dll"
                     Path.Combine(tempFolderName, filename)
+                let assemblyName = AssemblyName(Path.GetFileNameWithoutExtension(assemblyPath))
                                             
-                let providedAssembly = ProvidedAssembly(ctxt)                
+                let providedAssembly = ProvidedAssembly(assemblyName, assemblyPath)                
                 
                 // Implement IComponentConnector                
                 let iComponentConnectorType = typeof<System.Windows.Markup.IComponentConnector>
 
                 // Create a field for tracking whether we're initialized
-                let initializedField = ctxt.ProvidedField(XamlTypeUtils.InitializedComponentFieldName, typeof<bool>)
+                let initializedField = ProvidedField(XamlTypeUtils.InitializedComponentFieldName, typeof<bool>)
 
                 // Make InitializeComponent public, since that matches C# expectations
                 // However, we're making it virtual, so subclasses can do extra work before/after if desired
@@ -86,7 +86,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                 let connectInterface = iComponentConnectorType.GetMethod("Connect")
 
                 let initializeComponentMethod = 
-                    ctxt.ProvidedMethod("InitializeComponent", [ ], typeof<System.Void>, 
+                    ProvidedMethod("InitializeComponent", [ ], typeof<System.Void>, 
                             invokeCode =
                                 fun args ->
                                     match args with 
@@ -103,20 +103,18 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                                         
                     |> XamlTypeUtils.asInterfaceImplementation
                 let connectMethod = 
-                    ctxt.ProvidedMethod("Connect", [ ctxt.ProvidedParameter("connectionId", typeof<int>) ; ctxt.ProvidedParameter("target", typeof<obj>) ], typeof<System.Void>, invokeCode = XamlTypeUtils.emptyInvokeCode)
+                    ProvidedMethod("Connect", [ ProvidedParameter("connectionId", typeof<int>) ; ProvidedParameter("target", typeof<obj>) ], typeof<System.Void>, invokeCode = XamlTypeUtils.emptyInvokeCode)
                     |> XamlTypeUtils.asInterfaceImplementation
 
                 let generatedType = 
-                    XamlTypeUtils.createProvidedType ctxt assembly nameSpace typeName rootTypeInXaml (path, loadFromResource) initializeComponentMethod initializedField xamlInfo 
+                    XamlTypeUtils.createProvidedType assembly nameSpace typeName rootTypeInXaml (path, loadFromResource) initializeComponentMethod connectMethod initializedField xamlInfo 
 
                 generatedType.AddMember initializedField                
 
                 // Wire up IComponentConnector
                 generatedType.AddInterfaceImplementation iComponentConnectorType
                 generatedType.DefineMethodOverride(initializeComponentMethod, initializeComponentInterface)
-                generatedType.AddMember initializeComponentMethod
                 generatedType.DefineMethodOverride(connectMethod, connectInterface)
-                generatedType.AddMember connectMethod 
 
                 // Add the type to our assembly
                 providedAssembly.AddTypes <| [ generatedType ]

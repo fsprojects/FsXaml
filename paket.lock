@@ -49,12 +49,12 @@ NUGET
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (e672bab0bef3a196e1c72a832b26521cf9428116)
+    modules/Octokit/Octokit.fsx (ddf45441759a2a7bc528b3b4c6f9a1edc7bd9f55)
       Octokit (>= 0.20)
   remote: fsprojects/FSharp.TypeProviders.StarterPack
-    src/ProvidedTypes.fs (ab397235f8f952025757f6bc1806adc5ffcc59b9)
-    src/ProvidedTypes.fsi (ab397235f8f952025757f6bc1806adc5ffcc59b9)
-    src/ProvidedTypesTesting.fs (ab397235f8f952025757f6bc1806adc5ffcc59b9)
+    src/ProvidedTypes.fs (27232ac95fa6f91f136e01b23f38dda34d0f3dc4)
+    src/ProvidedTypes.fsi (27232ac95fa6f91f136e01b23f38dda34d0f3dc4)
+    src/ProvidedTypesTesting.fs (27232ac95fa6f91f136e01b23f38dda34d0f3dc4)
 GROUP Test
 RESTRICTION: >= net45
 NUGET
