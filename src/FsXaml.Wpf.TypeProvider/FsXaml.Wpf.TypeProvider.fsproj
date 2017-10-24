@@ -23,7 +23,7 @@
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>..\..\bin\FsXaml.Wpf\FsXaml.Wpf.TypeProvider.XML</DocumentationFile>
     <StartAction>Program</StartAction>
-    <StartProgram>D:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartProgram>D:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\devenv.exe</StartProgram>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
