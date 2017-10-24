@@ -107,7 +107,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                     |> XamlTypeUtils.asInterfaceImplementation
 
                 let generatedType = 
-                    XamlTypeUtils.createProvidedType assembly nameSpace typeName rootTypeInXaml (path, loadFromResource) initializeComponentMethod connectMethod initializedField xamlInfo 
+                    XamlTypeUtils.createProvidedType providedAssembly nameSpace typeName rootTypeInXaml (path, loadFromResource) initializeComponentMethod connectMethod initializedField xamlInfo 
 
                 generatedType.AddMember initializedField                
 
@@ -127,6 +127,7 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
         let name = System.Reflection.AssemblyName(args.Name)
         let existingAssembly = 
             System.AppDomain.CurrentDomain.GetAssemblies()
+            |> Seq.append assemblies
             |> Seq.tryFind(fun a -> System.Reflection.AssemblyName.ReferenceMatchesDefinition(name, a.GetName()))
         match existingAssembly with
         | Some a -> a
