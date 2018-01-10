@@ -30,8 +30,6 @@ type public XamlTypeProvider(config : TypeProviderConfig) as this =
                 asm |> (IO.File.ReadAllBytes >> Assembly.Load >> Some)
             with 
             | _ -> None)
-        |> Seq.append [XamlTypeUtils.wpfAssembly] // FAILS
-        // |> Seq.append [XamlTypeUtils.wpfAssembly ; typeof<System.Windows.RoutedEventArgs>.Assembly] // WORKS
         |> Array.ofSeq
         
     do

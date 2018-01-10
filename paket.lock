@@ -37,24 +37,24 @@ GROUP Build
 RESTRICTION: >= net45
 NUGET
   remote: https://www.nuget.org/api/v2
-    FAKE (4.63.2)
+    FAKE (4.64.3)
     FSharp.Compiler.Service (2.0.0.6)
     FSharp.Formatting (2.14.4)
       FSharp.Compiler.Service (2.0.0.6)
       FSharpVSPowerTools.Core (>= 2.3 < 2.4)
     FSharpVSPowerTools.Core (2.3)
       FSharp.Compiler.Service (>= 2.0.0.3)
-    NuGet.CommandLine (4.3)
-    Octokit (0.27)
+    NuGet.CommandLine (4.4.1)
+    Octokit (0.28)
     SourceLink.Fake (1.1)
 GITHUB
   remote: fsharp/FAKE
-    modules/Octokit/Octokit.fsx (0341a2e614eb2a7f34607cec914eb0ed83ce9add)
+    modules/Octokit/Octokit.fsx (51a7cae12acc7292db4623ae0e3cc3a2ce6ca1c9)
       Octokit (>= 0.20)
   remote: fsprojects/FSharp.TypeProviders.StarterPack
-    src/ProvidedTypes.fs (1cdb510f445feaffbaf78ef3248f895363ae752d)
-    src/ProvidedTypes.fsi (1cdb510f445feaffbaf78ef3248f895363ae752d)
-    src/ProvidedTypesTesting.fs (1cdb510f445feaffbaf78ef3248f895363ae752d)
+    src/ProvidedTypes.fs (bebf76af3ffd2f9723b42de68d191f2371ecefd0)
+    src/ProvidedTypes.fsi (bebf76af3ffd2f9723b42de68d191f2371ecefd0)
+    src/ProvidedTypesTesting.fs (bebf76af3ffd2f9723b42de68d191f2371ecefd0)
 GROUP Test
 RESTRICTION: >= net45
 NUGET

@@ -7,8 +7,6 @@ open Microsoft.FSharp.Quotations
 open ProviderImplementation.ProvidedTypes
 
 module internal XamlTypeUtils =
-    let wpfAssembly = typeof<System.Windows.Controls.Button>.Assembly
-
     [<Literal>]
     let InitializedComponentFieldName = "__components_initialized";  
 
